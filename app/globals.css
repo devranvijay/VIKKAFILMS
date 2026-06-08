@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+/* ── LuxeLens / Lens & Void Design System ─────────────────────────── */
+
+:root {
+  --background: #0e0e0e;
+  --foreground: #e2e2e2;
+
+  /* Obsidian & Chrome color tokens */
+  --color-surface: #131313;
+  --color-surface-dim: #131313;
+  --color-surface-bright: #393939;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-container-low: #1b1b1b;
+  --color-surface-container: #1f1f1f;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-highest: #353535;
+  --color-on-surface: #e2e2e2;
+  --color-on-surface-variant: #c4c7c8;
+  --color-primary: #ffffff;
+  --color-on-primary: #2f3131;
+  --color-primary-container: #e2e2e2;
+  --color-on-primary-container: #636565;
+  --color-secondary: #c7c6c6;
+  --color-on-secondary: #2f3131;
+  --color-secondary-container: #484949;
+  --color-on-secondary-container: #b8b8b8;
+  --color-tertiary: #ffffff;
+  --color-on-tertiary: #313030;
+  --color-outline: #8e9192;
+  --color-outline-variant: #444748;
+  --color-background: #131313;
+  --color-on-background: #e2e2e2;
+  --color-surface-variant: #353535;
+  --color-inverse-surface: #e2e2e2;
+  --color-inverse-on-surface: #303030;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+}
+
+body {
+  background-color: #0e0e0e;
+  color: #e2e2e2;
+  font-family: 'Hanken Grotesk', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0e0e0e; }
+::-webkit-scrollbar-thumb { background: #353535; }
+
+/* ── Typography utilities ─────────────────────────────────────────── */
+.font-playfair { font-family: 'Playfair Display', serif; }
+.font-hanken   { font-family: 'Hanken Grotesk', sans-serif; }
+.font-geist    { font-family: 'Geist', monospace; }
+
+/* ── Glassmorphism ────────────────────────────────────────────────── */
+.glass-panel {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.glass-card {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+.high-blur {
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+.glass-edge { border: 1px solid rgba(255, 255, 255, 0.1); }
+.glass-shine {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+}
+
+/* ── Magnetic buttons ─────────────────────────────────────────────── */
+.magnetic-btn {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease;
+}
+.magnetic-btn:hover { box-shadow: 0 0 30px rgba(255,255,255,0.15); }
+
+/* ── Shimmer sweep ────────────────────────────────────────────────── */
+@keyframes shimmerSweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.btn-shimmer { transform: translateX(-100%); }
+.magnetic-btn:hover .btn-shimmer { animation: shimmerSweep 1s ease forwards; }
+
+/* ── Dust particles ───────────────────────────────────────────────── */
+.dust-particle {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.2;
+  pointer-events: none;
+}
+@keyframes float {
+  0%   { transform: translate(0, 0); }
+  33%  { transform: translate(100px, 100px); }
+  66%  { transform: translate(-50px, 200px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ── Iris animation ───────────────────────────────────────────────── */
+@keyframes iris-in {
+  from { clip-path: circle(0% at 50% 50%); }
+  to   { clip-path: circle(100% at 50% 50%); }
+}
+.animate-iris { animation: iris-in 1.5s cubic-bezier(0.77, 0, 0.175, 1); }
+.iris-blade {
+  transition: transform 1.2s cubic-bezier(0.2, 0, 0, 1);
+  transform-origin: center;
+}
+
+/* ── Scroll-reveal ────────────────────────────────────────────────── */
+.studio-object {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.studio-object.visible { opacity: 1; transform: translateY(0); }
+.studio-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.studio-reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Material Symbols icon font ───────────────────────────────────── */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ── Portfolio utilities ──────────────────────────────────────────── */
+.perspective-container { perspective: 2000px; }
+.parallax-frame {
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.metallic-text {
+  background: linear-gradient(180deg, #ffffff 0%, #b0b0b0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.infinite-floor {
+  background: radial-gradient(circle at 50% 100%, #1f1f1f 0%, #0e0e0e 70%);
+}
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.timeline-line {
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, #ffffff, transparent);
+  height: 100%;
+}
+
+/* ── Contact page ─────────────────────────────────────────────────── */
+.floating-input:focus { border-bottom-color: #ffffff !important; }
+.floating-input:focus ~ .floating-label,
+.floating-input:not(:placeholder-shown) ~ .floating-label {
+  top: -16px !important;
+  font-size: 12px !important;
+  color: #ffffff !important;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+  50%       { transform: translateY(-25%); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+}
+.bounce-animation { animation: bounce 1s infinite; }
+
+/* ── Bento Reel Card hover ────────────────────────────────────────── */
+.reel-card .reel-thumbnail { transition: transform 0.65s cubic-bezier(0.23,1,0.32,1); }
+.reel-card:hover .reel-thumbnail { transform: scale(1.05); }
+.reel-card .reel-hover-content { opacity: 0; transition: opacity 0.32s ease; }
+.reel-card:hover .reel-hover-content { opacity: 1; }
+.reel-card .reel-play-circle { transition: transform 0.22s ease, background-color 0.22s ease; }
+.reel-card:hover .reel-play-circle { transform: scale(1.14); background-color: rgba(255,255,255,0.16); }
+
+/* ── Film scroll cue ──────────────────────────────────────────────── */
+@keyframes filmScrollCue {
+  0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
+  40%  { opacity: 1; transform: scaleY(1); transform-origin: top; }
+  80%  { opacity: 1; transform: scaleY(1); transform-origin: bottom; }
+  100% { opacity: 0; transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hidden-mobile-nav { display: none; }
+  .form-grid { grid-template-columns: 1fr !important; }
+  .footer-bottom { flex-direction: column !important; align-items: center !important; }
+}
