@@ -193,10 +193,10 @@ export default function HomePage() {
         >
           <div
             ref={cameraRef}
-            className="relative"
+            className="camera-body relative"
             style={{
-              width: "600px",
-              height: "400px",
+              width: "clamp(240px, 80vw, 600px)",
+              height: "clamp(160px, 53vw, 400px)",
               perspective: "1000px",
             }}
           >
@@ -220,8 +220,8 @@ export default function HomePage() {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  width: "200px",
-                  height: "200px",
+                  width: "clamp(80px, 27vw, 200px)",
+                  height: "clamp(80px, 27vw, 200px)",
                   borderRadius: "50%",
                   overflow: "hidden",
                   backgroundColor: "#050505",
@@ -296,10 +296,10 @@ export default function HomePage() {
               <div
                 className="absolute"
                 style={{
-                  bottom: "24px",
-                  left: "32px",
+                  bottom: "clamp(10px, 3vw, 24px)",
+                  left: "clamp(12px, 4vw, 32px)",
                   fontFamily: "var(--font-geist), monospace",
-                  fontSize: "10px",
+                  fontSize: "clamp(7px, 1.2vw, 10px)",
                   color: "rgba(196, 199, 200, 0.4)",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
@@ -382,7 +382,7 @@ export default function HomePage() {
             </p>
             <div
               ref={heroBtnsRef}
-              className="flex gap-6 justify-center opacity-0 translate-y-5 transition-all duration-1000 ease-out"
+              className="flex flex-wrap gap-4 justify-center opacity-0 translate-y-5 transition-all duration-1000 ease-out"
               style={{ transitionDelay: "500ms" }}
             >
               <Link
@@ -540,7 +540,7 @@ export default function HomePage() {
                 <h3
                   style={{
                     fontFamily: "var(--font-playfair), serif",
-                    fontSize: "42px",
+                    fontSize: "clamp(24px, 5vw, 42px)",
                     lineHeight: "1.2",
                     fontWeight: 500,
                     color: "#e2e2e2",
@@ -569,6 +569,8 @@ export default function HomePage() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "flex-end",
+                flexWrap: "wrap",
+                gap: "20px",
                 marginBottom: "clamp(40px,6vw,72px)",
                 opacity: 0,
                 transform: "translateY(32px)",
@@ -776,6 +778,7 @@ export default function HomePage() {
 
             {/* Right-anchored photo — full person visible, subtle parallax */}
             <div
+              className="filmmaker-photo"
               style={{
                 position: "absolute",
                 right: 0,
@@ -803,6 +806,7 @@ export default function HomePage() {
 
             {/* Cinematic side gradient — darkens left for text legibility */}
             <div
+              className="filmmaker-gradient"
               style={{
                 position: "absolute",
                 inset: 0,
@@ -876,7 +880,7 @@ export default function HomePage() {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                padding: "0 7vw",
+                padding: "0 clamp(20px, 7vw, 80px)",
                 maxWidth: "860px",
                 opacity: filmProgress > 0.90 ? Math.max(0, 1 - (filmProgress - 0.90) / 0.10) : 1,
               }}
@@ -1212,7 +1216,7 @@ export default function HomePage() {
         <footer
           className="w-full flex flex-col items-center gap-8 border-t relative z-20"
           style={{
-            padding: "160px 5vw",
+            padding: "clamp(64px, 10vw, 160px) 5vw",
             backgroundColor: "#0e0e0e",
             borderColor: "rgba(255,255,255,0.05)",
           }}
@@ -1220,7 +1224,7 @@ export default function HomePage() {
           <div
             style={{
               fontFamily: "var(--font-playfair), serif",
-              fontSize: "42px",
+              fontSize: "clamp(28px, 5vw, 42px)",
               lineHeight: "1.2",
               fontWeight: 500,
               color: "#ffffff",
@@ -1229,7 +1233,7 @@ export default function HomePage() {
             VikaFilms
           </div>
           <div
-            className="flex gap-12"
+            className="flex flex-wrap justify-center gap-8"
             style={{
               fontFamily: "var(--font-geist), monospace",
               fontSize: "12px",

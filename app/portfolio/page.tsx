@@ -586,6 +586,7 @@ export default function PortfolioPage() {
             return (
               <>
                 <div
+                  className="bento-grid"
                   style={{
                     display: "grid",
                     gridTemplateColumns: "repeat(3, 1fr)",
@@ -599,6 +600,7 @@ export default function PortfolioPage() {
                     return (
                       <div
                         key={reel.id}
+                        className="bento-item"
                         style={{
                           gridColumn: `span ${span.col}`,
                           gridRow: `span ${span.row}`,

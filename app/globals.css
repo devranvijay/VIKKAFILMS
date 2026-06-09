@@ -211,4 +211,38 @@ body {
   .hidden-mobile-nav { display: none; }
   .form-grid { grid-template-columns: 1fr !important; }
   .footer-bottom { flex-direction: column !important; align-items: center !important; }
+
+  /* Portfolio bento — 2 columns on tablet */
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-auto-rows: 200px !important;
+  }
+  .bento-item { grid-column: span 1 !important; }
+
+  /* Filmmaker section — photo full width so gradient properly backs the text */
+  .filmmaker-photo { width: 100vw !important; }
+  .filmmaker-gradient {
+    background: linear-gradient(
+      105deg,
+      rgba(0,0,0,0.92) 0%,
+      rgba(0,0,0,0.70) 50%,
+      rgba(0,0,0,0.20) 80%,
+      transparent 100%
+    ) !important;
+  }
+
+  /* Contact grid already handled via inline @media in the page, reinforce here */
+  .contact-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+}
+
+@media (max-width: 480px) {
+  /* Bento — single column on phones */
+  .bento-grid {
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: 220px !important;
+  }
+  .bento-item {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+  }
 }

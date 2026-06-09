@@ -85,8 +85,8 @@ export default function ContactPage() {
         {/* ── Page Header ───────────────────────────────────────────── */}
         <section
           style={{
-            paddingTop: "140px",
-            paddingBottom: "64px",
+            paddingTop: "clamp(100px, 14vw, 140px)",
+            paddingBottom: "clamp(40px, 6vw, 64px)",
             paddingLeft: "5vw",
             paddingRight: "5vw",
             maxWidth: "80rem",
@@ -297,7 +297,7 @@ export default function ContactPage() {
           <div
             className="glass-card"
             style={{
-              padding: "56px 48px",
+              padding: "clamp(24px, 4vw, 56px) clamp(20px, 3.5vw, 48px)",
               borderRadius: "8px",
             }}
           >

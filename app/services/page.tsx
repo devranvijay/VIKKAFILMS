@@ -74,7 +74,7 @@ export default function ServicesPage() {
     >
       <main>
         {/* Services Section: Floating Glass Cards */}
-        <section className="min-h-screen py-[160px] px-[5vw] relative overflow-hidden">
+        <section className="min-h-screen py-20 md:py-[160px] px-[5vw] relative overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <div className="mb-20 space-y-4">
               <span className="font-mono-ui text-label-caps text-on-surface-variant uppercase">
@@ -90,7 +90,7 @@ export default function ServicesPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Card: Photography */}
-              <div className="group relative aspect-[4/5] glass-edge rounded-lg overflow-hidden glass-shine p-[40px] flex flex-col justify-end high-blur transition-all duration-700 hover:-translate-y-4">
+              <div className="group relative aspect-[4/5] glass-edge rounded-lg overflow-hidden glass-shine p-6 md:p-[40px] flex flex-col justify-end high-blur transition-all duration-700 hover:-translate-y-4">
                 <div
                   className="absolute inset-0 z-0 transition-opacity duration-1000 opacity-60 group-hover:opacity-80"
                   style={{
@@ -102,7 +102,7 @@ export default function ServicesPage() {
                   <span className="font-mono-ui text-mono-ui text-primary-muted">
                     01 / PHOTOGRAPHY
                   </span>
-                  <h3 className="font-display-lg text-[42px] leading-[1.2] font-medium">
+                  <h3 className="font-display-lg text-[28px] md:text-[42px] leading-[1.2] font-medium">
                     Photo Shoots
                   </h3>
                   <p className="font-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500 max-w-xs">
@@ -123,7 +123,7 @@ export default function ServicesPage() {
               </div>
 
               {/* Card: Cinematics */}
-              <div className="group relative aspect-[4/5] glass-edge rounded-lg overflow-hidden glass-shine p-[40px] flex flex-col justify-end high-blur transition-all duration-700 hover:-translate-y-4 lg:mt-24">
+              <div className="group relative aspect-[4/5] glass-edge rounded-lg overflow-hidden glass-shine p-6 md:p-[40px] flex flex-col justify-end high-blur transition-all duration-700 hover:-translate-y-4 lg:mt-24">
                 <div
                   className="absolute inset-0 z-0 transition-opacity duration-1000 opacity-60 group-hover:opacity-80"
                   style={{
@@ -135,7 +135,7 @@ export default function ServicesPage() {
                   <span className="font-mono-ui text-mono-ui text-primary-muted">
                     02 / CINEMATOGRAPHY
                   </span>
-                  <h3 className="font-display-lg text-[42px] leading-[1.2] font-medium">
+                  <h3 className="font-display-lg text-[28px] md:text-[42px] leading-[1.2] font-medium">
                     Cinematics
                   </h3>
                   <p className="font-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500 max-w-xs">
@@ -156,7 +156,7 @@ export default function ServicesPage() {
               </div>
 
               {/* Card: Video Shoots */}
-              <div className="group relative aspect-[4/5] glass-edge rounded-lg overflow-hidden glass-shine p-[40px] flex flex-col justify-end high-blur transition-all duration-700 hover:-translate-y-4">
+              <div className="group relative aspect-[4/5] glass-edge rounded-lg overflow-hidden glass-shine p-6 md:p-[40px] flex flex-col justify-end high-blur transition-all duration-700 hover:-translate-y-4">
                 <div
                   className="absolute inset-0 z-0 transition-opacity duration-1000 opacity-60 group-hover:opacity-80"
                   style={{
@@ -168,7 +168,7 @@ export default function ServicesPage() {
                   <span className="font-mono-ui text-mono-ui text-primary-muted">
                     03 / VIDEO
                   </span>
-                  <h3 className="font-display-lg text-[42px] leading-[1.2] font-medium">
+                  <h3 className="font-display-lg text-[28px] md:text-[42px] leading-[1.2] font-medium">
                     Video Shoots
                   </h3>
                   <p className="font-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500 max-w-xs">
@@ -192,7 +192,7 @@ export default function ServicesPage() {
         </section>
 
         {/* Production Studio Section: Behind The Lens */}
-        <section className="min-h-screen py-[160px] bg-[#0e0e0e] relative">
+        <section className="min-h-screen py-20 md:py-[160px] bg-[#0e0e0e] relative">
           <div className="px-[5vw] max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
             {/* Left: Documentary Timeline */}
             <div className="w-full md:w-1/3 relative">
@@ -296,7 +296,7 @@ export default function ServicesPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-[160px] px-[5vw] text-center">
+        <section className="py-20 md:py-[160px] px-[5vw] text-center">
           <div className="max-w-3xl mx-auto space-y-8">
             <span className="font-mono-ui text-label-caps text-on-surface-variant uppercase tracking-widest">
               Photography · Cinematics · Video
@@ -321,7 +321,7 @@ export default function ServicesPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-[160px] px-[5vw] flex flex-col items-center gap-8 bg-[#0e0e0e] border-t border-white/5">
+      <footer className="w-full py-16 md:py-[160px] px-[5vw] flex flex-col items-center gap-8 bg-[#0e0e0e] border-t border-white/5">
         <div className="font-display-lg text-[42px] leading-[1.2] font-medium text-primary tracking-tighter">
           VikaFilms
         </div>
