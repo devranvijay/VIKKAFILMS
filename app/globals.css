@@ -206,6 +206,30 @@ body {
   100% { opacity: 0; transform: scaleY(0); transform-origin: bottom; }
 }
 
+/* ── Cinema scroll-reveal ─────────────────────────────────────────── */
+.cinema-reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cinema-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Project modal entrance ───────────────────────────────────────── */
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: scale(1.04); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Navbar scroll-hide ───────────────────────────────────────────── */
+.nav-hidden {
+  transform: translateX(-50%) translateY(-140%) !important;
+  pointer-events: none;
+}
+
 /* ── Responsive ───────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .hidden-mobile-nav { display: none; }

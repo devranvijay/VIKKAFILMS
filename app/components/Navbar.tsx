@@ -15,12 +15,16 @@ export default function Navbar() {
   const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const nav = navRef.current;
       if (!nav) return;
-      if (window.scrollY > 80) {
+      const current = window.scrollY;
+
+      // Compact on scroll
+      if (current > 80) {
         nav.style.paddingTop = "10px";
         nav.style.paddingBottom = "10px";
         nav.style.marginTop = "12px";
@@ -31,6 +35,14 @@ export default function Navbar() {
         nav.style.marginTop = "24px";
         nav.style.backdropFilter = "blur(20px) saturate(150%)";
       }
+
+      // Hide on scroll down, reveal on scroll up
+      if (current > lastScrollY.current + 6 && current > 120) {
+        nav.classList.add("nav-hidden");
+      } else if (current < lastScrollY.current - 6) {
+        nav.classList.remove("nav-hidden");
+      }
+      lastScrollY.current = current;
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -59,7 +71,7 @@ export default function Navbar() {
           width: "90%",
           maxWidth: "80rem",
           boxShadow: "0 8px 32px rgba(0,0,0,0.8)",
-          transition: "padding 0.3s ease, margin 0.3s ease, backdrop-filter 0.3s ease",
+          transition: "padding 0.3s ease, margin 0.3s ease, backdrop-filter 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1)",
         }}
       >
         {/* Logo */}
