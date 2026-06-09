@@ -91,7 +91,7 @@ function HScrollCard({
         borderRadius: "12px",
         overflow: "hidden",
         position: "relative",
-        cursor: "none",
+        cursor: "pointer",
         transform: hovered ? "scale(1.025)" : "scale(1)",
         transition: "transform 0.5s cubic-bezier(0.23,1,0.32,1)",
       }}
@@ -714,8 +714,6 @@ export default function PortfolioPage() {
     useState<CinemaProject | null>(null);
   const [heroVisible, setHeroVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
-  const [cursorExpanded, setCursorExpanded] = useState(false);
 
   const hScrollSectionRef = useRef<HTMLDivElement>(null);
   const hScrollTrackRef = useRef<HTMLDivElement>(null);
@@ -733,14 +731,6 @@ export default function PortfolioPage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ── Custom cursor
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
 
   // ── Horizontal scroll section height
   useEffect(() => {
@@ -807,47 +797,6 @@ export default function PortfolioPage() {
 
   return (
     <>
-      {/* ── Custom cursor ───────────────────────────────────────────── */}
-      <div
-        aria-hidden
-        style={{
-          position: "fixed",
-          top: cursorPos.y,
-          left: cursorPos.x,
-          zIndex: 9999,
-          pointerEvents: "none",
-          transform: "translate(-50%,-50%)",
-          width: cursorExpanded ? "60px" : "7px",
-          height: cursorExpanded ? "60px" : "7px",
-          borderRadius: "50%",
-          backgroundColor: cursorExpanded
-            ? "rgba(255,255,255,0.09)"
-            : "#ffffff",
-          border: cursorExpanded
-            ? "1px solid rgba(255,255,255,0.25)"
-            : "none",
-          backdropFilter: cursorExpanded ? "blur(10px)" : "none",
-          transition:
-            "width 0.35s cubic-bezier(0.23,1,0.32,1), height 0.35s cubic-bezier(0.23,1,0.32,1)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {cursorExpanded && (
-          <span
-            style={{
-              fontFamily: "var(--font-geist), monospace",
-              fontSize: "7px",
-              letterSpacing: "0.08em",
-              color: "rgba(255,255,255,0.7)",
-              textTransform: "uppercase",
-            }}
-          >
-            View
-          </span>
-        )}
-      </div>
 
       {/* ── Project Modal ────────────────────────────────────────────── */}
       {selectedProject && (
@@ -1055,10 +1004,8 @@ export default function PortfolioPage() {
                 height: "100vh",
                 position: "relative",
                 overflow: "hidden",
-                cursor: "none",
+                cursor: "pointer",
               }}
-              onMouseEnter={() => setCursorExpanded(true)}
-              onMouseLeave={() => setCursorExpanded(false)}
               onClick={() => setSelectedProject(project)}
             >
               {/* Parallax image */}
@@ -1223,7 +1170,7 @@ export default function PortfolioPage() {
                     letterSpacing: "0.22em",
                     textTransform: "uppercase",
                     color: "#fff",
-                    cursor: "none",
+                    cursor: "pointer",
                     transition: "background 0.25s, border-color 0.25s",
                   }}
                   onMouseEnter={(e) => {
@@ -1345,7 +1292,7 @@ export default function PortfolioPage() {
                 <HScrollCard
                   key={reel.id}
                   reel={reel}
-                  onHoverChange={(h) => setCursorExpanded(h)}
+                  onHoverChange={() => {}}
                   onSelect={() => {
                     // if videoUrl exists could open a player; for now noop
                   }}
@@ -1568,7 +1515,7 @@ export default function PortfolioPage() {
                         aspectRatio: i % 3 === 1 ? "3/4" : "4/3",
                         borderRadius: "10px",
                         overflow: "hidden",
-                        cursor: cinema ? "none" : "default",
+                        cursor: cinema ? "pointer" : "default",
                         border: "1px solid rgba(255,255,255,0.06)",
                         transition: "border-color 0.3s",
                       }}
@@ -1583,7 +1530,6 @@ export default function PortfolioPage() {
                         if (ov) ov.style.opacity = "1";
                         e.currentTarget.style.borderColor =
                           "rgba(255,255,255,0.16)";
-                        if (cinema) setCursorExpanded(true);
                       }}
                       onMouseLeave={(e) => {
                         const img = e.currentTarget.querySelector(
@@ -1596,7 +1542,6 @@ export default function PortfolioPage() {
                         if (ov) ov.style.opacity = "0";
                         e.currentTarget.style.borderColor =
                           "rgba(255,255,255,0.06)";
-                        setCursorExpanded(false);
                       }}
                       onClick={() => cinema && setSelectedProject(cinema)}
                     >
