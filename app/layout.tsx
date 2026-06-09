@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Hanken_Grotesk, Geist } from "next/font/google";
 import Navbar from "./components/Navbar";
+import FloatingContact from "./components/FloatingContact";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -65,6 +66,7 @@ export default function RootLayout({
         }}
       >
         <Navbar />
+        <FloatingContact />
         {children}
       </body>
     </html>

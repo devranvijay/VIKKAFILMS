@@ -206,37 +206,65 @@ export default function ServicesPage() {
                     PHOTO · CINEMATICS · VIDEO
                   </p>
                 </div>
-                <div className="relative h-[400px]">
-                  <div className="timeline-line absolute left-4 top-0" />
-                  <div className="space-y-16 pl-12">
-                    <div className="relative studio-object" data-index="1">
-                      <div className="timeline-dot absolute -left-12 top-2 w-3 h-3 bg-primary rounded-full shadow-[0_0_10px_#fff]" />
-                      <h4 className="font-mono-ui text-[12px] leading-none tracking-[0.2em] font-semibold mb-1">
-                        OPTICS
-                      </h4>
-                      <p className="font-body-md text-on-surface-variant text-sm">
-                        Full-frame 8K sensors, anamorphic &amp; cinema glass for both photo and film — every frame at its highest resolution.
-                      </p>
+                <div className="flex flex-col gap-0">
+                  {[
+                    {
+                      index: "1",
+                      title: "OPTICS",
+                      desc: "Full-frame 8K sensors, anamorphic & cinema glass for both photo and film — every frame at its highest resolution.",
+                      active: true,
+                    },
+                    {
+                      index: "2",
+                      title: "LUMINESCENCE",
+                      desc: "Arri lighting arrays for stills; portable rigs and natural-light mastery for location video shoots and weddings.",
+                      active: false,
+                    },
+                    {
+                      index: "3",
+                      title: "POST-PRODUCTION",
+                      desc: "DaVinci Resolve colour grading, sound design, and motion graphics — complete end-to-end delivery for every format.",
+                      active: false,
+                    },
+                  ].map((item, i, arr) => (
+                    <div key={item.index} className="flex gap-5 studio-object" data-index={item.index}>
+                      {/* Dot + connector column */}
+                      <div className="flex flex-col items-center" style={{ width: "12px", flexShrink: 0 }}>
+                        <div
+                          className="timeline-dot rounded-full"
+                          style={{
+                            width: "12px",
+                            height: "12px",
+                            flexShrink: 0,
+                            marginTop: "3px",
+                            backgroundColor: item.active ? "#ffffff" : "rgba(255,255,255,0.2)",
+                            boxShadow: item.active ? "0 0 10px #fff" : "none",
+                          }}
+                        />
+                        {i < arr.length - 1 && (
+                          <div
+                            style={{
+                              width: "1px",
+                              flex: 1,
+                              minHeight: "56px",
+                              background: "linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(255,255,255,0.05))",
+                              marginTop: "6px",
+                              marginBottom: "6px",
+                            }}
+                          />
+                        )}
+                      </div>
+                      {/* Content */}
+                      <div style={{ paddingBottom: i < arr.length - 1 ? "32px" : "0" }}>
+                        <h4 className="font-mono-ui text-[12px] leading-none tracking-[0.2em] font-semibold mb-2">
+                          {item.title}
+                        </h4>
+                        <p className="font-body-md text-on-surface-variant text-sm">
+                          {item.desc}
+                        </p>
+                      </div>
                     </div>
-                    <div className="relative studio-object" data-index="2">
-                      <div className="timeline-dot absolute -left-12 top-2 w-3 h-3 bg-white/20 rounded-full" />
-                      <h4 className="font-mono-ui text-[12px] leading-none tracking-[0.2em] font-semibold mb-1">
-                        LUMINESCENCE
-                      </h4>
-                      <p className="font-body-md text-on-surface-variant text-sm">
-                        Arri lighting arrays for stills; portable rigs and natural-light mastery for location video shoots and weddings.
-                      </p>
-                    </div>
-                    <div className="relative studio-object" data-index="3">
-                      <div className="timeline-dot absolute -left-12 top-2 w-3 h-3 bg-white/20 rounded-full" />
-                      <h4 className="font-mono-ui text-[12px] leading-none tracking-[0.2em] font-semibold mb-1">
-                        POST-PRODUCTION
-                      </h4>
-                      <p className="font-body-md text-on-surface-variant text-sm">
-                        DaVinci Resolve colour grading, sound design, and motion graphics — complete end-to-end delivery for every format.
-                      </p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>

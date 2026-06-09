@@ -33,17 +33,45 @@ export default function ContactPage() {
     return () => cleanup.forEach((fn) => fn());
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [submitError, setSubmitError] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setSubmitError(false);
     const btn = submitBtnRef.current;
     if (btn) {
       btn.textContent = "SENDING…";
       btn.style.opacity = "0.7";
       btn.disabled = true;
     }
-    setTimeout(() => {
+
+    const form = e.currentTarget;
+    const data = {
+      name: (form.querySelector("#name") as HTMLInputElement)?.value,
+      company: (form.querySelector("#company") as HTMLInputElement)?.value,
+      email: (form.querySelector("#email") as HTMLInputElement)?.value,
+      phone: (form.querySelector("#phone") as HTMLInputElement)?.value,
+      shootType: (form.querySelector("#shoot-type") as HTMLSelectElement)?.value,
+      budget: (form.querySelector("#budget") as HTMLInputElement)?.value,
+      details: (form.querySelector("#details") as HTMLTextAreaElement)?.value,
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Server error");
       setSubmitted(true);
-    }, 900);
+    } catch {
+      setSubmitError(true);
+      if (btn) {
+        btn.textContent = "TRY AGAIN";
+        btn.style.opacity = "1";
+        btn.disabled = false;
+      }
+    }
   };
 
   return (
@@ -156,19 +184,19 @@ export default function ContactPage() {
                 {
                   icon: "mail",
                   label: "EMAIL",
-                  value: "studio@vikafilms.co",
-                  href: "mailto:studio@vikafilms.co",
+                  value: "vikafilms15@gmail.com",
+                  href: "mailto:vikafilms15@gmail.com",
                 },
                 {
                   icon: "call",
-                  label: "PHONE",
-                  value: "+1 (212) 555-0198",
-                  href: "tel:+12125550198",
+                  label: "WHATSAPP",
+                  value: "+91 93099 06722",
+                  href: "https://wa.me/919309906722",
                 },
                 {
                   icon: "location_on",
                   label: "STUDIO",
-                  value: "New York — London",
+                  value: "Mumbai, India",
                   href: "#",
                 },
               ].map(({ icon, label, value, href }) => (
@@ -227,10 +255,21 @@ export default function ContactPage() {
               >
                 Follow
               </span>
-              {["Instagram", "Vimeo", "Behance", "LinkedIn"].map((s) => (
+              {[
+                {
+                  label: "Instagram",
+                  href: "https://www.instagram.com/vikafilms.in?igsh=MWkyc2hoMTBiM3VhMA%3D%3D&utm_source=qr",
+                },
+                {
+                  label: "LinkedIn",
+                  href: "https://www.linkedin.com/in/vivek-kamble-65a39b238?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+                },
+              ].map(({ label, href }) => (
                 <a
-                  key={s}
-                  href="#"
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
                     fontFamily: "var(--font-geist), monospace",
                     fontSize: "12px",
@@ -244,7 +283,7 @@ export default function ContactPage() {
                   onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
                   onMouseLeave={(e) => (e.currentTarget.style.color = "#8e9192")}
                 >
-                  {s} ↗
+                  {label} ↗
                 </a>
               ))}
             </div>
@@ -455,7 +494,7 @@ export default function ContactPage() {
                       </select>
                     </div>
 
-                    <Field id="budget" label="Approx. Budget" type="text" placeholder="e.g. $5,000 – $10,000" />
+                    <Field id="budget" label="Approx. Budget" type="text" placeholder="e.g. ₹25,000 – ₹50,000" />
                   </div>
 
                   {/* Project Details */}
@@ -499,6 +538,19 @@ export default function ContactPage() {
                       onBlur={(e) => (e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.15)")}
                     />
                   </div>
+
+                  {/* Error message */}
+                  {submitError && (
+                    <p style={{
+                      fontFamily: "var(--font-geist), monospace",
+                      fontSize: "11px",
+                      letterSpacing: "0.1em",
+                      color: "#ffb4ab",
+                      textAlign: "center",
+                    }}>
+                      Something went wrong. Please try again or WhatsApp us directly.
+                    </p>
+                  )}
 
                   {/* Submit */}
                   <button
