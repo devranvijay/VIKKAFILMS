@@ -113,6 +113,7 @@ export default function Navbar() {
                   transition: "color 0.2s",
                   borderBottom: isActive ? "1px solid #ffffff" : "1px solid transparent",
                   paddingBottom: "2px",
+                  fontWeight: isActive ? 700 : 600,
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
                 onMouseLeave={(e) =>

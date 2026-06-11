@@ -1343,7 +1343,7 @@ export default function PortfolioPage() {
                 margin: 0,
               }}
             >
-              The Collection.
+              The Work.
             </h2>
           </div>
 
@@ -1810,7 +1810,7 @@ export default function PortfolioPage() {
               letterSpacing: "0.1em",
             }}
           >
-            © 2024 VikaFilms. All Rights Reserved.
+            © 2025 VikaFilms. All Rights Reserved.
           </span>
         </footer>
 

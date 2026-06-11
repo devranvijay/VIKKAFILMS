@@ -356,9 +356,9 @@ export default function HomePage() {
                 marginBottom: "24px",
               }}
             >
-              Photography That
+              Visuals That
               <br />
-              Sells Stories
+              Command Attention
             </h1>
             <p
               ref={heroSubRef}
@@ -377,8 +377,7 @@ export default function HomePage() {
                 transitionDelay: "300ms",
               }}
             >
-              Commercial Visuals For Brands That Want Attention. We blend
-              cinematic precision with narrative depth.
+              Cinematic precision meets commercial strategy — for brands that refuse to be ordinary.
             </p>
             <div
               ref={heroBtnsRef}
@@ -387,13 +386,13 @@ export default function HomePage() {
             >
               <Link
                 href="/portfolio"
-                className="magnetic-btn group relative overflow-hidden glass-panel"
+                className="magnetic-btn group relative overflow-hidden"
                 style={{
                   padding: "16px 32px",
                   borderRadius: "9999px",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.28)",
                   backdropFilter: "blur(20px)",
-                  background: "rgba(255,255,255,0.03)",
+                  background: "rgba(255,255,255,0.06)",
                   cursor: "pointer",
                   transition: "all 0.3s cubic-bezier(0.23, 1, 0.32, 1)",
                   textDecoration: "none",
@@ -457,21 +456,25 @@ export default function HomePage() {
               color: "rgba(196, 199, 200, 0.3)",
             }}
           >
-            <span
-              style={{
-                fontFamily: "var(--font-geist), monospace",
-                fontSize: "10px",
-                letterSpacing: "0.4em",
-              }}
+            <svg
+              className="bounce-animation"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(196,199,200,0.35)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              SCROLL TO ENTER
-            </span>
+              <path d="M6 9l6 6 6-6" />
+            </svg>
             <div
               style={{
                 width: "1px",
-                height: "48px",
+                height: "40px",
                 background:
-                  "linear-gradient(to bottom, rgba(255,255,255,0.2), transparent)",
+                  "linear-gradient(to bottom, rgba(255,255,255,0.15), transparent)",
               }}
             />
           </div>
@@ -1273,7 +1276,7 @@ export default function HomePage() {
               opacity: 0.5,
             }}
           >
-            &copy; 2024 VikaFilms. All Rights Reserved.
+            &copy; 2025 VikaFilms. All Rights Reserved.
           </p>
         </footer>
       </main>

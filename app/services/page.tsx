@@ -306,16 +306,16 @@ export default function ServicesPage() {
                 <div className="relative aspect-[3/4] glass-edge rounded-lg overflow-hidden studio-reveal group flex items-center justify-center"
                   style={{ background: "linear-gradient(135deg, #1a1a1a 0%, #111 100%)" }}
                 >
-                  <div className="text-center p-8">
-                    <span className="font-mono-ui text-[10px] tracking-widest text-white/20 block mb-3">
-                      YOUR SHOOT HERE
+                  <div className="flex flex-col items-center gap-4 p-8">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="3"/><path d="M20.188 10.934a9 9 0 1 0-1.252 4.913"/>
+                      <path d="M20.188 10.934A9 9 0 1 0 12 21"/>
+                      <rect x="2" y="2" width="20" height="20" rx="2" ry="2" style={{display:"none"}}/>
+                      <circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83M16.62 12l-5.74 9.94" style={{display:"none"}}/>
+                    </svg>
+                    <span className="font-mono-ui text-[9px] tracking-widest text-white/15 text-center leading-relaxed">
+                      New projects<br />dropping soon
                     </span>
-                    <span className="font-mono-ui text-[9px] tracking-widest text-white/10 block">
-                      Add images to<br />public/portfolio/
-                    </span>
-                  </div>
-                  <div className="absolute top-4 right-4 font-mono-ui text-[10px] glass-edge px-3 py-1 rounded-full high-blur text-white/30">
-                    COMING SOON
                   </div>
                 </div>
               </div>
@@ -330,8 +330,8 @@ export default function ServicesPage() {
               Photography · Cinematics · Video
             </span>
             <h2 className="font-display-lg text-[48px] md:text-[84px] leading-tight font-bold">
-              Let's Create <br />
-              Something Real.
+              Let&apos;s Make <br />
+              Something Remarkable.
             </h2>
             <p className="font-body-md text-on-surface-variant max-w-lg mx-auto">
               Whether it's a brand photoshoot, a cinematic film, or a social reel — we handle it all from concept to final cut.
@@ -365,7 +365,7 @@ export default function ServicesPage() {
           </a>
         </div>
         <div className="mt-8 font-body-md text-[16px] leading-[1.6] text-[#e5e2e1] opacity-40">
-          &copy; 2024 VikaFilms. All Rights Reserved.
+          &copy; 2025 VikaFilms. All Rights Reserved.
         </div>
       </footer>
     </div>

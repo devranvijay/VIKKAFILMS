@@ -157,7 +157,7 @@ export default function ContactPage() {
               maxWidth: "480px",
             }}
           >
-            Tell us about your vision. We respond within 24 hours to every serious inquiry.
+            Tell us about your vision. Every inquiry is answered within 24 hours.
           </p>
         </section>
 
@@ -288,6 +288,17 @@ export default function ContactPage() {
               ))}
             </div>
 
+            {/* Availability note */}
+            <p style={{
+              fontFamily: "var(--font-hanken), sans-serif",
+              fontSize: "13px",
+              lineHeight: 1.7,
+              color: "rgba(196,199,200,0.35)",
+            }}>
+              Available across India &amp; international.<br />
+              Every inquiry answered within 24 hours.
+            </p>
+
             {/* Divider */}
             <div style={{ height: "1px", background: "rgba(255,255,255,0.06)" }} />
 
@@ -323,8 +334,15 @@ export default function ContactPage() {
                     textTransform: "uppercase",
                     transition: "color 0.2s",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "#8e9192")}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#ffffff";
+                    e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#8e9192";
+                    e.currentTarget.style.borderBottomColor = "transparent";
+                  }}
+                  className="also-explore-link"
                 >
                   {label} →
                 </Link>
@@ -338,6 +356,8 @@ export default function ContactPage() {
             style={{
               padding: "clamp(24px, 4vw, 56px) clamp(20px, 3.5vw, 48px)",
               borderRadius: "8px",
+              border: "1px solid rgba(255,255,255,0.09)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 24px 64px rgba(0,0,0,0.4)",
             }}
           >
             {submitted ? (
@@ -489,7 +509,7 @@ export default function ContactPage() {
                           Event Coverage
                         </option>
                         <option value="other" style={{ backgroundColor: "#1f1f1f" }}>
-                          Other
+                          Let&apos;s Talk
                         </option>
                       </select>
                     </div>
@@ -560,7 +580,7 @@ export default function ContactPage() {
                     style={{
                       width: "100%",
                       marginTop: "8px",
-                      backgroundColor: "#ffffff",
+                      backgroundColor: "#f2ede6",
                       color: "#131313",
                       fontFamily: "var(--font-geist), monospace",
                       fontSize: "11px",
@@ -623,7 +643,7 @@ export default function ContactPage() {
               letterSpacing: "0.1em",
             }}
           >
-            © 2024 VikaFilms. All Rights Reserved.
+            © 2025 VikaFilms. All Rights Reserved.
           </span>
         </footer>
       </main>
