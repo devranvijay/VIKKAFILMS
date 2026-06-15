@@ -1,375 +1,1043 @@
-﻿"use client";
+"use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function ServicesPage() {
-  useEffect(() => {
-    // Scroll Animation Logic
-    const observerOptions = { threshold: 0.2 };
+// ─── Cloudinary URL helper (inline, no import needed) ─────────────────────────
+const CLD = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto`;
+const img = (id: string) => `${CLD}/${id}`;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          if (entry.target.classList.contains("studio-object")) {
-            const dots =
-              entry.target.parentElement?.querySelectorAll(".timeline-dot");
-            if (dots) {
-              const index = Array.from(
-                entry.target.parentElement?.children ?? []
-              ).indexOf(entry.target as Element);
-              if (dots[index]) {
-                dots[index].classList.remove("bg-white/20");
-                dots[index].classList.add(
-                  "bg-primary",
-                  "shadow-[0_0_10px_#fff]"
-                );
-              }
-            }
-          }
-        }
-      });
-    }, observerOptions);
+// ─── Service data ─────────────────────────────────────────────────────────────
+const SERVICES = [
+  {
+    num: "01",
+    label: "Photography",
+    title: "Still Work",
+    tagline: "Every frame, a statement.",
+    description:
+      "Commercial campaigns, automotive stills, product photography, editorial portraits, and brand identity — captured on full-frame sensors with cinema glass.",
+    features: [
+      "Automotive & Commercial",
+      "Brand & Product Stills",
+      "Corporate & Editorial",
+    ],
+    cta: "Book a Shoot",
+    src: img("DSC01488_qx6a1n"),
+    accent: "rgba(200,184,154,0.18)",
+    accentLine: "#c8b89a",
+  },
+  {
+    num: "02",
+    label: "Cinematography",
+    title: "Film Work",
+    tagline: "Motion with intention.",
+    description:
+      "Narrative brand films, product cinematics, wedding films, and documentary storytelling — colour graded and delivered in 4K with cinema lenses.",
+    features: [
+      "Brand & Product Films",
+      "Wedding Cinematics",
+      "Colour Graded Delivery",
+    ],
+    cta: "Commission a Film",
+    src: img("DSC09380_aonznj"),
+    accent: "rgba(160,180,200,0.18)",
+    accentLine: "#a0b4c8",
+  },
+  {
+    num: "03",
+    label: "Video",
+    title: "Reels & Social",
+    tagline: "Built for every screen.",
+    description:
+      "Social reels, product demos, testimonials, event highlights, and platform-optimised content — from Instagram to broadcast, we cut for attention.",
+    features: [
+      "Social Media Reels",
+      "Product Demo & Testimonial",
+      "Event & Live Coverage",
+    ],
+    cta: "Start a Project",
+    src: img("DSC01456_ygk3gp"),
+    accent: "rgba(160,180,140,0.14)",
+    accentLine: "#a8b898",
+  },
+];
 
-    document
-      .querySelectorAll(".studio-object, .studio-reveal")
-      .forEach((el) => {
-        observer.observe(el);
-      });
+// ─── Process steps ─────────────────────────────────────────────────────────────
+const PROCESS = [
+  {
+    num: "01",
+    title: "Discovery & Brief",
+    body: "We start by understanding your brand, audience, and objectives. Every project begins with a detailed creative brief — no assumptions, no guesswork.",
+  },
+  {
+    num: "02",
+    title: "Production Day",
+    body: "Full-frame cameras, cinema glass, professional lighting, and a focused crew. We execute with precision — on location or in studio, always on time.",
+  },
+  {
+    num: "03",
+    title: "Edit & Delivery",
+    body: "DaVinci Resolve colour grading, sound design, and motion graphics. Files delivered optimised for every platform, every format, every deadline.",
+  },
+];
 
-    // Magnetic Button Micro-interaction
-    const magneticBtns = document.querySelectorAll<HTMLElement>(".magnetic-btn");
-    const mouseMoveHandlers: Array<(e: MouseEvent) => void> = [];
-    const mouseLeaveHandlers: Array<() => void> = [];
-
-    magneticBtns.forEach((btn, i) => {
-      const moveHandler = (e: MouseEvent) => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.05)`;
-      };
-      const leaveHandler = () => {
-        btn.style.transform = "translate(0px, 0px) scale(1)";
-      };
-      mouseMoveHandlers[i] = moveHandler;
-      mouseLeaveHandlers[i] = leaveHandler;
-      btn.addEventListener("mousemove", moveHandler);
-      btn.addEventListener("mouseleave", leaveHandler);
-    });
-
-    return () => {
-      observer.disconnect();
-      magneticBtns.forEach((btn, i) => {
-        btn.removeEventListener("mousemove", mouseMoveHandlers[i]);
-        btn.removeEventListener("mouseleave", mouseLeaveHandlers[i]);
-      });
-    };
-  }, []);
+// ─── ServiceCard component ─────────────────────────────────────────────────────
+function ServiceCard({
+  service,
+  index,
+}: {
+  service: (typeof SERVICES)[0];
+  index: number;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   return (
     <div
-      className={`text-on-surface font-body-md selection:bg-primary selection:text-surface`}
+      className="cinema-reveal"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: "relative",
+        aspectRatio: "3/4",
+        borderRadius: "20px",
+        overflow: "hidden",
+        cursor: "pointer",
+        transform: hovered ? "scale(1.018)" : "scale(1)",
+        transition: "transform 0.65s cubic-bezier(0.23,1,0.32,1)",
+        transitionDelay: `${index * 80}ms`,
+      }}
     >
-      <main>
-        {/* Services Section: Floating Glass Cards */}
-        <section className="min-h-screen py-20 md:py-[160px] px-[5vw] relative overflow-hidden">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-20 space-y-4">
-              <span className="font-mono-ui text-label-caps text-on-surface-variant uppercase">
-                Photography · Cinematics · Video
-              </span>
-              <h2 className="font-display-lg text-[48px] md:text-[84px] leading-none font-bold">
-                Full-Service <br />
-                Production.
-              </h2>
-              <p className="font-body-md text-on-surface-variant max-w-xl pt-2">
-                From a single product shot to a full cinematic brand film — VikaFilms delivers across every visual medium your brand demands.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Card: Photography */}
-              <div className="group relative aspect-[4/5] glass-edge rounded-lg overflow-hidden glass-shine p-6 md:p-[40px] flex flex-col justify-end high-blur transition-all duration-700 hover:-translate-y-4">
-                <div
-                  className="absolute inset-0 z-0 transition-opacity duration-1000 opacity-60 group-hover:opacity-80"
+      {/* Accent line */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "1px",
+          height: "100%",
+          background: `linear-gradient(to bottom, transparent 0%, ${service.accentLine}44 40%, transparent 100%)`,
+          zIndex: 3,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Background image */}
+      {!loaded && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "#0f0f11",
+            borderRadius: "20px",
+          }}
+        />
+      )}
+      <Image
+        src={service.src}
+        alt={service.title}
+        fill
+        sizes="(max-width:768px) 90vw, 33vw"
+        style={{
+          objectFit: "cover",
+          opacity: loaded ? 1 : 0,
+          transform: hovered ? "scale(1.07)" : "scale(1)",
+          transition: "transform 0.9s cubic-bezier(0.23,1,0.32,1), opacity 0.6s ease",
+        }}
+        onLoad={() => setLoaded(true)}
+      />
+
+      {/* Dark gradient overlay */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: hovered
+            ? "linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.55) 52%, rgba(0,0,0,0.28) 100%)"
+            : "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 42%, rgba(0,0,0,0.18) 100%)",
+          transition: "background 0.5s ease",
+        }}
+      />
+
+      {/* Ambient radial glow */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: service.accent,
+          opacity: hovered ? 1 : 0,
+          transition: "opacity 0.6s ease",
+          mixBlendMode: "screen",
+        }}
+      />
+
+      {/* Top: number + label */}
+      <div
+        style={{
+          position: "absolute",
+          top: "clamp(20px, 2.5vw, 32px)",
+          left: "clamp(20px, 2.5vw, 32px)",
+          zIndex: 4,
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "8px",
+            letterSpacing: "0.4em",
+            textTransform: "uppercase",
+            color: service.accentLine,
+            opacity: 0.8,
+          }}
+        >
+          {service.num}
+        </span>
+        <span
+          style={{
+            width: "20px",
+            height: "1px",
+            background: `${service.accentLine}66`,
+            display: "block",
+          }}
+        />
+        <span
+          style={{
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "8px",
+            letterSpacing: "0.35em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.3)",
+          }}
+        >
+          {service.label}
+        </span>
+      </div>
+
+      {/* Bottom: content */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "clamp(22px, 2.8vw, 36px)",
+          left: "clamp(20px, 2.5vw, 32px)",
+          right: "clamp(20px, 2.5vw, 32px)",
+          zIndex: 4,
+        }}
+      >
+        {/* Tagline — always visible */}
+        <div
+          style={{
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "9px",
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.28)",
+            marginBottom: "10px",
+            opacity: hovered ? 0 : 1,
+            transform: hovered ? "translateY(-4px)" : "translateY(0)",
+            transition: "all 0.3s ease",
+          }}
+        >
+          {service.tagline}
+        </div>
+
+        {/* Title */}
+        <h3
+          style={{
+            fontFamily: "var(--font-playfair), serif",
+            fontSize: "clamp(30px, 3.5vw, 52px)",
+            fontWeight: 700,
+            lineHeight: 0.95,
+            letterSpacing: "-0.02em",
+            color: "#fff",
+            marginBottom: hovered ? "18px" : "0",
+            transition: "margin 0.45s cubic-bezier(0.23,1,0.32,1)",
+          }}
+        >
+          {service.title}
+        </h3>
+
+        {/* Description — hover reveal */}
+        <div
+          style={{
+            overflow: "hidden",
+            maxHeight: hovered ? "200px" : "0",
+            opacity: hovered ? 1 : 0,
+            transition:
+              "max-height 0.5s cubic-bezier(0.23,1,0.32,1), opacity 0.4s ease 0.1s",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-hanken), sans-serif",
+              fontSize: "clamp(12px, 1.1vw, 14px)",
+              lineHeight: 1.72,
+              color: "rgba(196,199,200,0.58)",
+              marginBottom: "16px",
+            }}
+          >
+            {service.description}
+          </p>
+
+          <ul style={{ marginBottom: "20px", listStyle: "none", padding: 0 }}>
+            {service.features.map((f) => (
+              <li
+                key={f}
+                style={{
+                  fontFamily: "var(--font-geist), monospace",
+                  fontSize: "8.5px",
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.32)",
+                  marginBottom: "6px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <span
                   style={{
-                    background:
-                      "radial-gradient(ellipse at 30% 20%, rgba(80,100,140,0.4) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(40,60,100,0.3) 0%, transparent 50%)",
+                    width: "12px",
+                    height: "1px",
+                    background: `${service.accentLine}88`,
+                    display: "block",
+                    flexShrink: 0,
                   }}
                 />
-                <div className="relative z-10 space-y-4">
-                  <span className="font-mono-ui text-mono-ui text-primary-muted">
-                    01 / PHOTOGRAPHY
-                  </span>
-                  <h3 className="font-display-lg text-[28px] md:text-[42px] leading-[1.2] font-medium">
-                    Photo Shoots
-                  </h3>
-                  <p className="font-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500 max-w-xs">
-                    Commercial campaigns, product stills, editorial portraits, weddings, and corporate — captured on full-frame sensors with anamorphic glass.
-                  </p>
-                  <ul className="font-mono-ui text-[10px] tracking-widest text-on-surface-variant space-y-1 opacity-0 group-hover:opacity-60 transition-opacity duration-500">
-                    <li>→ Brand &amp; Commercial</li>
-                    <li>→ Wedding &amp; Events</li>
-                    <li>→ Corporate &amp; Healthcare</li>
-                  </ul>
-                  <div className="pt-4 flex items-center gap-2 font-mono-ui text-label-caps group-hover:gap-4 transition-all">
-                    <span>BOOK A SHOOT</span>
-                    <span className="material-symbols-outlined text-[16px]">
-                      arrow_forward
-                    </span>
-                  </div>
-                </div>
-              </div>
+                {f}
+              </li>
+            ))}
+          </ul>
 
-              {/* Card: Cinematics */}
-              <div className="group relative aspect-[4/5] glass-edge rounded-lg overflow-hidden glass-shine p-6 md:p-[40px] flex flex-col justify-end high-blur transition-all duration-700 hover:-translate-y-4 lg:mt-24">
-                <div
-                  className="absolute inset-0 z-0 transition-opacity duration-1000 opacity-60 group-hover:opacity-80"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse at 70% 10%, rgba(120,80,140,0.35) 0%, transparent 60%), radial-gradient(ellipse at 20% 90%, rgba(60,40,100,0.25) 0%, transparent 50%)",
-                  }}
-                />
-                <div className="relative z-10 space-y-4">
-                  <span className="font-mono-ui text-mono-ui text-primary-muted">
-                    02 / CINEMATOGRAPHY
-                  </span>
-                  <h3 className="font-display-lg text-[28px] md:text-[42px] leading-[1.2] font-medium">
-                    Cinematics
-                  </h3>
-                  <p className="font-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500 max-w-xs">
-                    Narrative-driven cinematic production — brand films, wedding cinematics, and documentary stories shot in 4K with cinema glass.
-                  </p>
-                  <ul className="font-mono-ui text-[10px] tracking-widest text-on-surface-variant space-y-1 opacity-0 group-hover:opacity-60 transition-opacity duration-500">
-                    <li>→ Brand &amp; Product Films</li>
-                    <li>→ Wedding Cinematics</li>
-                    <li>→ Colour Graded Delivery</li>
-                  </ul>
-                  <div className="pt-4 flex items-center gap-2 font-mono-ui text-label-caps group-hover:gap-4 transition-all">
-                    <span>COMMISSION A FILM</span>
-                    <span className="material-symbols-outlined text-[16px]">
-                      arrow_forward
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card: Video Shoots */}
-              <div className="group relative aspect-[4/5] glass-edge rounded-lg overflow-hidden glass-shine p-6 md:p-[40px] flex flex-col justify-end high-blur transition-all duration-700 hover:-translate-y-4">
-                <div
-                  className="absolute inset-0 z-0 transition-opacity duration-1000 opacity-60 group-hover:opacity-80"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse at 50% 0%, rgba(160,140,80,0.3) 0%, transparent 60%), radial-gradient(ellipse at 10% 80%, rgba(80,100,60,0.2) 0%, transparent 50%)",
-                  }}
-                />
-                <div className="relative z-10 space-y-4">
-                  <span className="font-mono-ui text-mono-ui text-primary-muted">
-                    03 / VIDEO
-                  </span>
-                  <h3 className="font-display-lg text-[28px] md:text-[42px] leading-[1.2] font-medium">
-                    Video Shoots
-                  </h3>
-                  <p className="font-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500 max-w-xs">
-                    Social reels, product demos, event coverage, and testimonial videos — platform-optimised from Instagram to broadcast.
-                  </p>
-                  <ul className="font-mono-ui text-[10px] tracking-widest text-on-surface-variant space-y-1 opacity-0 group-hover:opacity-60 transition-opacity duration-500">
-                    <li>→ Social Media Reels</li>
-                    <li>→ Product Demo &amp; Testimonial</li>
-                    <li>→ Event &amp; Live Coverage</li>
-                  </ul>
-                  <div className="pt-4 flex items-center gap-2 font-mono-ui text-label-caps group-hover:gap-4 transition-all">
-                    <span>START A PROJECT</span>
-                    <span className="material-symbols-outlined text-[16px]">
-                      arrow_forward
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Production Studio Section: Behind The Lens */}
-        <section className="min-h-screen py-20 md:py-[160px] bg-[#0e0e0e] relative">
-          <div className="px-[5vw] max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
-            {/* Left: Documentary Timeline */}
-            <div className="w-full md:w-1/3 relative">
-              <div className="sticky top-40 space-y-12">
-                <div className="space-y-2">
-                  <h2 className="font-display-lg text-[42px] leading-[1.2] font-medium">
-                    Behind The <br />
-                    Lens
-                  </h2>
-                  <p className="font-mono-ui text-mono-ui text-on-surface-variant">
-                    PHOTO · CINEMATICS · VIDEO
-                  </p>
-                </div>
-                <div className="flex flex-col gap-0">
-                  {[
-                    {
-                      index: "1",
-                      title: "OPTICS",
-                      desc: "Full-frame 8K sensors, anamorphic & cinema glass for both photo and film — every frame at its highest resolution.",
-                      active: true,
-                    },
-                    {
-                      index: "2",
-                      title: "LUMINESCENCE",
-                      desc: "Arri lighting arrays for stills; portable rigs and natural-light mastery for location video shoots and weddings.",
-                      active: false,
-                    },
-                    {
-                      index: "3",
-                      title: "POST-PRODUCTION",
-                      desc: "DaVinci Resolve colour grading, sound design, and motion graphics — complete end-to-end delivery for every format.",
-                      active: false,
-                    },
-                  ].map((item, i, arr) => (
-                    <div key={item.index} className="flex gap-5 studio-object" data-index={item.index}>
-                      {/* Dot + connector column */}
-                      <div className="flex flex-col items-center" style={{ width: "12px", flexShrink: 0 }}>
-                        <div
-                          className="timeline-dot rounded-full"
-                          style={{
-                            width: "12px",
-                            height: "12px",
-                            flexShrink: 0,
-                            marginTop: "3px",
-                            backgroundColor: item.active ? "#ffffff" : "rgba(255,255,255,0.2)",
-                            boxShadow: item.active ? "0 0 10px #fff" : "none",
-                          }}
-                        />
-                        {i < arr.length - 1 && (
-                          <div
-                            style={{
-                              width: "1px",
-                              flex: 1,
-                              minHeight: "56px",
-                              background: "linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(255,255,255,0.05))",
-                              marginTop: "6px",
-                              marginBottom: "6px",
-                            }}
-                          />
-                        )}
-                      </div>
-                      {/* Content */}
-                      <div style={{ paddingBottom: i < arr.length - 1 ? "32px" : "0" }}>
-                        <h4 className="font-mono-ui text-[12px] leading-none tracking-[0.2em] font-semibold mb-2">
-                          {item.title}
-                        </h4>
-                        <p className="font-body-md text-on-surface-variant text-sm">
-                          {item.desc}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Cinematic Reveal */}
-            <div className="w-full md:w-2/3 space-y-8">
-              <div className="relative aspect-video glass-edge rounded-lg overflow-hidden studio-reveal group">
-                <Image
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                  src="/portfolio/commercial/BMW-01.jpg"
-                  alt="BMW luxury automotive campaign shoot"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 66vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
-                  <div className="space-y-1">
-                    <span className="font-mono-ui text-[10px] tracking-widest text-primary/50">
-                      COMMERCIAL // BMW
-                    </span>
-                    <p className="font-mono-ui text-sm">
-                      FOCAL LENGTH: 35MM / APERTURE: F/1.4
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-8">
-                <div className="relative aspect-[3/4] glass-edge rounded-lg overflow-hidden studio-reveal group">
-                  <Image
-                    className="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 transition-all duration-1000"
-                    src="/portfolio/commercial/DentalChair-01.jpeg"
-                    alt="Dental studio commercial shoot"
-                    fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                  />
-                  <div className="absolute top-4 right-4 font-mono-ui text-[10px] glass-edge px-3 py-1 rounded-full high-blur">
-                    CLINICAL PRECISION
-                  </div>
-                </div>
-                <div className="relative aspect-[3/4] glass-edge rounded-lg overflow-hidden studio-reveal group flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg, #1a1a1a 0%, #111 100%)" }}
-                >
-                  <div className="flex flex-col items-center gap-4 p-8">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="3"/><path d="M20.188 10.934a9 9 0 1 0-1.252 4.913"/>
-                      <path d="M20.188 10.934A9 9 0 1 0 12 21"/>
-                      <rect x="2" y="2" width="20" height="20" rx="2" ry="2" style={{display:"none"}}/>
-                      <circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83M16.62 12l-5.74 9.94" style={{display:"none"}}/>
-                    </svg>
-                    <span className="font-mono-ui text-[9px] tracking-widest text-white/15 text-center leading-relaxed">
-                      New projects<br />dropping soon
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 md:py-[160px] px-[5vw] text-center">
-          <div className="max-w-3xl mx-auto space-y-8">
-            <span className="font-mono-ui text-label-caps text-on-surface-variant uppercase tracking-widest">
-              Photography · Cinematics · Video
-            </span>
-            <h2 className="font-display-lg text-[48px] md:text-[84px] leading-tight font-bold">
-              Let&apos;s Make <br />
-              Something Remarkable.
-            </h2>
-            <p className="font-body-md text-on-surface-variant max-w-lg mx-auto">
-              Whether it's a brand photoshoot, a cinematic film, or a social reel — we handle it all from concept to final cut.
-            </p>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              <button className="px-12 py-5 bg-primary text-on-primary rounded-full font-mono-ui tracking-widest uppercase hover:scale-105 transition-transform magnetic-btn">
-                Book a Session
-              </button>
-              <button className="px-12 py-5 glass-edge text-primary rounded-full font-mono-ui tracking-widest uppercase hover:bg-white/5 transition-colors magnetic-btn">
-                View Portfolio
-              </button>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="w-full py-16 md:py-[160px] px-[5vw] flex flex-col items-center gap-8 bg-[#0e0e0e] border-t border-white/5">
-        <div className="font-display-lg text-[42px] leading-[1.2] font-medium text-primary tracking-tighter">
-          VikaFilms
+          <Link
+            href="/contact"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              fontFamily: "var(--font-geist), monospace",
+              fontSize: "9px",
+              letterSpacing: "0.28em",
+              textTransform: "uppercase",
+              color: "#fff",
+              textDecoration: "none",
+              borderBottom: `1px solid ${service.accentLine}66`,
+              paddingBottom: "3px",
+              transition: "border-color 0.2s",
+            }}
+          >
+            {service.cta}
+            <span style={{ fontSize: "12px" }}>→</span>
+          </Link>
         </div>
-        <div className="flex gap-12 font-body-md text-on-tertiary-container">
-          <a className="hover:text-primary transition-all" href="#">
-            Privacy
-          </a>
-          <a className="hover:text-primary transition-all" href="#">
-            Terms
-          </a>
-          <a className="hover:text-primary transition-all" href="#">
-            Legal
-          </a>
-        </div>
-        <div className="mt-8 font-body-md text-[16px] leading-[1.6] text-[#e5e2e1] opacity-40">
-          &copy; 2025 VikaFilms. All Rights Reserved.
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }
 
+// ─── Page ──────────────────────────────────────────────────────────────────────
+export default function ServicesPage() {
+  const [heroVisible, setHeroVisible] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
+  useEffect(() => {
+    const t = setTimeout(() => setHeroVisible(true), 120);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Scroll reveal
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).classList.add("is-visible");
+            obs.unobserve(e.target);
+          }
+        }),
+      { threshold: 0.08 }
+    );
+    document.querySelectorAll(".cinema-reveal").forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      style={{
+        backgroundColor: "#060606",
+        color: "#e2e2e2",
+        overflowX: "hidden",
+      }}
+    >
+      {/* ══ HERO ════════════════════════════════════════════════════════════ */}
+      <section
+        style={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          padding: "0 8vw clamp(60px, 9vh, 110px)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Film grain */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: 0.04,
+            backgroundImage:
+              "url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>\")",
+            backgroundRepeat: "repeat",
+            backgroundSize: "200px",
+            pointerEvents: "none",
+            mixBlendMode: "overlay",
+          }}
+        />
+
+        {/* VF watermark */}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "-1vw",
+            transform: `translateY(calc(-50% + ${scrollY * 0.04}px))`,
+            fontFamily: "var(--font-playfair), serif",
+            fontSize: "clamp(180px, 32vw, 480px)",
+            fontWeight: 700,
+            color: "rgba(255,255,255,0.016)",
+            letterSpacing: "-0.05em",
+            lineHeight: 1,
+            userSelect: "none",
+            pointerEvents: "none",
+          }}
+        >
+          VF
+        </div>
+
+        {/* Top-right year tag */}
+        <div
+          style={{
+            position: "absolute",
+            top: "clamp(100px, 14vw, 140px)",
+            right: "8vw",
+            textAlign: "right",
+            opacity: heroVisible ? 1 : 0,
+            transform: heroVisible ? "translateY(0)" : "translateY(12px)",
+            transition: "all 1s cubic-bezier(0.16,1,0.3,1) 0.7s",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-geist), monospace",
+              fontSize: "9px",
+              letterSpacing: "0.3em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.18)",
+            }}
+          >
+            2026 · Studio Services
+          </span>
+        </div>
+
+        {/* Overline */}
+        <span
+          style={{
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "10px",
+            letterSpacing: "0.55em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.28)",
+            display: "block",
+            marginBottom: "28px",
+            opacity: heroVisible ? 1 : 0,
+            transform: heroVisible ? "translateY(0)" : "translateY(18px)",
+            transition: "all 1.1s cubic-bezier(0.16,1,0.3,1) 0.1s",
+          }}
+        >
+          What We Do
+        </span>
+
+        {/* Headline */}
+        <h1
+          style={{
+            fontFamily: "var(--font-playfair), serif",
+            fontSize: "clamp(48px, 8vw, 120px)",
+            fontWeight: 700,
+            lineHeight: 0.92,
+            letterSpacing: "-0.03em",
+            color: "#fff",
+            marginBottom: "clamp(28px, 4vw, 52px)",
+            opacity: heroVisible ? 1 : 0,
+            transform: heroVisible ? "translateY(0)" : "translateY(50px)",
+            transition: "all 1.3s cubic-bezier(0.16,1,0.3,1) 0.2s",
+          }}
+        >
+          Full-Service
+          <br />
+          Visual{" "}
+          <em style={{ fontStyle: "italic", color: "rgba(226,226,226,0.32)" }}>
+            Production.
+          </em>
+        </h1>
+
+        {/* Bottom row */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            flexWrap: "wrap",
+            gap: "24px",
+            opacity: heroVisible ? 1 : 0,
+            transform: heroVisible ? "translateY(0)" : "translateY(24px)",
+            transition: "all 1s cubic-bezier(0.16,1,0.3,1) 0.55s",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-hanken), sans-serif",
+              fontSize: "clamp(13px, 1.4vw, 17px)",
+              lineHeight: 1.7,
+              color: "rgba(196,199,200,0.42)",
+              maxWidth: "380px",
+              margin: 0,
+            }}
+          >
+            From a single product shot to a complete cinematic brand film — everything your brand needs, under one roof.
+          </p>
+
+          {/* Scroll cue */}
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", flexShrink: 0 }}>
+            <span
+              style={{
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "9px",
+                letterSpacing: "0.38em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.18)",
+              }}
+            >
+              Scroll to explore
+            </span>
+            <div
+              style={{
+                width: "48px",
+                height: "1px",
+                background: "linear-gradient(to right, rgba(255,255,255,0.35), transparent)",
+                animation: "svcScrollCue 2s ease-in-out infinite",
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ══ SERVICES CARDS ════════════════════════════════════════════════════ */}
+      <section
+        style={{
+          padding: "clamp(80px, 10vw, 130px) 8vw",
+          borderTop: "1px solid rgba(255,255,255,0.05)",
+          backgroundColor: "#080808",
+        }}
+      >
+        {/* Header */}
+        <div
+          className="cinema-reveal"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            flexWrap: "wrap",
+            gap: "24px",
+            marginBottom: "clamp(48px, 6vw, 80px)",
+            paddingBottom: "clamp(28px, 3.5vw, 44px)",
+            borderBottom: "1px solid rgba(255,255,255,0.06)",
+          }}
+        >
+          <div>
+            <span
+              style={{
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "9px",
+                letterSpacing: "0.5em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.2)",
+                display: "block",
+                marginBottom: "14px",
+              }}
+            >
+              Three Disciplines
+            </span>
+            <h2
+              style={{
+                fontFamily: "var(--font-playfair), serif",
+                fontSize: "clamp(34px, 5vw, 68px)",
+                fontWeight: 700,
+                lineHeight: 0.95,
+                letterSpacing: "-0.03em",
+                color: "#fff",
+                margin: 0,
+              }}
+            >
+              The{" "}
+              <em style={{ fontStyle: "italic", color: "rgba(255,255,255,0.28)" }}>
+                Services.
+              </em>
+            </h2>
+          </div>
+          <p
+            style={{
+              fontFamily: "var(--font-hanken), sans-serif",
+              fontSize: "clamp(13px, 1.3vw, 16px)",
+              lineHeight: 1.72,
+              color: "rgba(196,199,200,0.38)",
+              maxWidth: "320px",
+              margin: 0,
+              textAlign: "right",
+            }}
+          >
+            Hover any service to explore what&apos;s included.
+          </p>
+        </div>
+
+        {/* 3-column card grid */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "clamp(10px, 1.5vw, 18px)",
+          }}
+          className="services-grid"
+        >
+          {SERVICES.map((s, i) => (
+            <ServiceCard key={s.num} service={s} index={i} />
+          ))}
+        </div>
+      </section>
+
+      {/* ══ PROCESS ══════════════════════════════════════════════════════════ */}
+      <section
+        style={{
+          padding: "clamp(80px, 10vw, 130px) 8vw",
+          backgroundColor: "#0a0a0a",
+          borderTop: "1px solid rgba(255,255,255,0.04)",
+        }}
+      >
+        {/* Header */}
+        <div
+          className="cinema-reveal"
+          style={{ marginBottom: "clamp(56px, 7vw, 96px)" }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-geist), monospace",
+              fontSize: "9px",
+              letterSpacing: "0.5em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.2)",
+              display: "block",
+              marginBottom: "14px",
+            }}
+          >
+            How We Work
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-playfair), serif",
+              fontSize: "clamp(34px, 5vw, 68px)",
+              fontWeight: 700,
+              lineHeight: 0.95,
+              letterSpacing: "-0.03em",
+              color: "#fff",
+              margin: 0,
+            }}
+          >
+            The{" "}
+            <em style={{ fontStyle: "italic", color: "rgba(255,255,255,0.28)" }}>
+              Process.
+            </em>
+          </h2>
+        </div>
+
+        {/* Steps */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+          {PROCESS.map((step, i) => (
+            <div
+              key={step.num}
+              className="cinema-reveal"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "clamp(32px, 5vw, 80px)",
+                alignItems: "center",
+                padding: "clamp(40px, 5vw, 64px) 0",
+                borderBottom:
+                  i < PROCESS.length - 1
+                    ? "1px solid rgba(255,255,255,0.05)"
+                    : "none",
+                transitionDelay: `${i * 100}ms`,
+              }}
+            >
+              {/* Left: number + title */}
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "clamp(24px, 3vw, 48px)" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-playfair), serif",
+                    fontSize: "clamp(72px, 10vw, 140px)",
+                    fontWeight: 700,
+                    lineHeight: 0.85,
+                    color: "rgba(255,255,255,0.04)",
+                    flexShrink: 0,
+                    userSelect: "none",
+                  }}
+                >
+                  {step.num}
+                </span>
+                <div style={{ paddingTop: "clamp(10px, 1.5vw, 18px)" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-geist), monospace",
+                      fontSize: "8px",
+                      letterSpacing: "0.4em",
+                      textTransform: "uppercase",
+                      color: "rgba(255,255,255,0.18)",
+                      display: "block",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    Step {step.num}
+                  </span>
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-playfair), serif",
+                      fontSize: "clamp(24px, 2.8vw, 38px)",
+                      fontWeight: 700,
+                      lineHeight: 1.1,
+                      letterSpacing: "-0.02em",
+                      color: "#fff",
+                      margin: 0,
+                    }}
+                  >
+                    {step.title}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Right: description */}
+              <p
+                style={{
+                  fontFamily: "var(--font-hanken), sans-serif",
+                  fontSize: "clamp(14px, 1.4vw, 17px)",
+                  lineHeight: 1.75,
+                  color: "rgba(196,199,200,0.48)",
+                  margin: 0,
+                }}
+              >
+                {step.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══ IMAGE SHOWCASE ════════════════════════════════════════════════════ */}
+      <section
+        style={{
+          display: "grid",
+          gridTemplateColumns: "2fr 1fr",
+          gap: "2px",
+          borderTop: "1px solid rgba(255,255,255,0.04)",
+        }}
+        className="showcase-grid"
+      >
+        {/* Large: BMW */}
+        <div style={{ position: "relative", aspectRatio: "16/9", overflow: "hidden" }}>
+          <Image
+            src={img("DSC01346-Enhanced-NR_lf6bof")}
+            alt="BMW Z4 commercial shoot"
+            fill
+            sizes="(max-width:768px) 100vw, 66vw"
+            style={{ objectFit: "cover" }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)",
+            }}
+          />
+          <div style={{ position: "absolute", bottom: "clamp(20px, 3vw, 36px)", left: "clamp(20px, 3vw, 36px)" }}>
+            <span
+              style={{
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "8px",
+                letterSpacing: "0.4em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.35)",
+                display: "block",
+                marginBottom: "8px",
+              }}
+            >
+              Commercial · Automotive · 2026
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-playfair), serif",
+                fontSize: "clamp(20px, 2.5vw, 34px)",
+                fontWeight: 700,
+                color: "#fff",
+                lineHeight: 1.1,
+              }}
+            >
+              BMW Z4
+            </span>
+          </div>
+        </div>
+
+        {/* Small: DJI */}
+        <div style={{ position: "relative", overflow: "hidden" }}>
+          <Image
+            src={img("DSC09376_lygk5q")}
+            alt="DJI Gimbal product shoot"
+            fill
+            sizes="(max-width:768px) 100vw, 33vw"
+            style={{ objectFit: "cover" }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, transparent 55%)",
+            }}
+          />
+          <div style={{ position: "absolute", bottom: "clamp(20px, 3vw, 36px)", left: "clamp(20px, 3vw, 36px)" }}>
+            <span
+              style={{
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "8px",
+                letterSpacing: "0.4em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.35)",
+                display: "block",
+                marginBottom: "8px",
+              }}
+            >
+              Commercial · Product · 2026
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-playfair), serif",
+                fontSize: "clamp(20px, 2.5vw, 34px)",
+                fontWeight: 700,
+                color: "#fff",
+                lineHeight: 1.1,
+              }}
+            >
+              DJI Gimbal
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ CAPABILITIES STRIP ════════════════════════════════════════════════ */}
+      <section
+        style={{
+          backgroundColor: "#070707",
+          borderTop: "1px solid rgba(255,255,255,0.04)",
+          padding: "clamp(48px, 6vw, 80px) 8vw",
+        }}
+      >
+        <div
+          className="cinema-reveal"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(160px,1fr))",
+            gap: "clamp(32px, 4vw, 56px)",
+            textAlign: "center",
+          }}
+        >
+          {[
+            { value: "8K", label: "Full-Frame Sensors" },
+            { value: "4K", label: "Cinema Glass" },
+            { value: "DaVinci", label: "Colour Grading" },
+            { value: "Arri", label: "Lighting Arrays" },
+          ].map((c, i) => (
+            <div key={c.label} style={{ transitionDelay: `${i * 70}ms` }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-playfair), serif",
+                  fontSize: "clamp(32px, 4vw, 52px)",
+                  fontWeight: 700,
+                  lineHeight: 1,
+                  background: "linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.3) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  marginBottom: "10px",
+                }}
+              >
+                {c.value}
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-geist), monospace",
+                  fontSize: "8.5px",
+                  letterSpacing: "0.3em",
+                  textTransform: "uppercase",
+                  color: "rgba(196,199,200,0.28)",
+                }}
+              >
+                {c.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══ CTA ════════════════════════════════════════════════════════════════ */}
+      <section
+        style={{
+          padding: "clamp(80px, 10vw, 140px) 8vw",
+          textAlign: "center",
+          backgroundColor: "#0a0a0a",
+          borderTop: "1px solid rgba(255,255,255,0.05)",
+        }}
+      >
+        <div className="cinema-reveal">
+          <p
+            style={{
+              fontFamily: "var(--font-geist), monospace",
+              fontSize: "9px",
+              letterSpacing: "0.45em",
+              textTransform: "uppercase",
+              color: "rgba(196,199,200,0.28)",
+              marginBottom: "20px",
+            }}
+          >
+            Ready to start?
+          </p>
+          <h2
+            style={{
+              fontFamily: "var(--font-playfair), serif",
+              fontSize: "clamp(34px, 5vw, 70px)",
+              fontWeight: 700,
+              color: "#fff",
+              lineHeight: 1.05,
+              letterSpacing: "-0.03em",
+              marginBottom: "clamp(32px, 4vw, 52px)",
+            }}
+          >
+            Let&apos;s create your
+            <br />
+            <em style={{ fontStyle: "italic", color: "rgba(255,255,255,0.32)" }}>
+              next visual story.
+            </em>
+          </h2>
+          <div
+            style={{
+              display: "flex",
+              gap: "14px",
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <Link
+              href="/contact"
+              style={{
+                backgroundColor: "#ffffff",
+                color: "#0a0a0a",
+                padding: "14px 44px",
+                borderRadius: "9999px",
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "11px",
+                fontWeight: 700,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+                display: "inline-block",
+                transition: "transform 0.3s, box-shadow 0.3s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1.05)";
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow =
+                  "0 0 32px rgba(255,255,255,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)";
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
+              }}
+            >
+              Book A Shoot
+            </Link>
+            <Link
+              href="/portfolio"
+              style={{
+                backgroundColor: "transparent",
+                color: "rgba(255,255,255,0.55)",
+                padding: "14px 44px",
+                borderRadius: "9999px",
+                border: "1px solid rgba(255,255,255,0.14)",
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "11px",
+                fontWeight: 500,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+                display: "inline-block",
+                transition: "border-color 0.25s, color 0.25s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.borderColor =
+                  "rgba(255,255,255,0.4)";
+                (e.currentTarget as HTMLAnchorElement).style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.borderColor =
+                  "rgba(255,255,255,0.14)";
+                (e.currentTarget as HTMLAnchorElement).style.color =
+                  "rgba(255,255,255,0.55)";
+              }}
+            >
+              View Portfolio
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Page-scoped CSS ── */}
+      <style>{`
+        @keyframes svcScrollCue {
+          0%, 100% { width: 48px; opacity: 0.6; }
+          50%       { width: 72px; opacity: 1; }
+        }
+        .cinema-reveal {
+          opacity: 0;
+          transform: translateY(28px);
+          transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                      transform 0.9s cubic-bezier(0.16,1,0.3,1);
+        }
+        .cinema-reveal.is-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        @media (max-width: 768px) {
+          .services-grid { grid-template-columns: 1fr !important; }
+          .showcase-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 900px) {
+          .services-grid { grid-template-columns: 1fr 1fr !important; }
+        }
+      `}</style>
+    </div>
+  );
+}

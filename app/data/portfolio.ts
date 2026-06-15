@@ -1,55 +1,36 @@
-export type Category =
-  | "Commercial"
-  | "Cinematics"
-  | "Weddings"
-  | "Hospitality"
-  | "Medical"
-  | "Businesses";
+import { cldImage, cldVideoThumb } from "../lib/cloudinary";
 
-export const CATEGORIES: Category[] = [
-  "Commercial",
-  "Cinematics",
-  "Weddings",
-  "Hospitality",
-  "Medical",
-  "Businesses",
-];
+// ─── Categories — mirrors Cloudinary top-level folders exactly ───────────────
+export type Category = "Commercial" | "Cinematic Reels" | "Events";
 
-/** Per-category heading + sub shown in the portfolio header */
+export const CATEGORIES: Category[] = ["Commercial", "Cinematic Reels", "Events"];
+
+// ─── Per-category copy shown in the portfolio header ─────────────────────────
 export const CATEGORY_META: Record<"All" | Category, { heading: string; sub: string }> = {
   All: {
-    heading: "Commercial\nShowcase.",
-    sub: "Selected campaigns, editorial narratives, and motion stories — crafted for brands that demand attention.",
+    heading: "The\nCollection.",
+    sub: "Commercial campaigns, cinematic reels, and live event coverage — every frame crafted with intent.",
   },
   Commercial: {
-    heading: "Brand\nCampaigns.",
-    sub: "High-impact commercial photography engineered for global market leadership.",
+    heading: "Commercial\nWork.",
+    sub: "Brand photography and product campaigns for automotive, lifestyle, and business clients.",
   },
-  Cinematics: {
+  "Cinematic Reels": {
     heading: "Cinematic\nReels.",
-    sub: "Brand films, wedding cinematics, and motion narratives — crafted frame by frame.",
+    sub: "Motion narratives, brand films, and short-form cinematics crafted frame by frame.",
   },
-  Weddings: {
-    heading: "Wedding\nFilms.",
-    sub: "Timeless documentation of your most important day — photo and cinema combined.",
-  },
-  Hospitality: {
-    heading: "Space\nNarratives.",
-    sub: "Interior stories and lifestyle photography for the hospitality sector.",
-  },
-  Medical: {
-    heading: "Clinical\nPrecision.",
-    sub: "Healthcare facility and medical brand photography that communicates trust.",
-  },
-  Businesses: {
-    heading: "Corporate\nPortraits.",
-    sub: "Professional imagery that elevates your team, office, and company identity.",
+  Events: {
+    heading: "Event\nCoverage.",
+    sub: "Live event photography and videography — corporate, cultural, and social occasions.",
   },
 };
 
+// ─── Project interface ────────────────────────────────────────────────────────
 export interface Project {
   id: number;
   category: Category;
+  /** "Cars" | "Products" — only used within Commercial */
+  subcategory?: string;
   title: string;
   description: string;
   src: string;
@@ -57,90 +38,56 @@ export interface Project {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ADD YOUR SHOOTS HERE
+// HOW TO ADD A NEW PROJECT
 //
-// src → files inside public/portfolio/<category>/
-// e.g. src: "/portfolio/weddings/sharma-wedding-01.jpg"
+// 1. Upload the image to Cloudinary under the correct folder:
+//      VikaFilms/Commercial/Cars/    ← car / automotive shoots
+//      VikaFilms/Commercial/Products/ ← product / brand shoots
+//      VikaFilms/Cinematic Reels/     ← video stills / film frames
+//      VikaFilms/Events/              ← event photos
 //
-// featured: true → appears in the "Selected Work" grid on the home page
+// 2. Copy the filename (without extension) from Cloudinary Media Library.
+//
+// 3. Add an entry below using cldImage("VikaFilms/FolderName/your-filename")
+//    Cloudinary auto-serves WebP, compresses quality, and CDN-delivers it.
 // ─────────────────────────────────────────────────────────────────────────────
 export const PROJECTS: Project[] = [
-  // ── Commercial ─────────────────────────────────────────────────────────────
-  {
-    id: 1,
-    category: "Commercial",
-    title: "BMW Series",
-    description: "Luxury automotive campaign",
-    src: "/portfolio/commercial/BMW-01.jpg",
-    featured: true,
-  },
-  {
-    id: 2,
-    category: "Commercial",
-    title: "Dental Studio",
-    description: "Clinical precision · healthcare brand",
-    src: "/portfolio/commercial/DentalChair-01.jpeg",
-    featured: true,
-  },
 
-  // ── Cinematics ───────────────────────────────────────────────────────────────
-  // Add your cinematic / video stills below:
-  // {
-  //   id: 5,
-  //   category: "Cinematics",
-  //   title: "Product Launch Film",
-  //   description: "Brand reveal · 4K cinematic",
-  //   src: "/portfolio/cinematics/launch-film-01.jpg",
-  //   featured: true,
-  // },
+  // ── Commercial → Cars (BMW Z4 shoot) ─────────────────────────────────────
+  { id: 1,  category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01488_qx6a1n"),              featured: true  },
+  { id: 2,  category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01456_ygk3gp"),              featured: false },
+  { id: 3,  category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01395-Enhanced-NR_el2qlx"), featured: false },
+  { id: 4,  category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01346-Enhanced-NR_lf6bof"), featured: false },
+  { id: 5,  category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01326_fedjlf"),              featured: false },
+  { id: 6,  category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01538_nj4cxb"),              featured: false },
+  { id: 7,  category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01487_gybjpg"),              featured: false },
+  { id: 8,  category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01458_a4sarj"),              featured: false },
+  { id: 9,  category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01400_onzzlx"),              featured: false },
+  { id: 10, category: "Commercial", subcategory: "Cars",     title: "BMW Z4", description: "BMW Z4 · Automotive commercial", src: cldImage("DSC01390_ttilio"),              featured: false },
 
-  // ── Weddings ────────────────────────────────────────────────────────────────
-  // Add your wedding images below:
-  // {
-  //   id: 10,
-  //   category: "Weddings",
-  //   title: "Sharma Wedding",
-  //   description: "Luxury destination wedding · Udaipur",
-  //   src: "/portfolio/weddings/sharma-wedding-01.jpg",
-  //   featured: true,
-  // },
+  // ── Commercial → Products (DJI Gimbal shoot) ──────────────────────────────
+  { id: 11, category: "Commercial", subcategory: "Products", title: "DJI Gimbal", description: "DJI Gimbal · Product commercial", src: cldImage("DSC09380_aonznj"),              featured: true  },
+  { id: 12, category: "Commercial", subcategory: "Products", title: "DJI Gimbal", description: "DJI Gimbal · Product commercial", src: cldImage("DSC09376_lygk5q"),              featured: false },
+  { id: 13, category: "Commercial", subcategory: "Products", title: "DJI Gimbal", description: "DJI Gimbal · Product commercial", src: cldImage("DSC09383_sdvqan"),              featured: false },
+  { id: 14, category: "Commercial", subcategory: "Products", title: "DJI Gimbal", description: "DJI Gimbal · Product commercial", src: cldImage("DSC09373_uxxdtu"),              featured: false },
+  { id: 15, category: "Commercial", subcategory: "Products", title: "DJI Gimbal", description: "DJI Gimbal · Product commercial", src: cldImage("DSC09374_sxovrw"),              featured: false },
+  { id: 16, category: "Commercial", subcategory: "Products", title: "DJI Gimbal", description: "DJI Gimbal · Product commercial", src: cldImage("DSC09378_ryczhm"),              featured: false },
 
-  // ── Hospitality ─────────────────────────────────────────────────────────────
-  // Add your hospitality images below:
-  // {
-  //   id: 20,
-  //   category: "Hospitality",
-  //   title: "The Grand Oberoi",
-  //   description: "Resort interiors & lifestyle",
-  //   src: "/portfolio/hospitality/oberoi-01.jpg",
-  // },
+  // ── Cinematic Reels ── (add when uploaded to VikaFilms/Cinematic Reels/)
+  // { id: 20, category: "Cinematic Reels", title: "...", description: "...", src: cldImage("VikaFilms/Cinematic Reels/filename"), featured: true },
 
-  // ── Medical ─────────────────────────────────────────────────────────────────
-  // Add your medical images below:
-  // {
-  //   id: 30,
-  //   category: "Medical",
-  //   title: "Apollo Clinics",
-  //   description: "Healthcare facility brand shoot",
-  //   src: "/portfolio/medical/apollo-01.jpg",
-  // },
-
-  // ── Businesses ──────────────────────────────────────────────────────────────
-  // Add your business/corporate images below:
-  // {
-  //   id: 40,
-  //   category: "Businesses",
-  //   title: "The Leadership Team",
-  //   description: "Executive portraits · corporate identity",
-  //   src: "/portfolio/businesses/corp-01.jpg",
-  // },
+  // ── Events ── (add when uploaded to VikaFilms/Events/)
+  // { id: 30, category: "Events", title: "...", description: "...", src: cldImage("VikaFilms/Events/filename"), featured: true },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // REELS — video showcase cards
 //
-// Add your Vimeo / YouTube embed URLs in videoUrl.
-// thumbnail → any image from public/ (used as poster before play)
+// Upload video to: VikaFilms/Cinematic Reels/ on Cloudinary
+// thumbnail → use cldVideoThumb("VikaFilms/Cinematic Reels/filename")
+//             Cloudinary auto-generates a still from the 3-second mark
+// videoUrl  → YouTube unlisted embed URL  OR  Cloudinary video URL
+//             e.g. "https://www.youtube.com/embed/VIDEO_ID"
 // ─────────────────────────────────────────────────────────────────────────────
 export interface Reel {
   id: number;
@@ -148,20 +95,38 @@ export interface Reel {
   category: string;
   duration: string;
   thumbnail: string;
-  videoUrl?: string; // YouTube / Vimeo embed src (optional — shows placeholder if empty)
+  videoUrl?: string;
 }
 
 export const REELS: Reel[] = [
-  { id: 1,  title: "BMW Motion Series",        category: "Automotive Film",  duration: "2:34", thumbnail: "/portfolio/commercial/BMW-01.jpg",        videoUrl: "" },
-  { id: 2,  title: "Healthcare Brand Story",   category: "Corporate Film",   duration: "3:12", thumbnail: "/portfolio/commercial/DentalChair-01.jpeg", videoUrl: "" },
-  { id: 3,  title: "Wedding Cinematic Reel",   category: "Wedding Film",     duration: "4:05", thumbnail: "/portfolio/commercial/BMW-01.jpg",        videoUrl: "" },
-  { id: 4,  title: "Luxury Hotel Walkthrough", category: "Hospitality Film", duration: "2:48", thumbnail: "/portfolio/commercial/DentalChair-01.jpeg", videoUrl: "" },
-  { id: 5,  title: "Product Launch Film",      category: "Commercial Film",  duration: "1:55", thumbnail: "/portfolio/commercial/BMW-01.jpg",        videoUrl: "" },
-  { id: 6,  title: "Corporate Identity Reel",  category: "Brand Film",       duration: "3:30", thumbnail: "/portfolio/commercial/DentalChair-01.jpeg", videoUrl: "" },
-  { id: 7,  title: "Medical Facility Tour",    category: "Healthcare Film",  duration: "2:15", thumbnail: "/portfolio/commercial/BMW-01.jpg",        videoUrl: "" },
-  { id: 8,  title: "Annual Event Highlights",  category: "Event Film",       duration: "5:10", thumbnail: "/portfolio/commercial/DentalChair-01.jpeg", videoUrl: "" },
-  { id: 9,  title: "Startup Brand Story",      category: "Brand Film",       duration: "2:58", thumbnail: "/portfolio/commercial/BMW-01.jpg",        videoUrl: "" },
-  { id: 10, title: "Restaurant Ambience Film", category: "Hospitality Film", duration: "1:30", thumbnail: "/portfolio/commercial/DentalChair-01.jpeg", videoUrl: "" },
-  { id: 11, title: "Executive Portrait Film",  category: "Corporate Film",   duration: "2:20", thumbnail: "/portfolio/commercial/BMW-01.jpg",        videoUrl: "" },
-  { id: 12, title: "Fashion Editorial Cuts",   category: "Editorial Film",   duration: "1:42", thumbnail: "/portfolio/commercial/DentalChair-01.jpeg", videoUrl: "" },
+
+  // ── Cinematic Reels ────────────────────────────────────────────────────────
+  // {
+  //   id: 1,
+  //   title: "Brand Launch Film",
+  //   category: "Cinematic",
+  //   duration: "2:34",
+  //   thumbnail: cldVideoThumb("VikaFilms/Cinematic Reels/brand-launch"),
+  //   videoUrl: "https://www.youtube.com/embed/YOUR_VIDEO_ID",
+  // },
+
+  // ── Commercial ────────────────────────────────────────────────────────────
+  // {
+  //   id: 2,
+  //   title: "BMW Motion Series",
+  //   category: "Automotive",
+  //   duration: "1:50",
+  //   thumbnail: cldVideoThumb("VikaFilms/Commercial/Cars/bmw-motion"),
+  //   videoUrl: "https://www.youtube.com/embed/YOUR_VIDEO_ID",
+  // },
+
+  // ── Events ────────────────────────────────────────────────────────────────
+  // {
+  //   id: 3,
+  //   title: "Annual Gala Highlights",
+  //   category: "Event Film",
+  //   duration: "3:20",
+  //   thumbnail: cldVideoThumb("VikaFilms/Events/gala-2024"),
+  //   videoUrl: "https://www.youtube.com/embed/YOUR_VIDEO_ID",
+  // },
 ];

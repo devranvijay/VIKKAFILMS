@@ -37,16 +37,16 @@ export default function FloatingContact() {
           display: "flex",
           alignItems: "center",
           gap: "10px",
-          backgroundColor: waHovered ? "rgba(37,211,102,0.15)" : "rgba(19,19,19,0.75)",
+          backgroundColor: waHovered ? "#25D366" : "rgba(19,19,19,0.75)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          border: waHovered ? "1px solid rgba(37,211,102,0.5)" : "1px solid rgba(37,211,102,0.2)",
+          border: "1px solid rgba(37,211,102,0.35)",
           borderRadius: "9999px",
           padding: "11px",
-          color: "#25D366",
+          color: waHovered ? "#fff" : "#25D366",
           textDecoration: "none",
           boxShadow: waHovered
-            ? "0 0 20px rgba(37,211,102,0.2), 0 4px 20px rgba(0,0,0,0.5)"
+            ? "0 0 24px rgba(37,211,102,0.45), 0 4px 20px rgba(0,0,0,0.5)"
             : "0 4px 20px rgba(0,0,0,0.5)",
           transition: "all 0.25s cubic-bezier(0.23,1,0.32,1)",
           transform: waHovered ? "scale(1.08)" : "scale(1)",
@@ -67,7 +67,7 @@ export default function FloatingContact() {
         {/* Label — only visible on hover */}
         <span
           style={{
-            fontFamily: "var(--font-geist), monospace",
+            fontFamily: "var(--font-sans), monospace",
             fontSize: "11px",
             fontWeight: 600,
             letterSpacing: "0.05em",
@@ -128,7 +128,7 @@ export default function FloatingContact() {
         {/* Label */}
         <span
           style={{
-            fontFamily: "var(--font-geist), monospace",
+            fontFamily: "var(--font-sans), monospace",
             fontSize: "11px",
             fontWeight: 600,
             letterSpacing: "0.05em",

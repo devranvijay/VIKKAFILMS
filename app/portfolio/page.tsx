@@ -9,6 +9,7 @@ import {
   REELS,
   type Category,
   type Reel,
+  type Project,
 } from "../data/portfolio";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -27,6 +28,8 @@ interface CinemaProject {
   src: string;
   accentColor: string;
   tags: string[];
+  /** If set, "View Project" opens the gallery of all PROJECTS with this title */
+  galleryTitle?: string;
 }
 
 // ─── Featured project data (richer metadata for scenes + modal) ───────────────
@@ -34,7 +37,7 @@ const CINEMA_PROJECTS: CinemaProject[] = [
   {
     id: 1,
     num: "01",
-    category: "Automotive · Commercial",
+    category: "Commercial · Cars",
     title: "BMW Series",
     subtitle: "The Art of Motion",
     year: "2024",
@@ -44,20 +47,22 @@ const CINEMA_PROJECTS: CinemaProject[] = [
     src: "/portfolio/commercial/BMW-01.jpg",
     accentColor: "#c8b89a",
     tags: ["8K Full-Frame", "Anamorphic Glass", "Studio Lighting"],
+    galleryTitle: "BMW Z4",
   },
   {
     id: 2,
     num: "02",
-    category: "Healthcare · Brand",
-    title: "Dental Studio",
-    subtitle: "Clinical Elegance",
+    category: "Commercial · Products",
+    title: "DJI Gimbal",
+    subtitle: "Engineering in Frame",
     year: "2024",
-    client: "Dental Studio Clinic",
+    client: "DJI India",
     description:
-      "Where clinical precision meets visual storytelling. A comprehensive brand identity campaign that transforms a modern healthcare space into an architectural and human narrative.",
-    src: "/portfolio/commercial/DentalChair-01.jpeg",
-    accentColor: "#7eb8c9",
-    tags: ["Brand Identity", "Architecture", "Healthcare"],
+      "Precision meets artistry. A product cinematics campaign built around DJI's stabilisation technology — every angle crafted to reveal the engineering detail and tactile quality of the hardware.",
+    src: "https://res.cloudinary.com/deheutmgd/image/upload/q_auto,f_auto/DSC09380_aonznj",
+    accentColor: "#a0b4c8",
+    tags: ["Product Cinema", "Macro Detail", "Studio Light"],
+    galleryTitle: "DJI Gimbal",
   },
 ];
 
@@ -227,6 +232,919 @@ function HScrollCard({
         </span>
       </div>
     </div>
+  );
+}
+
+// ─── MarqueeCard ─────────────────────────────────────────────────────────────
+function MarqueeCard({
+  reel,
+  variant,
+  index,
+}: {
+  reel: Reel;
+  variant: "portrait" | "landscape";
+  index: number;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  const isPortrait = variant === "portrait";
+  const w = isPortrait
+    ? "clamp(190px, 16vw, 270px)"
+    : "clamp(300px, 26vw, 440px)";
+  const h = isPortrait
+    ? "clamp(280px, 24vw, 380px)"
+    : "clamp(180px, 15vw, 250px)";
+
+  return (
+    <div
+      style={{
+        flexShrink: 0,
+        width: w,
+        height: h,
+        borderRadius: "10px",
+        overflow: "hidden",
+        position: "relative",
+        cursor: "pointer",
+        marginRight: "clamp(12px, 1.4vw, 18px)",
+        border: "1px solid rgba(255,255,255,0.06)",
+        transform: hovered ? "scale(1.04)" : "scale(1)",
+        transition:
+          "transform 0.6s cubic-bezier(0.23,1,0.32,1), border-color 0.3s",
+        borderColor: hovered
+          ? "rgba(255,255,255,0.18)"
+          : "rgba(255,255,255,0.06)",
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <Image
+        src={reel.thumbnail}
+        alt={reel.title}
+        fill
+        sizes="440px"
+        style={{
+          objectFit: "cover",
+          transform: hovered ? "scale(1.1)" : "scale(1)",
+          transition: "transform 1.2s cubic-bezier(0.23,1,0.32,1)",
+        }}
+      />
+
+      {/* Base scrim */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.18) 50%, transparent 100%)",
+          opacity: hovered ? 1 : 0.68,
+          transition: "opacity 0.45s",
+        }}
+      />
+
+      {/* Top badges */}
+      <div
+        style={{
+          position: "absolute",
+          top: 14,
+          left: 14,
+          right: 14,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "8px",
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.55)",
+            background: "rgba(0,0,0,0.45)",
+            backdropFilter: "blur(10px)",
+            padding: "4px 10px",
+            borderRadius: "9999px",
+            border: "1px solid rgba(255,255,255,0.09)",
+          }}
+        >
+          {reel.category}
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "8px",
+            letterSpacing: "0.1em",
+            color: "rgba(255,255,255,0.35)",
+            background: "rgba(0,0,0,0.38)",
+            backdropFilter: "blur(10px)",
+            padding: "4px 10px",
+            borderRadius: "9999px",
+            border: "1px solid rgba(255,255,255,0.06)",
+          }}
+        >
+          {reel.duration}
+        </span>
+      </div>
+
+      {/* Bottom info */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: "18px 18px 18px",
+          transform: hovered ? "translateY(0)" : "translateY(6px)",
+          opacity: hovered ? 1 : 0.72,
+          transition:
+            "transform 0.45s cubic-bezier(0.23,1,0.32,1), opacity 0.45s",
+        }}
+      >
+        <span
+          style={{
+            display: "block",
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "8px",
+            letterSpacing: "0.38em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.3)",
+            marginBottom: "5px",
+          }}
+        >
+          {String((index % 12) + 1).padStart(2, "0")}
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--font-playfair), serif",
+            fontSize: "clamp(13px, 1.4vw, 17px)",
+            fontWeight: 500,
+            color: "#fff",
+            lineHeight: 1.2,
+          }}
+        >
+          {reel.title}
+        </span>
+      </div>
+
+      {/* Play ring on hover */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: `translate(-50%,-50%) scale(${hovered ? 1 : 0.7})`,
+          opacity: hovered ? 1 : 0,
+          transition: "all 0.4s cubic-bezier(0.23,1,0.32,1)",
+          width: "46px",
+          height: "46px",
+          borderRadius: "50%",
+          border: "1px solid rgba(255,255,255,0.28)",
+          background: "rgba(255,255,255,0.07)",
+          backdropFilter: "blur(12px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          pointerEvents: "none",
+        }}
+      >
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="#fff"
+          style={{ marginLeft: "2px" }}
+        >
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ─── Aspect ratio per index — creates editorial masonry rhythm ───────────────
+function cardAspectRatio(i: number): string {
+  const cycle = ["4/3", "3/4", "4/3", "16/9", "3/4", "4/3", "1/1"];
+  return cycle[i % cycle.length];
+}
+
+// ─── CollectionCard (Apple Photos-style grid card) ───────────────────────────
+function CollectionCard({
+  project,
+  index,
+  onOpen,
+}: {
+  project: Project;
+  index: number;
+  onOpen: () => void;
+}) {
+  const shots = PROJECTS.filter((p) => p.title === project.title);
+  const [loaded, setLoaded] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onClick={onOpen}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: "relative",
+        aspectRatio: "4/3",
+        borderRadius: "18px",
+        overflow: "hidden",
+        cursor: "pointer",
+        opacity: 0,
+        transform: "scale(0.95) translateY(12px)",
+        animation: `collectionReveal 0.55s cubic-bezier(0.34,1.2,0.64,1) ${0.08 + index * 0.07}s forwards`,
+      }}
+    >
+      {/* Skeleton */}
+      {!loaded && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "#1c1c1e",
+            borderRadius: "18px",
+            overflow: "hidden",
+          }}
+        >
+          <div className="sk-shimmer" />
+        </div>
+      )}
+
+      {/* Photo */}
+      <Image
+        src={project.src}
+        alt={project.title}
+        fill
+        sizes="(max-width:640px) calc(100vw - 48px),(max-width:900px) calc(50vw - 32px),calc(33vw - 28px)"
+        style={{
+          objectFit: "cover",
+          opacity: loaded ? 1 : 0,
+          transform: hovered ? "scale(1.07)" : "scale(1)",
+          transition: "transform 0.65s cubic-bezier(0.23,1,0.32,1), opacity 0.5s ease",
+        }}
+        onLoad={() => setLoaded(true)}
+      />
+
+      {/* Permanent gradient */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(160deg, rgba(0,0,0,0.44) 0%, rgba(0,0,0,0.04) 42%, rgba(0,0,0,0.6) 100%)",
+          transition: "opacity 0.4s",
+          opacity: hovered ? 0.9 : 1,
+        }}
+      />
+
+      {/* Top-left label — Apple Photos title style */}
+      <div
+        style={{
+          position: "absolute",
+          top: "clamp(12px, 1.4vw, 18px)",
+          left: "clamp(12px, 1.4vw, 18px)",
+          zIndex: 2,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "var(--font-geist), system-ui, sans-serif",
+            fontSize: "clamp(13px, 1.3vw, 16px)",
+            fontWeight: 700,
+            color: "#fff",
+            textShadow: "0 1px 8px rgba(0,0,0,0.55)",
+            letterSpacing: "-0.015em",
+            lineHeight: 1.2,
+          }}
+        >
+          {project.title}
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "9px",
+            color: "rgba(255,255,255,0.48)",
+            letterSpacing: "0.1em",
+            marginTop: "3px",
+          }}
+        >
+          {project.subcategory ?? project.category}
+        </div>
+      </div>
+
+      {/* Bottom-right frame count badge */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "clamp(10px, 1.2vw, 14px)",
+          right: "clamp(10px, 1.2vw, 14px)",
+          backgroundColor: "rgba(0,0,0,0.52)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: "9999px",
+          padding: "4px 11px",
+          fontFamily: "var(--font-geist), monospace",
+          fontSize: "8.5px",
+          letterSpacing: "0.2em",
+          color: "rgba(255,255,255,0.65)",
+          zIndex: 2,
+          transition: "opacity 0.3s",
+          opacity: hovered ? 0.5 : 1,
+        }}
+      >
+        {shots.length} frames
+      </div>
+
+      {/* Hover CTA */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          opacity: hovered ? 1 : 0,
+          transition: "opacity 0.3s ease",
+          zIndex: 3,
+        }}
+      >
+        <span
+          style={{
+            backgroundColor: "rgba(255,255,255,0.14)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.24)",
+            borderRadius: "9999px",
+            padding: "10px 28px",
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "9px",
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            color: "#fff",
+            transform: hovered ? "scale(1)" : "scale(0.88)",
+            transition: "transform 0.35s cubic-bezier(0.34,1.56,0.64,1)",
+          }}
+        >
+          View Gallery
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ─── ProjectGalleryModal ──────────────────────────────────────────────────────
+function ProjectGalleryModal({
+  title,
+  onClose,
+}: {
+  title: string;
+  onClose: () => void;
+}) {
+  const [visible, setVisible] = useState(false);
+  const shots = PROJECTS.filter((p) => p.title === title);
+  const hero = shots.find((p) => p.featured) ?? shots[0];
+
+  useEffect(() => {
+    const t = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(t);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  const close = () => {
+    setVisible(false);
+    setTimeout(onClose, 480);
+  };
+
+  if (!hero || shots.length === 0) return null;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 1000,
+        backgroundColor: "#050505",
+        overflowY: "auto",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "scale(1)" : "scale(1.04)",
+        transition:
+          "opacity 0.48s cubic-bezier(0.16,1,0.3,1), transform 0.48s cubic-bezier(0.16,1,0.3,1)",
+      }}
+    >
+      {/* ── Back button ── */}
+      <button
+        onClick={close}
+        style={{
+          position: "fixed",
+          top: "28px",
+          left: "5vw",
+          zIndex: 10,
+          backgroundColor: "rgba(5,5,5,0.75)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid rgba(255,255,255,0.12)",
+          borderRadius: "9999px",
+          padding: "10px 24px",
+          color: "#c4c7c8",
+          fontFamily: "var(--font-geist), monospace",
+          fontSize: "10px",
+          letterSpacing: "0.25em",
+          textTransform: "uppercase",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          transition: "border-color 0.22s, color 0.22s",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLElement).style.borderColor =
+            "rgba(255,255,255,0.4)";
+          (e.currentTarget as HTMLElement).style.color = "#fff";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.borderColor =
+            "rgba(255,255,255,0.12)";
+          (e.currentTarget as HTMLElement).style.color = "#c4c7c8";
+        }}
+      >
+        ← Back to Work
+      </button>
+
+      {/* ── Full-viewport hero ── */}
+      <div style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+        <Image
+          src={hero.src}
+          alt={title}
+          fill
+          priority
+          sizes="100vw"
+          style={{
+            objectFit: "cover",
+            transform: visible ? "scale(1)" : "scale(1.1)",
+            transition: "transform 1.6s cubic-bezier(0.16,1,0.3,1) 0.08s",
+          }}
+        />
+
+        {/* Gradient overlays */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.28) 52%, rgba(0,0,0,0.18) 100%)",
+          }}
+        />
+        <div
+          style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.12)" }}
+        />
+
+        {/* ── Title block ── */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "clamp(56px, 8vh, 100px)",
+            left: "8vw",
+            right: "8vw",
+          }}
+        >
+          {/* Overline */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "20px",
+              marginBottom: "18px",
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(16px)",
+              transition: "all 1s cubic-bezier(0.16,1,0.3,1) 0.3s",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "9px",
+                letterSpacing: "0.45em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.45)",
+              }}
+            >
+              {hero.category} · {hero.subcategory} · 2026
+            </span>
+            <span
+              style={{
+                width: "32px",
+                height: "1px",
+                background: "rgba(255,255,255,0.2)",
+                display: "block",
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "9px",
+                letterSpacing: "0.3em",
+                color: "rgba(255,255,255,0.22)",
+              }}
+            >
+              {shots.length} shots
+            </span>
+          </div>
+
+          {/* Main title */}
+          <h1
+            style={{
+              fontFamily: "var(--font-playfair), serif",
+              fontSize: "clamp(60px, 10vw, 140px)",
+              fontWeight: 700,
+              lineHeight: 0.88,
+              letterSpacing: "-0.03em",
+              color: "#fff",
+              margin: "0 0 clamp(24px, 3.5vh, 44px)",
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(44px)",
+              transition: "all 1.2s cubic-bezier(0.16,1,0.3,1) 0.42s",
+            }}
+          >
+            {title}
+          </h1>
+
+          {/* Scroll cue */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "14px",
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(12px)",
+              transition: "all 1s cubic-bezier(0.16,1,0.3,1) 0.62s",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "8px",
+                letterSpacing: "0.4em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.2)",
+              }}
+            >
+              Scroll to explore all shots
+            </span>
+            <div
+              style={{
+                width: "44px",
+                height: "1px",
+                background:
+                  "linear-gradient(to right, rgba(255,255,255,0.28), transparent)",
+                animation: "filmScrollCue 2s ease-in-out infinite",
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Big shot counter watermark */}
+        <div
+          style={{
+            position: "absolute",
+            top: "clamp(80px, 11vh, 130px)",
+            right: "8vw",
+            textAlign: "right",
+            opacity: visible ? 1 : 0,
+            transition: "opacity 1s ease 0.5s",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-playfair), serif",
+              fontSize: "clamp(64px, 10vw, 130px)",
+              fontWeight: 700,
+              color: "rgba(255,255,255,0.05)",
+              lineHeight: 1,
+              display: "block",
+            }}
+          >
+            {String(shots.length).padStart(2, "0")}
+          </span>
+          <span
+            style={{
+              fontFamily: "var(--font-geist), monospace",
+              fontSize: "8px",
+              letterSpacing: "0.35em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.14)",
+            }}
+          >
+            frames
+          </span>
+        </div>
+      </div>
+
+      {/* ── Gallery ── */}
+      <div
+        style={{
+          backgroundColor: "#0a0a0a",
+          padding: "clamp(56px, 7vw, 96px) 8vw",
+        }}
+      >
+        {/* Section label */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingBottom: "clamp(24px, 3vw, 36px)",
+            marginBottom: "clamp(24px, 3vw, 36px)",
+            borderBottom: "1px solid rgba(255,255,255,0.06)",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-geist), monospace",
+              fontSize: "9px",
+              letterSpacing: "0.45em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.2)",
+            }}
+          >
+            All Frames
+          </span>
+          <span
+            style={{
+              fontFamily: "var(--font-geist), monospace",
+              fontSize: "9px",
+              letterSpacing: "0.25em",
+              color: "rgba(255,255,255,0.1)",
+            }}
+          >
+            {shots.length} images
+          </span>
+        </div>
+
+        {/* Grid */}
+        <div className="gallery-modal-grid">
+          {shots.map((shot, i) => (
+            <div
+              key={shot.id}
+              className="gallery-modal-card"
+              style={{
+                position: "relative",
+                aspectRatio: cardAspectRatio(i),
+                borderRadius: "8px",
+                overflow: "hidden",
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(28px)",
+                transition: `opacity 0.7s ease ${0.3 + i * 0.07}s, transform 0.75s cubic-bezier(0.23,1,0.32,1) ${0.3 + i * 0.07}s`,
+              }}
+            >
+              <Image
+                src={shot.src}
+                alt={title}
+                fill
+                sizes="(max-width:640px) 100vw, (max-width:900px) 50vw, 33vw"
+                style={{
+                  objectFit: "cover",
+                  transition: "transform 0.8s cubic-bezier(0.23,1,0.32,1)",
+                }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLElement).style.transform =
+                    "scale(1.06)")
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLElement).style.transform = "scale(1)")
+                }
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CTA ── */}
+      <div
+        style={{
+          backgroundColor: "#050505",
+          borderTop: "1px solid rgba(255,255,255,0.04)",
+          padding: "clamp(56px, 7vw, 96px) 8vw",
+          textAlign: "center",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "9px",
+            letterSpacing: "0.45em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.2)",
+            marginBottom: "18px",
+          }}
+        >
+          Want a similar shoot?
+        </p>
+        <h3
+          style={{
+            fontFamily: "var(--font-playfair), serif",
+            fontSize: "clamp(28px, 3.5vw, 48px)",
+            fontWeight: 700,
+            color: "#fff",
+            lineHeight: 1.1,
+            marginBottom: "32px",
+          }}
+        >
+          Let&apos;s create your
+          <br />
+          <em style={{ fontStyle: "italic", color: "rgba(255,255,255,0.35)" }}>
+            next visual story.
+          </em>
+        </h3>
+        <Link
+          href="/contact"
+          onClick={close}
+          style={{
+            backgroundColor: "#ffffff",
+            color: "#131313",
+            padding: "14px 40px",
+            borderRadius: "9999px",
+            fontFamily: "var(--font-geist), monospace",
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            textDecoration: "none",
+            display: "inline-block",
+            transition: "transform 0.3s, box-shadow 0.3s",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLAnchorElement).style.transform =
+              "scale(1.05)";
+            (e.currentTarget as HTMLAnchorElement).style.boxShadow =
+              "0 0 28px rgba(255,255,255,0.2)";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)";
+            (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
+          }}
+        >
+          Book A Shoot
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// ─── MarqueeShowcase ──────────────────────────────────────────────────────────
+function MarqueeShowcase() {
+  // Duplicate for seamless loop — -50% translateX returns to origin
+  const row1 = [...REELS, ...REELS];
+  // Row 2: offset starting point for visual variety
+  const row2src = [...REELS.slice(4), ...REELS.slice(0, 4)];
+  const row2 = [...row2src, ...row2src];
+
+  const MASK =
+    "linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%)";
+
+  return (
+    <section
+      style={{
+        backgroundColor: "#070707",
+        padding: "clamp(72px, 9vw, 120px) 0",
+        borderTop: "1px solid rgba(255,255,255,0.04)",
+        overflow: "hidden",
+      }}
+    >
+      {/* Section header */}
+      <div
+        className="cinema-reveal"
+        style={{
+          paddingLeft: "8vw",
+          paddingRight: "8vw",
+          marginBottom: "clamp(44px, 5.5vw, 76px)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          flexWrap: "wrap",
+          gap: "20px",
+        }}
+      >
+        <div>
+          <span
+            style={{
+              fontFamily: "var(--font-geist), monospace",
+              fontSize: "9px",
+              letterSpacing: "0.45em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.22)",
+              display: "block",
+              marginBottom: "12px",
+            }}
+          >
+            Project Reel
+          </span>
+          <h2
+            style={{
+              fontFamily: "var(--font-playfair), serif",
+              fontSize: "clamp(28px, 3.8vw, 52px)",
+              fontWeight: 700,
+              lineHeight: 1.05,
+              letterSpacing: "-0.025em",
+              color: "#fff",
+              margin: 0,
+            }}
+          >
+            Every frame,{" "}
+            <em
+              style={{
+                fontStyle: "italic",
+                color: "rgba(255,255,255,0.35)",
+              }}
+            >
+              intentional.
+            </em>
+          </h2>
+        </div>
+        <p
+          style={{
+            fontFamily: "var(--font-hanken), sans-serif",
+            fontSize: "clamp(13px, 1.3vw, 15px)",
+            lineHeight: 1.75,
+            color: "rgba(196,199,200,0.38)",
+            maxWidth: "320px",
+            margin: 0,
+          }}
+        >
+          A continuous reel of commercial shoots, brand films, and cinematic
+          narratives — in motion.
+        </p>
+      </div>
+
+      {/* Row 1 — portrait cards scrolling left */}
+      <div
+        style={{
+          maskImage: MASK,
+          WebkitMaskImage: MASK,
+          overflow: "hidden",
+          marginBottom: "clamp(12px, 1.4vw, 18px)",
+        }}
+      >
+        <div
+          className="marquee-left"
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            width: "max-content",
+            animation: "marqueeLeft 38s linear infinite",
+            willChange: "transform",
+          }}
+        >
+          {row1.map((reel, i) => (
+            <MarqueeCard
+              key={`r1-${i}`}
+              reel={reel}
+              variant="portrait"
+              index={i}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Row 2 — landscape cards scrolling right */}
+      <div
+        style={{
+          maskImage: MASK,
+          WebkitMaskImage: MASK,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          className="marquee-right"
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            width: "max-content",
+            animation: "marqueeRight 28s linear infinite",
+            willChange: "transform",
+          }}
+        >
+          {row2.map((reel, i) => (
+            <MarqueeCard
+              key={`r2-${i}`}
+              reel={reel}
+              variant="landscape"
+              index={i}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -712,6 +1630,7 @@ export default function PortfolioPage() {
   const [activeFilter, setActiveFilter] = useState<Filter>("All");
   const [selectedProject, setSelectedProject] =
     useState<CinemaProject | null>(null);
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [heroVisible, setHeroVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
@@ -784,11 +1703,12 @@ export default function PortfolioPage() {
 
   // ── Body scroll lock when modal open
   useEffect(() => {
-    document.body.style.overflow = selectedProject ? "hidden" : "";
+    document.body.style.overflow =
+      selectedProject || selectedTitle ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedProject]);
+  }, [selectedProject, selectedTitle]);
 
   const filtered =
     activeFilter === "All"
@@ -803,6 +1723,12 @@ export default function PortfolioPage() {
         <ProjectModal
           project={selectedProject}
           onClose={() => setSelectedProject(null)}
+        />
+      )}
+      {selectedTitle && (
+        <ProjectGalleryModal
+          title={selectedTitle}
+          onClose={() => setSelectedTitle(null)}
         />
       )}
 
@@ -1006,7 +1932,11 @@ export default function PortfolioPage() {
                 overflow: "hidden",
                 cursor: "pointer",
               }}
-              onClick={() => setSelectedProject(project)}
+              onClick={() =>
+                project.galleryTitle
+                  ? setSelectedTitle(project.galleryTitle)
+                  : setSelectedProject(project)
+              }
             >
               {/* Parallax image */}
               <div
@@ -1194,8 +2124,11 @@ export default function PortfolioPage() {
           );
         })}
 
+        {/* ══ INFINITE MARQUEE SHOWCASE ════════════════════════════════ */}
+        {REELS.length > 0 && <MarqueeShowcase />}
+
         {/* ══ HORIZONTAL SCROLL SHOWCASE ═══════════════════════════════ */}
-        <div ref={hScrollSectionRef} style={{ position: "relative" }}>
+        {REELS.length > 0 && <div ref={hScrollSectionRef} style={{ position: "relative" }}>
           <div
             style={{
               position: "sticky",
@@ -1300,309 +2233,199 @@ export default function PortfolioPage() {
               ))}
             </div>
           </div>
-        </div>
+        </div>}
 
-        {/* ══ NETFLIX-STYLE CATEGORY FILTER + GRID ═════════════════════ */}
+        {/* ══ COLLECTION — Apple Photos-style ═══════════════════════════ */}
         <section
           style={{
-            backgroundColor: "#0e0e0e",
-            padding: "clamp(72px, 9vw, 130px) 0",
+            padding: "clamp(80px, 10vw, 130px) 0 clamp(90px, 11vw, 150px)",
             borderTop: "1px solid rgba(255,255,255,0.04)",
+            position: "relative",
+            background:
+              "radial-gradient(ellipse 90% 60% at 28% 55%, rgba(55,55,80,0.06) 0%, transparent 65%), #080808",
           }}
         >
-          {/* Section heading */}
+          {/* ── Section header ── */}
           <div
             className="cinema-reveal"
             style={{
-              paddingLeft: "8vw",
-              paddingRight: "8vw",
-              marginBottom: "clamp(32px, 4vw, 56px)",
+              padding: "0 8vw",
+              marginBottom: "clamp(32px, 4vw, 52px)",
             }}
           >
-            <span
+            <div
               style={{
-                fontFamily: "var(--font-geist), monospace",
-                fontSize: "9px",
-                letterSpacing: "0.45em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.22)",
-                display: "block",
-                marginBottom: "14px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "clamp(10px, 1.5vw, 16px)",
               }}
             >
-              Browse by Category
-            </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-geist), monospace",
+                  fontSize: "9px",
+                  letterSpacing: "0.5em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.2)",
+                }}
+              >
+                Selected Work
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-geist), monospace",
+                  fontSize: "9px",
+                  letterSpacing: "0.3em",
+                  color: "rgba(255,255,255,0.1)",
+                }}
+              >
+                {Array.from(new Map(filtered.map((p) => [p.title, p])).values()).length} collections
+              </span>
+            </div>
             <h2
               style={{
                 fontFamily: "var(--font-playfair), serif",
-                fontSize: "clamp(32px, 4vw, 56px)",
+                fontSize: "clamp(34px, 5vw, 72px)",
                 fontWeight: 700,
-                lineHeight: 1.05,
-                letterSpacing: "-0.02em",
+                lineHeight: 0.95,
+                letterSpacing: "-0.03em",
                 color: "#fff",
                 margin: 0,
               }}
             >
-              The Work.
+              The{" "}
+              <em style={{ fontStyle: "italic", color: "rgba(255,255,255,0.28)" }}>
+                Collection.
+              </em>
             </h2>
           </div>
 
-          {/* Filter tabs */}
-          <div
-            className="hide-scrollbar"
-            style={{
-              display: "flex",
-              paddingLeft: "8vw",
-              paddingRight: "8vw",
-              paddingBottom: "clamp(36px, 4vw, 56px)",
-              overflowX: "auto",
-              gap: 0,
-            }}
-          >
-            {FILTER_TABS.map((tab) => {
-              const isActive = activeFilter === tab;
-              const count =
-                tab === "All"
-                  ? PROJECTS.length
-                  : PROJECTS.filter((p) => p.category === tab).length;
-              return (
-                <button
-                  key={tab}
-                  onClick={() => setActiveFilter(tab)}
-                  style={{
-                    position: "relative",
-                    padding: "10px 0",
-                    marginRight: "clamp(20px, 3.5vw, 44px)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    fontFamily: "var(--font-geist), monospace",
-                    fontSize: isActive ? "13px" : "11px",
-                    letterSpacing: "0.22em",
-                    textTransform: "uppercase",
-                    color: isActive
-                      ? "#ffffff"
-                      : "rgba(255,255,255,0.28)",
-                    transition: "color 0.3s ease, font-size 0.2s ease",
-                    whiteSpace: "nowrap",
-                    flexShrink: 0,
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive)
-                      (e.currentTarget as HTMLElement).style.color =
-                        "rgba(255,255,255,0.62)";
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive)
-                      (e.currentTarget as HTMLElement).style.color =
-                        "rgba(255,255,255,0.28)";
-                  }}
-                >
-                  {tab}
-                  {count > 0 && (
-                    <sup
+          {/* ── Floating macOS-style panel ── */}
+          <div style={{ padding: "0 8vw" }}>
+            <div
+              style={{
+                backgroundColor: "rgba(16,16,18,0.95)",
+                borderRadius: "28px",
+                border: "1px solid rgba(255,255,255,0.07)",
+                boxShadow:
+                  "0 60px 180px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.05) inset, 0 -1px 0 rgba(0,0,0,0.4) inset",
+                overflow: "hidden",
+                position: "relative",
+              }}
+            >
+              {/* Inner padding + grid */}
+              <div
+                style={{
+                  padding: "clamp(10px, 1.2vw, 16px)",
+                  paddingBottom: "clamp(68px, 8vw, 84px)",
+                }}
+              >
+                {/* Empty state */}
+                {filtered.length === 0 ? (
+                  <div
+                    style={{
+                      minHeight: "320px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "14px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-playfair), serif",
+                        fontSize: "clamp(56px, 9vw, 110px)",
+                        color: "rgba(255,255,255,0.025)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      Soon
+                    </span>
+                    <p
                       style={{
                         fontFamily: "var(--font-geist), monospace",
-                        fontSize: "7px",
-                        opacity: 0.45,
-                        marginLeft: "3px",
+                        fontSize: "9px",
+                        letterSpacing: "0.32em",
+                        textTransform: "uppercase",
+                        color: "rgba(196,199,200,0.14)",
                       }}
                     >
-                      {count}
-                    </sup>
-                  )}
-                  {/* Active underline indicator */}
-                  <span
-                    style={{
-                      position: "absolute",
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: "1px",
-                      backgroundColor: "#ffffff",
-                      transform: isActive ? "scaleX(1)" : "scaleX(0)",
-                      transformOrigin: "left center",
-                      transition:
-                        "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
-                    }}
-                  />
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Grid */}
-          <div
-            style={{ paddingLeft: "8vw", paddingRight: "8vw" }}
-          >
-            {filtered.length === 0 ? (
-              /* Empty state */
-              <div
-                style={{
-                  minHeight: "52vh",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "20px",
-                  border: "1px dashed rgba(255,255,255,0.07)",
-                  borderRadius: "16px",
-                  padding: "80px 40px",
-                  textAlign: "center",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-playfair), serif",
-                    fontSize: "clamp(28px, 4vw, 48px)",
-                    color: "rgba(255,255,255,0.05)",
-                  }}
-                >
-                  Coming Soon
-                </span>
-                <p
-                  style={{
-                    fontFamily: "var(--font-geist), monospace",
-                    fontSize: "9px",
-                    letterSpacing: "0.3em",
-                    textTransform: "uppercase",
-                    color: "rgba(196,199,200,0.18)",
-                    maxWidth: "300px",
-                    lineHeight: 1.8,
-                  }}
-                >
-                  Drop images in{" "}
-                  <code
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      padding: "2px 6px",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    public/portfolio/{activeFilter.toLowerCase()}/
-                  </code>
-                  {" "}and register them in{" "}
-                  <code
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      padding: "2px 6px",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    app/data/portfolio.ts
-                  </code>
-                </p>
-              </div>
-            ) : (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns:
-                    "repeat(auto-fill, minmax(min(100%, 340px), 1fr))",
-                  gap: "clamp(10px, 1.8vw, 20px)",
-                }}
-              >
-                {filtered.map((project, i) => {
-                  const cinema = CINEMA_PROJECTS.find(
-                    (c) => c.title === project.title
-                  );
-                  return (
-                    <div
-                      key={project.id}
-                      className="cinema-reveal"
-                      style={{
-                        position: "relative",
-                        aspectRatio: i % 3 === 1 ? "3/4" : "4/3",
-                        borderRadius: "10px",
-                        overflow: "hidden",
-                        cursor: cinema ? "pointer" : "default",
-                        border: "1px solid rgba(255,255,255,0.06)",
-                        transition: "border-color 0.3s",
-                      }}
-                      onMouseEnter={(e) => {
-                        const img = e.currentTarget.querySelector(
-                          ".ci-img"
-                        ) as HTMLElement | null;
-                        if (img) img.style.transform = "scale(1.06)";
-                        const ov = e.currentTarget.querySelector(
-                          ".ci-ov"
-                        ) as HTMLElement | null;
-                        if (ov) ov.style.opacity = "1";
-                        e.currentTarget.style.borderColor =
-                          "rgba(255,255,255,0.16)";
-                      }}
-                      onMouseLeave={(e) => {
-                        const img = e.currentTarget.querySelector(
-                          ".ci-img"
-                        ) as HTMLElement | null;
-                        if (img) img.style.transform = "scale(1)";
-                        const ov = e.currentTarget.querySelector(
-                          ".ci-ov"
-                        ) as HTMLElement | null;
-                        if (ov) ov.style.opacity = "0";
-                        e.currentTarget.style.borderColor =
-                          "rgba(255,255,255,0.06)";
-                      }}
-                      onClick={() => cinema && setSelectedProject(cinema)}
-                    >
-                      <Image
-                        src={project.src}
-                        alt={project.title}
-                        fill
-                        sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw"
-                        className="ci-img"
-                        style={{
-                          objectFit: "cover",
-                          transition:
-                            "transform 0.8s cubic-bezier(0.23,1,0.32,1)",
-                        }}
+                      Coming Soon · Upload to Cloudinary
+                    </p>
+                  </div>
+                ) : (
+                  <div className="photos-grid">
+                    {Array.from(
+                      new Map(filtered.map((p) => [p.title, p])).values()
+                    ).map((project, i) => (
+                      <CollectionCard
+                        key={project.id}
+                        project={project}
+                        index={i}
+                        onOpen={() => setSelectedTitle(project.title)}
                       />
-                      {/* Overlay */}
-                      <div
-                        className="ci-ov"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          background:
-                            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 55%)",
-                          opacity: 0,
-                          transition: "opacity 0.4s ease",
-                          padding: "22px",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontFamily: "var(--font-geist), monospace",
-                            fontSize: "8px",
-                            letterSpacing: "0.32em",
-                            textTransform: "uppercase",
-                            color: "rgba(255,255,255,0.5)",
-                            display: "block",
-                            marginBottom: "5px",
-                          }}
-                        >
-                          {project.category}
-                        </span>
-                        <span
-                          style={{
-                            fontFamily: "var(--font-playfair), serif",
-                            fontSize: "clamp(17px, 2.2vw, 22px)",
-                            fontWeight: 500,
-                            color: "#fff",
-                            lineHeight: 1.2,
-                          }}
-                        >
-                          {project.title}
-                        </span>
-                      </div>
-                    </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* ── Bottom floating pill nav (Apple Photos-style) ── */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "clamp(14px, 2vw, 20px)",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  display: "flex",
+                  backgroundColor: "rgba(36,36,38,0.97)",
+                  backdropFilter: "blur(30px)",
+                  WebkitBackdropFilter: "blur(30px)",
+                  borderRadius: "9999px",
+                  padding: "4px",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  gap: "2px",
+                  zIndex: 4,
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.55)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {FILTER_TABS.map((tab) => {
+                  const isActive = activeFilter === tab;
+                  return (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveFilter(tab)}
+                      style={{
+                        padding: "9px clamp(14px, 2vw, 26px)",
+                        borderRadius: "9999px",
+                        border: "none",
+                        background: isActive
+                          ? "#ffffff"
+                          : "transparent",
+                        color: isActive
+                          ? "#000000"
+                          : "rgba(255,255,255,0.42)",
+                        fontFamily: "var(--font-geist), system-ui, sans-serif",
+                        fontSize: "clamp(10px, 1vw, 12px)",
+                        fontWeight: isActive ? 700 : 500,
+                        letterSpacing: "0.04em",
+                        cursor: "pointer",
+                        transition:
+                          "background 0.25s cubic-bezier(0.34,1.56,0.64,1), color 0.2s, transform 0.25s cubic-bezier(0.34,1.56,0.64,1)",
+                        transform: isActive ? "scale(1.03)" : "scale(1)",
+                        boxShadow: isActive
+                          ? "0 2px 12px rgba(255,255,255,0.18)"
+                          : "none",
+                      }}
+                    >
+                      {tab}
+                    </button>
                   );
                 })}
               </div>
-            )}
+            </div>
           </div>
         </section>
 
@@ -1810,7 +2633,7 @@ export default function PortfolioPage() {
               letterSpacing: "0.1em",
             }}
           >
-            © 2025 VikaFilms. All Rights Reserved.
+            © 2024 VikaFilms. All Rights Reserved.
           </span>
         </footer>
 
@@ -1819,6 +2642,95 @@ export default function PortfolioPage() {
           @keyframes headingSwap {
             from { opacity: 0; transform: translateY(12px); }
             to   { opacity: 1; transform: translateY(0); }
+          }
+          /* ── Skeleton shimmer ── */
+          @keyframes skShimmer {
+            0%   { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+          .sk-shimmer {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+              90deg,
+              transparent 0%,
+              rgba(255,255,255,0.055) 50%,
+              transparent 100%
+            );
+            animation: skShimmer 1.6s ease-in-out infinite;
+          }
+
+          /* ── Masonry grid ── */
+          .masonry-grid {
+            column-count: 3;
+            column-gap: clamp(8px, 1.2vw, 14px);
+          }
+          .masonry-card {
+            display: block;
+            break-inside: avoid;
+            margin-bottom: clamp(8px, 1.2vw, 14px);
+          }
+          @media (max-width: 900px) {
+            .masonry-grid { column-count: 2; }
+          }
+          @media (max-width: 540px) {
+            .masonry-grid { column-count: 1; }
+          }
+
+          /* ── Apple Photos collection grid ── */
+          .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+          }
+          @media (max-width: 900px) {
+            .photos-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+          }
+          @media (max-width: 540px) {
+            .photos-grid { grid-template-columns: 1fr; gap: 8px; }
+          }
+          @keyframes collectionReveal {
+            to { opacity: 1; transform: scale(1) translateY(0); }
+          }
+
+          /* ── Gallery modal grid ── */
+          .gallery-modal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+          }
+          @media (max-width: 900px) {
+            .gallery-modal-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+          }
+          @media (max-width: 540px) {
+            .gallery-modal-grid { grid-template-columns: 1fr; gap: 8px; }
+          }
+          .gallery-modal-card img {
+            transition: transform 0.8s cubic-bezier(0.23,1,0.32,1) !important;
+          }
+          .gallery-modal-card:hover img {
+            transform: scale(1.06) !important;
+          }
+
+          @keyframes filmScrollCue {
+            0%, 100% { width: 44px; opacity: 0.6; }
+            50%       { width: 70px; opacity: 1;   }
+          }
+
+          @keyframes marqueeLeft {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+          }
+          @keyframes marqueeRight {
+            from { transform: translateX(-50%); }
+            to   { transform: translateX(0); }
+          }
+          .marquee-left:hover,
+          .marquee-right:hover {
+            animation-play-state: paused;
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .marquee-left, .marquee-right { animation: none; }
           }
           @media (max-width: 768px) {
             .modal-story-grid { grid-template-columns: 1fr !important; }

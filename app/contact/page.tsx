@@ -77,7 +77,7 @@ export default function ContactPage() {
   return (
     <div
       style={{
-        fontFamily: "var(--font-hanken), sans-serif",
+        fontFamily: "var(--font-sans), sans-serif",
         color: "#e2e2e2",
         backgroundColor: "#0e0e0e",
         minHeight: "100vh",
@@ -123,7 +123,7 @@ export default function ContactPage() {
         >
           <span
             style={{
-              fontFamily: "var(--font-geist), monospace",
+              fontFamily: "var(--font-sans), monospace",
               fontSize: "11px",
               letterSpacing: "0.35em",
               fontWeight: 600,
@@ -137,7 +137,7 @@ export default function ContactPage() {
           </span>
           <h1
             style={{
-              fontFamily: "var(--font-playfair), serif",
+              fontFamily: "var(--font-display), serif",
               fontSize: "clamp(42px, 6vw, 84px)",
               lineHeight: 1.05,
               letterSpacing: "-0.02em",
@@ -150,14 +150,14 @@ export default function ContactPage() {
           </h1>
           <p
             style={{
-              fontFamily: "var(--font-hanken), sans-serif",
+              fontFamily: "var(--font-sans), sans-serif",
               fontSize: "18px",
               lineHeight: 1.65,
               color: "#8e9192",
               maxWidth: "480px",
             }}
           >
-            Tell us about your vision. Every inquiry is answered within 24 hours.
+            Tell us about your vision. We respond within 24 hours to every serious inquiry.
           </p>
         </section>
 
@@ -203,7 +203,7 @@ export default function ContactPage() {
                 <div key={label} style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <span
                     style={{
-                      fontFamily: "var(--font-geist), monospace",
+                      fontFamily: "var(--font-sans), monospace",
                       fontSize: "10px",
                       letterSpacing: "0.3em",
                       fontWeight: 600,
@@ -222,7 +222,7 @@ export default function ContactPage() {
                   <a
                     href={href}
                     style={{
-                      fontFamily: "var(--font-hanken), sans-serif",
+                      fontFamily: "var(--font-sans), sans-serif",
                       fontSize: "16px",
                       color: "#c4c7c8",
                       textDecoration: "none",
@@ -244,7 +244,7 @@ export default function ContactPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <span
                 style={{
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "10px",
                   letterSpacing: "0.3em",
                   fontWeight: 600,
@@ -271,7 +271,7 @@ export default function ContactPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    fontFamily: "var(--font-geist), monospace",
+                    fontFamily: "var(--font-sans), monospace",
                     fontSize: "12px",
                     letterSpacing: "0.2em",
                     fontWeight: 600,
@@ -288,17 +288,6 @@ export default function ContactPage() {
               ))}
             </div>
 
-            {/* Availability note */}
-            <p style={{
-              fontFamily: "var(--font-hanken), sans-serif",
-              fontSize: "13px",
-              lineHeight: 1.7,
-              color: "rgba(196,199,200,0.35)",
-            }}>
-              Available across India &amp; international.<br />
-              Every inquiry answered within 24 hours.
-            </p>
-
             {/* Divider */}
             <div style={{ height: "1px", background: "rgba(255,255,255,0.06)" }} />
 
@@ -306,7 +295,7 @@ export default function ContactPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <span
                 style={{
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "10px",
                   letterSpacing: "0.3em",
                   fontWeight: 600,
@@ -325,7 +314,7 @@ export default function ContactPage() {
                   key={href}
                   href={href}
                   style={{
-                    fontFamily: "var(--font-geist), monospace",
+                    fontFamily: "var(--font-sans), monospace",
                     fontSize: "12px",
                     letterSpacing: "0.2em",
                     fontWeight: 600,
@@ -334,15 +323,8 @@ export default function ContactPage() {
                     textTransform: "uppercase",
                     transition: "color 0.2s",
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#ffffff";
-                    e.currentTarget.style.borderBottomColor = "rgba(255,255,255,0.4)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "#8e9192";
-                    e.currentTarget.style.borderBottomColor = "transparent";
-                  }}
-                  className="also-explore-link"
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "#8e9192")}
                 >
                   {label} →
                 </Link>
@@ -356,8 +338,6 @@ export default function ContactPage() {
             style={{
               padding: "clamp(24px, 4vw, 56px) clamp(20px, 3.5vw, 48px)",
               borderRadius: "8px",
-              border: "1px solid rgba(255,255,255,0.09)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 24px 64px rgba(0,0,0,0.4)",
             }}
           >
             {submitted ? (
@@ -381,7 +361,7 @@ export default function ContactPage() {
                 </span>
                 <h2
                   style={{
-                    fontFamily: "var(--font-playfair), serif",
+                    fontFamily: "var(--font-display), serif",
                     fontSize: "36px",
                     fontWeight: 500,
                     color: "#ffffff",
@@ -391,7 +371,7 @@ export default function ContactPage() {
                 </h2>
                 <p
                   style={{
-                    fontFamily: "var(--font-hanken), sans-serif",
+                    fontFamily: "var(--font-sans), sans-serif",
                     fontSize: "16px",
                     color: "#8e9192",
                     maxWidth: "360px",
@@ -406,7 +386,7 @@ export default function ContactPage() {
                 <div style={{ marginBottom: "40px" }}>
                   <span
                     style={{
-                      fontFamily: "var(--font-geist), monospace",
+                      fontFamily: "var(--font-sans), monospace",
                       fontSize: "10px",
                       letterSpacing: "0.4em",
                       fontWeight: 600,
@@ -420,7 +400,7 @@ export default function ContactPage() {
                   </span>
                   <h2
                     style={{
-                      fontFamily: "var(--font-playfair), serif",
+                      fontFamily: "var(--font-display), serif",
                       fontSize: "32px",
                       lineHeight: 1.2,
                       fontWeight: 500,
@@ -463,7 +443,7 @@ export default function ContactPage() {
                       <label
                         htmlFor="shoot-type"
                         style={{
-                          fontFamily: "var(--font-geist), monospace",
+                          fontFamily: "var(--font-sans), monospace",
                           fontSize: "10px",
                           letterSpacing: "0.2em",
                           fontWeight: 600,
@@ -485,7 +465,7 @@ export default function ContactPage() {
                           paddingTop: "8px",
                           paddingBottom: "12px",
                           color: "#e2e2e2",
-                          fontFamily: "var(--font-hanken), sans-serif",
+                          fontFamily: "var(--font-sans), sans-serif",
                           fontSize: "15px",
                           outline: "none",
                           appearance: "none",
@@ -509,7 +489,7 @@ export default function ContactPage() {
                           Event Coverage
                         </option>
                         <option value="other" style={{ backgroundColor: "#1f1f1f" }}>
-                          Let&apos;s Talk
+                          Other
                         </option>
                       </select>
                     </div>
@@ -522,7 +502,7 @@ export default function ContactPage() {
                     <label
                       htmlFor="details"
                       style={{
-                        fontFamily: "var(--font-geist), monospace",
+                        fontFamily: "var(--font-sans), monospace",
                         fontSize: "10px",
                         letterSpacing: "0.2em",
                         fontWeight: 600,
@@ -547,7 +527,7 @@ export default function ContactPage() {
                         paddingLeft: 0,
                         paddingRight: 0,
                         color: "#e2e2e2",
-                        fontFamily: "var(--font-hanken), sans-serif",
+                        fontFamily: "var(--font-sans), sans-serif",
                         fontSize: "15px",
                         lineHeight: 1.6,
                         outline: "none",
@@ -562,7 +542,7 @@ export default function ContactPage() {
                   {/* Error message */}
                   {submitError && (
                     <p style={{
-                      fontFamily: "var(--font-geist), monospace",
+                      fontFamily: "var(--font-sans), monospace",
                       fontSize: "11px",
                       letterSpacing: "0.1em",
                       color: "#ffb4ab",
@@ -580,9 +560,9 @@ export default function ContactPage() {
                     style={{
                       width: "100%",
                       marginTop: "8px",
-                      backgroundColor: "#f2ede6",
+                      backgroundColor: "#ffffff",
                       color: "#131313",
-                      fontFamily: "var(--font-geist), monospace",
+                      fontFamily: "var(--font-sans), monospace",
                       fontSize: "11px",
                       letterSpacing: "0.3em",
                       fontWeight: 700,
@@ -626,7 +606,7 @@ export default function ContactPage() {
         >
           <span
             style={{
-              fontFamily: "var(--font-playfair), serif",
+              fontFamily: "var(--font-display), serif",
               fontSize: "20px",
               fontWeight: 700,
               color: "#ffffff",
@@ -637,13 +617,13 @@ export default function ContactPage() {
           </span>
           <span
             style={{
-              fontFamily: "var(--font-geist), monospace",
+              fontFamily: "var(--font-sans), monospace",
               fontSize: "11px",
               color: "#444748",
               letterSpacing: "0.1em",
             }}
           >
-            © 2025 VikaFilms. All Rights Reserved.
+            © 2024 VikaFilms. All Rights Reserved.
           </span>
         </footer>
       </main>
@@ -682,7 +662,7 @@ function Field({
       <label
         htmlFor={id}
         style={{
-          fontFamily: "var(--font-geist), monospace",
+          fontFamily: "var(--font-sans), monospace",
           fontSize: "10px",
           letterSpacing: "0.2em",
           fontWeight: 600,
@@ -708,7 +688,7 @@ function Field({
           paddingLeft: 0,
           paddingRight: 0,
           color: "#e2e2e2",
-          fontFamily: "var(--font-hanken), sans-serif",
+          fontFamily: "var(--font-sans), sans-serif",
           fontSize: "15px",
           outline: "none",
           boxSizing: "border-box",

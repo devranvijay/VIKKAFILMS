@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -25,14 +26,14 @@ export default function Navbar() {
 
       // Compact on scroll
       if (current > 80) {
-        nav.style.paddingTop = "10px";
-        nav.style.paddingBottom = "10px";
+        nav.style.paddingTop = "6px";
+        nav.style.paddingBottom = "6px";
         nav.style.marginTop = "12px";
         nav.style.backdropFilter = "blur(40px) saturate(200%)";
       } else {
-        nav.style.paddingTop = "16px";
-        nav.style.paddingBottom = "16px";
-        nav.style.marginTop = "24px";
+        nav.style.paddingTop = "10px";
+        nav.style.paddingBottom = "10px";
+        nav.style.marginTop = "20px";
         nav.style.backdropFilter = "blur(20px) saturate(150%)";
       }
 
@@ -66,8 +67,8 @@ export default function Navbar() {
           WebkitBackdropFilter: "blur(20px) saturate(150%)",
           border: "1px solid rgba(255,255,255,0.08)",
           borderRadius: "9999px",
-          padding: "16px 32px",
-          marginTop: "24px",
+          padding: "10px 28px",
+          marginTop: "20px",
           width: "90%",
           maxWidth: "80rem",
           boxShadow: "0 8px 32px rgba(0,0,0,0.8)",
@@ -78,16 +79,35 @@ export default function Navbar() {
         <Link
           href="/"
           style={{
-            fontFamily: "var(--font-playfair), serif",
-            fontSize: "22px",
-            fontWeight: 700,
-            color: "#ffffff",
-            letterSpacing: "-0.03em",
+            display: "flex",
+            alignItems: "center",
             textDecoration: "none",
-            lineHeight: 1,
+            flexShrink: 0,
           }}
+          aria-label="VikaFilms — Home"
         >
-          VikaFilms
+          <div
+            style={{
+              position: "relative",
+              width: "52px",
+              height: "52px",
+              flexShrink: 0,
+            }}
+          >
+            <Image
+              src="/vikafilms-logo.png"
+              alt="VikaFilms"
+              fill
+              sizes="52px"
+              priority
+              style={{
+                objectFit: "contain",
+                /* Makes the solid-black logo background invisible against
+                   the dark navbar — only the gold ring + script remain. */
+                mixBlendMode: "screen",
+              }}
+            />
+          </div>
         </Link>
 
         {/* Desktop Links */}
@@ -113,7 +133,6 @@ export default function Navbar() {
                   transition: "color 0.2s",
                   borderBottom: isActive ? "1px solid #ffffff" : "1px solid transparent",
                   paddingBottom: "2px",
-                  fontWeight: isActive ? 700 : 600,
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
                 onMouseLeave={(e) =>

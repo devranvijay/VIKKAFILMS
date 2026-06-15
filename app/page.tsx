@@ -160,7 +160,7 @@ export default function HomePage() {
   return (
     <div
       className={`text-[#e2e2e2]`}
-      style={{ fontFamily: "var(--font-hanken), sans-serif" }}
+      style={{ fontFamily: "var(--font-sans), sans-serif" }}
     >
       {/* 3D Scene Layer (Fixed) */}
       <div
@@ -298,7 +298,7 @@ export default function HomePage() {
                 style={{
                   bottom: "clamp(10px, 3vw, 24px)",
                   left: "clamp(12px, 4vw, 32px)",
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "clamp(7px, 1.2vw, 10px)",
                   color: "rgba(196, 199, 200, 0.4)",
                   letterSpacing: "0.1em",
@@ -347,7 +347,7 @@ export default function HomePage() {
               ref={heroTitleRef}
               className="opacity-0 translate-y-10 transition-all duration-1000 ease-out"
               style={{
-                fontFamily: "var(--font-playfair), serif",
+                fontFamily: "var(--font-display), serif",
                 fontSize: "clamp(48px, 6vw, 84px)",
                 lineHeight: "1.1",
                 letterSpacing: "-0.02em",
@@ -356,15 +356,15 @@ export default function HomePage() {
                 marginBottom: "24px",
               }}
             >
-              Visuals That
+              Photography That
               <br />
-              Command Attention
+              Sells Stories
             </h1>
             <p
               ref={heroSubRef}
               className="opacity-0 translate-y-5 transition-all duration-1000 ease-out"
               style={{
-                fontFamily: "var(--font-hanken), sans-serif",
+                fontFamily: "var(--font-sans), sans-serif",
                 fontSize: "18px",
                 lineHeight: "1.6",
                 letterSpacing: "0.01em",
@@ -377,7 +377,8 @@ export default function HomePage() {
                 transitionDelay: "300ms",
               }}
             >
-              Cinematic precision meets commercial strategy — for brands that refuse to be ordinary.
+              Commercial Visuals For Brands That Want Attention. We blend
+              cinematic precision with narrative depth.
             </p>
             <div
               ref={heroBtnsRef}
@@ -386,13 +387,13 @@ export default function HomePage() {
             >
               <Link
                 href="/portfolio"
-                className="magnetic-btn group relative overflow-hidden"
+                className="magnetic-btn group relative overflow-hidden glass-panel"
                 style={{
                   padding: "16px 32px",
                   borderRadius: "9999px",
-                  border: "1px solid rgba(255,255,255,0.28)",
+                  border: "1px solid rgba(255,255,255,0.1)",
                   backdropFilter: "blur(20px)",
-                  background: "rgba(255,255,255,0.06)",
+                  background: "rgba(255,255,255,0.03)",
                   cursor: "pointer",
                   transition: "all 0.3s cubic-bezier(0.23, 1, 0.32, 1)",
                   textDecoration: "none",
@@ -403,7 +404,7 @@ export default function HomePage() {
                   style={{
                     position: "relative",
                     zIndex: 10,
-                    fontFamily: "var(--font-geist), monospace",
+                    fontFamily: "var(--font-sans), monospace",
                     fontSize: "12px",
                     lineHeight: "1",
                     letterSpacing: "0.2em",
@@ -422,7 +423,7 @@ export default function HomePage() {
                   backgroundColor: "#ffffff",
                   color: "#2f3131",
                   borderRadius: "9999px",
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "12px",
                   lineHeight: "1",
                   letterSpacing: "0.2em",
@@ -456,25 +457,21 @@ export default function HomePage() {
               color: "rgba(196, 199, 200, 0.3)",
             }}
           >
-            <svg
-              className="bounce-animation"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="rgba(196,199,200,0.35)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <span
+              style={{
+                fontFamily: "var(--font-sans), monospace",
+                fontSize: "10px",
+                letterSpacing: "0.4em",
+              }}
             >
-              <path d="M6 9l6 6 6-6" />
-            </svg>
+              SCROLL TO ENTER
+            </span>
             <div
               style={{
                 width: "1px",
-                height: "40px",
+                height: "48px",
                 background:
-                  "linear-gradient(to bottom, rgba(255,255,255,0.15), transparent)",
+                  "linear-gradient(to bottom, rgba(255,255,255,0.2), transparent)",
               }}
             />
           </div>
@@ -527,7 +524,7 @@ export default function HomePage() {
               >
                 <span
                   style={{
-                    fontFamily: "var(--font-geist), monospace",
+                    fontFamily: "var(--font-sans), monospace",
                     fontSize: "12px",
                     lineHeight: "1",
                     letterSpacing: "0.2em",
@@ -542,7 +539,7 @@ export default function HomePage() {
                 </span>
                 <h3
                   style={{
-                    fontFamily: "var(--font-playfair), serif",
+                    fontFamily: "var(--font-display), serif",
                     fontSize: "clamp(24px, 5vw, 42px)",
                     lineHeight: "1.2",
                     fontWeight: 500,
@@ -583,7 +580,7 @@ export default function HomePage() {
               <div>
                 <span
                   style={{
-                    fontFamily: "var(--font-geist), monospace",
+                    fontFamily: "var(--font-sans), monospace",
                     fontSize: "11px",
                     letterSpacing: "0.35em",
                     textTransform: "uppercase",
@@ -596,7 +593,7 @@ export default function HomePage() {
                 </span>
                 <h2
                   style={{
-                    fontFamily: "var(--font-playfair), serif",
+                    fontFamily: "var(--font-display), serif",
                     fontSize: "clamp(36px,4vw,56px)",
                     fontWeight: 700,
                     lineHeight: 1.1,
@@ -613,7 +610,7 @@ export default function HomePage() {
               <Link
                 href="/portfolio"
                 style={{
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "11px",
                   letterSpacing: "0.2em",
                   textTransform: "uppercase",
@@ -708,7 +705,7 @@ export default function HomePage() {
                   >
                     <span
                       style={{
-                        fontFamily: "var(--font-geist), monospace",
+                        fontFamily: "var(--font-sans), monospace",
                         fontSize: "10px",
                         letterSpacing: "0.3em",
                         textTransform: "uppercase",
@@ -721,7 +718,7 @@ export default function HomePage() {
                     </span>
                     <span
                       style={{
-                        fontFamily: "var(--font-playfair), serif",
+                        fontFamily: "var(--font-display), serif",
                         fontSize: "22px",
                         fontWeight: 500,
                         color: "#ffffff",
@@ -891,7 +888,7 @@ export default function HomePage() {
               {/* THE FILMMAKER label */}
               <span
                 style={{
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "10px",
                   letterSpacing: "0.45em",
                   textTransform: "uppercase",
@@ -908,7 +905,7 @@ export default function HomePage() {
               {/* NAME */}
               <h2
                 style={{
-                  fontFamily: "var(--font-playfair), serif",
+                  fontFamily: "var(--font-display), serif",
                   fontSize: "clamp(52px, 9vw, 110px)",
                   fontWeight: 700,
                   lineHeight: 0.95,
@@ -937,7 +934,7 @@ export default function HomePage() {
               {/* SUBTITLE */}
               <span
                 style={{
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "11px",
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
@@ -954,7 +951,7 @@ export default function HomePage() {
               {/* BIO LINE 1 */}
               <p
                 style={{
-                  fontFamily: "var(--font-hanken), sans-serif",
+                  fontFamily: "var(--font-sans), sans-serif",
                   fontSize: "clamp(15px, 1.5vw, 18px)",
                   lineHeight: 1.8,
                   color: "rgba(255,255,255,0.68)",
@@ -972,7 +969,7 @@ export default function HomePage() {
               {/* BIO LINE 2 */}
               <p
                 style={{
-                  fontFamily: "var(--font-hanken), sans-serif",
+                  fontFamily: "var(--font-sans), sans-serif",
                   fontSize: "clamp(15px, 1.5vw, 18px)",
                   lineHeight: 1.8,
                   color: "rgba(255,255,255,0.68)",
@@ -1016,7 +1013,7 @@ export default function HomePage() {
                 />
                 <span
                   style={{
-                    fontFamily: "var(--font-geist), monospace",
+                    fontFamily: "var(--font-sans), monospace",
                     fontSize: "11px",
                     letterSpacing: "0.2em",
                     textTransform: "uppercase",
@@ -1046,7 +1043,7 @@ export default function HomePage() {
             >
               <span
                 style={{
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "9px",
                   letterSpacing: "0.35em",
                   color: "rgba(255,255,255,0.28)",
@@ -1105,7 +1102,7 @@ export default function HomePage() {
           >
             <span
               style={{
-                fontFamily: "var(--font-geist), monospace",
+                fontFamily: "var(--font-sans), monospace",
                 fontSize: "11px",
                 letterSpacing: "0.35em",
                 textTransform: "uppercase",
@@ -1118,7 +1115,7 @@ export default function HomePage() {
             </span>
             <h2
               style={{
-                fontFamily: "var(--font-playfair), serif",
+                fontFamily: "var(--font-display), serif",
                 fontSize: "clamp(40px,5vw,68px)",
                 fontWeight: 700,
                 lineHeight: 1.1,
@@ -1133,7 +1130,7 @@ export default function HomePage() {
             </h2>
             <p
               style={{
-                fontFamily: "var(--font-hanken), sans-serif",
+                fontFamily: "var(--font-sans), sans-serif",
                 fontSize: "16px",
                 lineHeight: 1.7,
                 color: "rgba(196,199,200,0.6)",
@@ -1162,7 +1159,7 @@ export default function HomePage() {
                   color: "#131313",
                   padding: "14px 36px",
                   borderRadius: "9999px",
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "11px",
                   fontWeight: 700,
                   letterSpacing: "0.2em",
@@ -1191,7 +1188,7 @@ export default function HomePage() {
                   padding: "14px 36px",
                   borderRadius: "9999px",
                   border: "1px solid rgba(255,255,255,0.15)",
-                  fontFamily: "var(--font-geist), monospace",
+                  fontFamily: "var(--font-sans), monospace",
                   fontSize: "11px",
                   fontWeight: 600,
                   letterSpacing: "0.2em",
@@ -1226,7 +1223,7 @@ export default function HomePage() {
         >
           <div
             style={{
-              fontFamily: "var(--font-playfair), serif",
+              fontFamily: "var(--font-display), serif",
               fontSize: "clamp(28px, 5vw, 42px)",
               lineHeight: "1.2",
               fontWeight: 500,
@@ -1238,7 +1235,7 @@ export default function HomePage() {
           <div
             className="flex flex-wrap justify-center gap-8"
             style={{
-              fontFamily: "var(--font-geist), monospace",
+              fontFamily: "var(--font-sans), monospace",
               fontSize: "12px",
               lineHeight: "1",
               letterSpacing: "0.2em",
@@ -1268,7 +1265,7 @@ export default function HomePage() {
           <p
             className="text-center"
             style={{
-              fontFamily: "var(--font-hanken), sans-serif",
+              fontFamily: "var(--font-sans), sans-serif",
               fontSize: "16px",
               lineHeight: "1.6",
               fontWeight: 400,
@@ -1276,7 +1273,7 @@ export default function HomePage() {
               opacity: 0.5,
             }}
           >
-            &copy; 2025 VikaFilms. All Rights Reserved.
+            &copy; 2024 VikaFilms. All Rights Reserved.
           </p>
         </footer>
       </main>

@@ -175,13 +175,6 @@ body {
   height: 100%;
 }
 
-/* ── Also Explore links ───────────────────────────────────────────── */
-.also-explore-link {
-  border-bottom: 1px solid transparent;
-  transition: color 0.2s, border-bottom-color 0.2s;
-  padding-bottom: 2px;
-}
-
 /* ── Contact page ─────────────────────────────────────────────────── */
 .floating-input:focus { border-bottom-color: #ffffff !important; }
 .floating-input:focus ~ .floating-label,
