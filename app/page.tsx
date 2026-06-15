@@ -642,15 +642,15 @@ export default function HomePage() {
             >
               {[
                 {
-                  src: "/portfolio/commercial/BMW-01.jpg",
+                  src: "https://res.cloudinary.com/deheutmgd/image/upload/q_auto,f_auto/DSC01488_qx6a1n",
                   category: "Commercial",
                   title: "BMW Series",
                   delay: "0ms",
                 },
                 {
-                  src: "/portfolio/commercial/DentalChair-01.jpeg",
+                  src: "https://res.cloudinary.com/deheutmgd/image/upload/q_auto,f_auto/DSC09380_aonznj",
                   category: "Commercial",
-                  title: "Dental Studio",
+                  title: "DJI Gimbal",
                   delay: "120ms",
                 },
               ].map((item) => (
