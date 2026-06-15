@@ -29,11 +29,11 @@ const geist = Geist({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.vikafilms.com"),
   title: {
-    default: "VikaFilms | Commercial Photographer & Cinematographer in Mumbai",
+    default: "VikaFilms | Commercial Photography, Brand Films & Product Shoots",
     template: "%s | VikaFilms",
   },
   description:
-    "VikaFilms is Mumbai's premium commercial photography and cinematography studio. We craft cinematic brand films, product campaigns, automotive shoots, corporate portraits, and editorial stories for businesses across India.",
+    "Crafting visual stories that move people. VikaFilms is Mumbai's premium commercial photography and cinematography studio — specializing in brand films, automotive campaigns, product photography, drone cinematography, corporate portraits, and creative visual storytelling for brands across India.",
   keywords: [
     "vikafilms",
     "vika films",
@@ -70,25 +70,25 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://www.vikafilms.com",
     siteName: "VikaFilms",
-    title: "VikaFilms | Commercial Photographer & Cinematographer in Mumbai",
+    title: "VikaFilms | Commercial Photography, Brand Films & Product Shoots",
     description:
-      "Mumbai's premium commercial photography and cinematography studio — brand films, product campaigns, automotive shoots & editorial stories.",
+      "Crafting visual stories that move people. Mumbai's premium commercial photography and cinematography studio — brand films, product campaigns, automotive shoots & editorial stories.",
     images: [
       {
-        url: "/portfolio/commercial/BMW-01.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "VikaFilms – Commercial Photography & Cinematography Mumbai",
+        alt: "VikaFilms – Commercial Photography & Brand Films, Mumbai",
       },
     ],
     locale: "en_IN",
   },
   twitter: {
     card: "summary_large_image",
-    title: "VikaFilms | Commercial Photographer Mumbai",
+    title: "VikaFilms | Commercial Photography, Brand Films & Product Shoots",
     description:
-      "Mumbai's premium commercial photography and cinematography studio — brand films, product campaigns & visual stories.",
-    images: ["/portfolio/commercial/BMW-01.jpg"],
+      "Crafting visual stories that move people. Mumbai's premium commercial photography and cinematography studio — brand films, product campaigns & visual stories.",
+    images: ["/opengraph-image"],
     creator: "@vikafilms",
   },
   robots: {
