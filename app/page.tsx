@@ -6,14 +6,6 @@ import Link from "next/link";
 import SoftAurora from "./components/SoftAurora";
 
 export default function HomePage() {
-  const heroTitleRef = useRef<HTMLHeadingElement>(null);
-  const heroSubRef = useRef<HTMLParagraphElement>(null);
-  const heroBtnsRef = useRef<HTMLDivElement>(null);
-  const dustFieldRef = useRef<HTMLDivElement>(null);
-  const cameraRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const tunnelStageRef = useRef<HTMLDivElement>(null);
-  const lensReflectionRef = useRef<HTMLDivElement>(null);
   const filmmakerRef = useRef<HTMLElement>(null);
   const [filmProgress, setFilmProgress] = useState(0);
 
@@ -36,102 +28,7 @@ export default function HomePage() {
     Math.max(0, Math.min(1, (filmProgress - start) / (end - start)));
 
   useEffect(() => {
-    // Intro animation
-    const timer = setTimeout(() => {
-      heroTitleRef.current?.classList.remove("opacity-0", "translate-y-10");
-      heroSubRef.current?.classList.remove("opacity-0", "translate-y-5");
-      heroBtnsRef.current?.classList.remove("opacity-0", "translate-y-5");
-    }, 500);
-
-    // Create dust particles
-    const dustField = dustFieldRef.current;
-    if (dustField) {
-      for (let i = 0; i < 100; i++) {
-        const particle = document.createElement("div");
-        particle.className = "dust-particle";
-        const size = Math.random() * 2 + 1;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.top = `${Math.random() * 100}%`;
-        particle.style.animation = `float ${Math.random() * 20 + 10}s linear infinite`;
-        dustField.appendChild(particle);
-      }
-    }
-
-    // Magnetic Buttons logic
-    const mButtons = document.querySelectorAll<HTMLElement>(".magnetic-btn");
-    const mouseMoveHandlers: Array<(e: MouseEvent) => void> = [];
-    const mouseLeaveHandlers: Array<() => void> = [];
-
-    mButtons.forEach((btn, idx) => {
-      const handleMouseMove = (e: MouseEvent) => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.05)`;
-      };
-      const handleMouseLeave = () => {
-        btn.style.transform = `translate(0px, 0px) scale(1)`;
-      };
-      mouseMoveHandlers[idx] = handleMouseMove;
-      mouseLeaveHandlers[idx] = handleMouseLeave;
-      btn.addEventListener("mousemove", handleMouseMove);
-      btn.addEventListener("mouseleave", handleMouseLeave);
-    });
-
-    // Scroll Handling
-    const labels = document.querySelectorAll<HTMLElement>(".tunnel-label");
-
-    const handleScroll = () => {
-      const scrollPos = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const scrollPercent =
-        scrollPos / (document.documentElement.scrollHeight - windowHeight);
-
-      const camera = cameraRef.current;
-      const viewport = viewportRef.current;
-      const tunnelStage = tunnelStageRef.current;
-      const lensReflection = lensReflectionRef.current;
-
-      if (!camera || !viewport || !tunnelStage || !lensReflection) return;
-
-      if (scrollPercent < 0.2) {
-        const rotation = 15 - scrollPercent * 5 * 15;
-        const tilt = 10 - scrollPercent * 5 * 10;
-        const scale = 1 + scrollPercent * 2;
-        camera.style.transform = `rotateY(${rotation}deg) rotateX(${tilt}deg)`;
-        viewport.style.transform = `scale(${scale})`;
-        viewport.style.opacity = "1";
-        tunnelStage.style.opacity = "0";
-      } else if (scrollPercent >= 0.2 && scrollPercent < 0.8) {
-        const localProgress = (scrollPercent - 0.2) / 0.6;
-        const zoomScale = 3 + localProgress * 20;
-        viewport.style.transform = `scale(${zoomScale})`;
-        viewport.style.opacity = String(1 - localProgress * 1.5);
-        tunnelStage.style.opacity = String(localProgress);
-        lensReflection.style.transform = `scale(${1.5 - localProgress})`;
-        lensReflection.style.opacity = String(0.4 + localProgress * 0.6);
-      } else {
-        viewport.style.opacity = "0";
-        tunnelStage.style.opacity = "1";
-      }
-
-      labels.forEach((label) => {
-        const threshold = parseFloat(label.dataset.threshold || "0");
-        const diff = Math.abs(scrollPercent - threshold);
-        if (diff < 0.1) {
-          label.style.opacity = String(1 - diff * 10);
-          label.style.transform = `translateX(${diff * 100}px)`;
-        } else {
-          label.style.opacity = "0";
-        }
-      });
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    // Reveal observer for sections below the tunnel
+    // Reveal observer for sections
     const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -146,15 +43,7 @@ export default function HomePage() {
     );
     document.querySelectorAll(".home-reveal").forEach((el) => revealObserver.observe(el));
 
-    return () => {
-      clearTimeout(timer);
-      revealObserver.disconnect();
-      window.removeEventListener("scroll", handleScroll);
-      mButtons.forEach((btn, idx) => {
-        btn.removeEventListener("mousemove", mouseMoveHandlers[idx]);
-        btn.removeEventListener("mouseleave", mouseLeaveHandlers[idx]);
-      });
-    };
+    return () => { revealObserver.disconnect(); };
   }, []);
 
   return (
@@ -162,396 +51,128 @@ export default function HomePage() {
       className={`text-[#e2e2e2]`}
       style={{ fontFamily: "var(--font-sans), sans-serif" }}
     >
-      {/* 3D Scene Layer (Fixed) */}
-      <div
-        className="fixed-canvas overflow-hidden"
+      {/* ══ HERO — full-screen video ═══════════════════════════════════ */}
+      {/* PLACEHOLDER VIDEO — replace src with your Cloudinary video URL  */}
+      {/* Upload a cinematic video to Cloudinary → use cldVideo() helper  */}
+      <section
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
+          position: "relative",
           height: "100vh",
-          pointerEvents: "none",
-          zIndex: 0,
+          overflow: "hidden",
+          backgroundColor: "#060606",
         }}
       >
-        {/* Floating Dust Container */}
+        {/* Video background */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        >
+          <source
+            src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-11-large.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        {/* Dark cinematic overlay */}
         <div
-          ref={dustFieldRef}
-          className="absolute inset-0 z-0"
-          id="dust-field"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.65) 100%)",
+          }}
         />
 
-        {/* Camera Container */}
+        {/* Film grain */}
         <div
-          ref={viewportRef}
-          className="absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-out"
           style={{
-            transform: "scale(1)",
-            opacity: 1,
+            position: "absolute",
+            inset: 0,
+            opacity: 0.045,
+            backgroundImage:
+              "url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>\")",
+            backgroundRepeat: "repeat",
+            backgroundSize: "200px",
+            mixBlendMode: "overlay",
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* Content — bottom-center */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "clamp(60px, 10vh, 110px)",
+            left: 0,
+            right: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "clamp(20px, 3.5vh, 36px)",
           }}
         >
-          <div
-            ref={cameraRef}
-            className="camera-body relative"
+          {/* "Vika Films" in Playfair italic */}
+          <h1
             style={{
-              width: "clamp(240px, 80vw, 600px)",
-              height: "clamp(160px, 53vw, 400px)",
-              perspective: "1000px",
+              fontFamily: "var(--font-playfair), serif",
+              fontSize: "clamp(72px, 13vw, 200px)",
+              fontStyle: "italic",
+              fontWeight: 700,
+              color: "#ffffff",
+              lineHeight: 0.88,
+              letterSpacing: "-0.03em",
+              margin: 0,
+              textAlign: "center",
+              textShadow: "0 2px 40px rgba(0,0,0,0.45)",
             }}
           >
-            {/* Base Body */}
-            <div
-              className="absolute inset-0 shadow-2xl specular-highlight camera-layer"
-              style={{
-                backgroundColor: "#353535",
-                borderRadius: "0.5rem",
-                border: "1px solid rgba(255,255,255,0.05)",
-                transform: "rotateY(15deg) rotateX(10deg)",
-                transition: "transform 0.1s ease-out",
-                background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%), #353535",
-              }}
-            >
-              {/* Lens Mount */}
-              <div
-                className="absolute"
-                style={{
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  width: "clamp(80px, 27vw, 200px)",
-                  height: "clamp(80px, 27vw, 200px)",
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  backgroundColor: "#050505",
-                  /* Outer ring stack */
-                  boxShadow:
-                    "0 0 0 3px rgba(80,82,82,0.5), 0 0 0 7px rgba(30,30,30,0.8), 0 0 0 10px rgba(60,62,62,0.3), 0 8px 32px rgba(0,0,0,0.8)",
-                }}
-              >
-                {/* Photo — full quality, no scale upscale, no bad blend mode */}
-                <div
-                  ref={lensReflectionRef}
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    transition: "opacity 0.5s",
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                  }}
-                >
-                  <Image
-                    src="/lens-photo.jpg"
-                    alt="VikaFilms shoot"
-                    fill
-                    sizes="400px"
-                    priority
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
+            Vika Films
+          </h1>
 
-                {/* Vignette — dark edges for depth */}
-                <div
-                  style={{
-                    position: "absolute", inset: 0, borderRadius: "50%",
-                    background:
-                      "radial-gradient(circle at 50% 50%, transparent 42%, rgba(0,0,0,0.55) 72%, rgba(0,0,0,0.85) 100%)",
-                    pointerEvents: "none",
-                  }}
-                />
-
-                {/* Glass specular — top-left light catch */}
-                <div
-                  style={{
-                    position: "absolute", inset: 0, borderRadius: "50%",
-                    background:
-                      "radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 35%, transparent 60%)",
-                    pointerEvents: "none",
-                  }}
-                />
-
-                {/* Inner aperture ring */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: "10px",
-                    borderRadius: "50%",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    pointerEvents: "none",
-                  }}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: "24px",
-                    borderRadius: "50%",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                    pointerEvents: "none",
-                  }}
-                />
-              </div>
-
-              {/* Technical Decals */}
-              <div
-                className="absolute"
-                style={{
-                  bottom: "clamp(10px, 3vw, 24px)",
-                  left: "clamp(12px, 4vw, 32px)",
-                  fontFamily: "var(--font-sans), monospace",
-                  fontSize: "clamp(7px, 1.2vw, 10px)",
-                  color: "rgba(196, 199, 200, 0.4)",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  lineHeight: 1.5,
-                }}
-              >
-                Sensor: Full Frame 8K
-                <br />
-                Dynamic Range: 16 Stops
-              </div>
-            </div>
-          </div>
+          {/* CTA pill */}
+          <Link
+            href="/contact"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              border: "1.5px solid rgba(255,255,255,0.65)",
+              borderRadius: "9999px",
+              padding: "13px 32px",
+              fontFamily: "var(--font-geist), monospace",
+              fontSize: "11px",
+              fontWeight: 600,
+              letterSpacing: "0.25em",
+              textTransform: "uppercase",
+              color: "#fff",
+              textDecoration: "none",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              background: "rgba(255,255,255,0.06)",
+              transition: "background 0.25s, border-color 0.25s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.15)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.9)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.06)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.65)";
+            }}
+          >
+            Let&apos;s Create ↗
+          </Link>
         </div>
-
-        {/* Tunnel Experience (Initially Hidden/Transparent) */}
-        <div
-          ref={tunnelStageRef}
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ opacity: 0, pointerEvents: "none" }}
-        >
-          <div
-            className="relative overflow-hidden"
-            style={{ width: "100vw", height: "100vh" }}
-          >
-            {/* Dynamically generated rings of imagery via JS */}
-          </div>
-        </div>
-      </div>
-
-      {/* Scrollable content wrapper */}
-      <main
-        className="interactive-content"
-        style={{ position: "relative", zIndex: 10, height: "500vh" }}
-      >
-        {/* Hero Section */}
-        <section
-          className="w-full flex flex-col items-center justify-center relative"
-          style={{
-            height: "100vh",
-            padding: "0 5vw",
-          }}
-        >
-          <div className="text-center z-20" style={{ maxWidth: "64rem" }}>
-            <h1
-              ref={heroTitleRef}
-              className="opacity-0 translate-y-10 transition-all duration-1000 ease-out"
-              style={{
-                fontFamily: "var(--font-display), serif",
-                fontSize: "clamp(48px, 6vw, 84px)",
-                lineHeight: "1.1",
-                letterSpacing: "-0.02em",
-                fontWeight: 700,
-                color: "#ffffff",
-                marginBottom: "24px",
-              }}
-            >
-              Photography That
-              <br />
-              Sells Stories
-            </h1>
-            <p
-              ref={heroSubRef}
-              className="opacity-0 translate-y-5 transition-all duration-1000 ease-out"
-              style={{
-                fontFamily: "var(--font-sans), sans-serif",
-                fontSize: "18px",
-                lineHeight: "1.6",
-                letterSpacing: "0.01em",
-                fontWeight: 400,
-                color: "rgba(196, 199, 200, 0.8)",
-                marginBottom: "48px",
-                maxWidth: "42rem",
-                marginLeft: "auto",
-                marginRight: "auto",
-                transitionDelay: "300ms",
-              }}
-            >
-              Commercial Visuals For Brands That Want Attention. We blend
-              cinematic precision with narrative depth.
-            </p>
-            <div
-              ref={heroBtnsRef}
-              className="flex flex-wrap gap-4 justify-center opacity-0 translate-y-5 transition-all duration-1000 ease-out"
-              style={{ transitionDelay: "500ms" }}
-            >
-              <Link
-                href="/portfolio"
-                className="magnetic-btn group relative overflow-hidden glass-panel"
-                style={{
-                  padding: "16px 32px",
-                  borderRadius: "9999px",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  backdropFilter: "blur(20px)",
-                  background: "rgba(255,255,255,0.03)",
-                  cursor: "pointer",
-                  transition: "all 0.3s cubic-bezier(0.23, 1, 0.32, 1)",
-                  textDecoration: "none",
-                  display: "inline-block",
-                }}
-              >
-                <span
-                  style={{
-                    position: "relative",
-                    zIndex: 10,
-                    fontFamily: "var(--font-sans), monospace",
-                    fontSize: "12px",
-                    lineHeight: "1",
-                    letterSpacing: "0.2em",
-                    fontWeight: 600,
-                    color: "#ffffff",
-                  }}
-                >
-                  View Work
-                </span>
-              </Link>
-              <Link
-                href="/contact"
-                className="magnetic-btn"
-                style={{
-                  padding: "16px 32px",
-                  backgroundColor: "#ffffff",
-                  color: "#2f3131",
-                  borderRadius: "9999px",
-                  fontFamily: "var(--font-sans), monospace",
-                  fontSize: "12px",
-                  lineHeight: "1",
-                  letterSpacing: "0.2em",
-                  fontWeight: 700,
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "all 0.3s cubic-bezier(0.23, 1, 0.32, 1)",
-                  textDecoration: "none",
-                  display: "inline-block",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.boxShadow =
-                    "0 0 30px rgba(255,255,255,0.3)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.boxShadow = "none")
-                }
-              >
-                Book A Shoot
-              </Link>
-            </div>
-          </div>
-
-          {/* Bottom Indicator */}
-          <div
-            className="absolute flex flex-col items-center gap-2"
-            style={{
-              bottom: "48px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              color: "rgba(196, 199, 200, 0.3)",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-sans), monospace",
-                fontSize: "10px",
-                letterSpacing: "0.4em",
-              }}
-            >
-              SCROLL TO ENTER
-            </span>
-            <div
-              style={{
-                width: "1px",
-                height: "48px",
-                background:
-                  "linear-gradient(to bottom, rgba(255,255,255,0.2), transparent)",
-              }}
-            />
-          </div>
-        </section>
-
-        {/* Tunnel Transition Trigger Area */}
-        <section
-          className="w-full relative"
-          style={{ height: "3072px" }}
-        >
-          {/* Labels floating in space during scroll */}
-          <div
-            className="sticky flex flex-col gap-32"
-            style={{
-              top: "50%",
-              transform: "translateY(-50%)",
-              maxWidth: "80rem",
-              width: "100%",
-              margin: "0 auto",
-              paddingLeft: "5vw",
-              paddingRight: "5vw",
-              boxSizing: "border-box",
-            }}
-          >
-            {[
-              {
-                num: "01",
-                label: "RESOLUTION",
-                headline: "Infinite Detail.",
-                threshold: "0.2",
-              },
-              {
-                num: "02",
-                label: "DEPTH",
-                headline: "Immersive Depth.",
-                threshold: "0.5",
-              },
-              {
-                num: "03",
-                label: "STORY",
-                headline: "Beyond Capture.",
-                threshold: "0.8",
-              },
-            ].map((item) => (
-              <div
-                key={item.num}
-                className="tunnel-label"
-                data-threshold={item.threshold}
-                style={{ opacity: 0 }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-sans), monospace",
-                    fontSize: "12px",
-                    lineHeight: "1",
-                    letterSpacing: "0.2em",
-                    fontWeight: 600,
-                    color: "rgba(196, 199, 200, 0.4)",
-                    textTransform: "uppercase",
-                    display: "block",
-                    marginBottom: "8px",
-                  }}
-                >
-                  {item.num} / {item.label}
-                </span>
-                <h3
-                  style={{
-                    fontFamily: "var(--font-display), serif",
-                    fontSize: "clamp(24px, 5vw, 42px)",
-                    lineHeight: "1.2",
-                    fontWeight: 500,
-                    color: "#e2e2e2",
-                  }}
-                >
-                  {item.headline}
-                </h3>
-              </div>
-            ))}
-          </div>
-        </section>
+      </section>
 
         {/* ── Selected Work ────────────────────────────────────── */}
         <section
@@ -1276,7 +897,6 @@ export default function HomePage() {
             &copy; 2024 VikaFilms. All Rights Reserved.
           </p>
         </footer>
-      </main>
     </div>
   );
 }

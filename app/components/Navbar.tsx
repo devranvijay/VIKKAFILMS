@@ -2,271 +2,260 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-const NAV_LINKS = [
+const LEFT_LINKS = [
   { label: "Work", href: "/portfolio" },
-  { label: "Studio", href: "/" },
+  { label: "Services", href: "/services" },
+];
+
+const MENU_LINKS = [
+  { label: "About", href: "/" },
+  { label: "Work", href: "/portfolio" },
   { label: "Services", href: "/services" },
   { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
-  const pathname = usePathname();
-  const navRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const lastScrollY = useRef(0);
+  const [visible, setVisible] = useState(false);
 
+  // Stagger menu link entrance
   useEffect(() => {
-    const handleScroll = () => {
-      const nav = navRef.current;
-      if (!nav) return;
-      const current = window.scrollY;
+    if (menuOpen) {
+      const t = setTimeout(() => setVisible(true), 20);
+      return () => clearTimeout(t);
+    } else {
+      setVisible(false);
+    }
+  }, [menuOpen]);
 
-      // Compact on scroll
-      if (current > 80) {
-        nav.style.paddingTop = "6px";
-        nav.style.paddingBottom = "6px";
-        nav.style.marginTop = "12px";
-        nav.style.backdropFilter = "blur(40px) saturate(200%)";
-      } else {
-        nav.style.paddingTop = "10px";
-        nav.style.paddingBottom = "10px";
-        nav.style.marginTop = "20px";
-        nav.style.backdropFilter = "blur(20px) saturate(150%)";
-      }
+  // Lock body scroll when menu open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
-      // Hide on scroll down, reveal on scroll up
-      if (current > lastScrollY.current + 6 && current > 120) {
-        nav.classList.add("nav-hidden");
-      } else if (current < lastScrollY.current - 6) {
-        nav.classList.remove("nav-hidden");
-      }
-      lastScrollY.current = current;
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+  // Close on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   return (
     <>
+      {/* ── Transparent bar ─────────────────────────────────────────────── */}
       <nav
-        ref={navRef}
         style={{
           position: "fixed",
           top: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
+          left: 0,
+          right: 0,
           zIndex: 100,
-          display: "flex",
-          justifyContent: "space-between",
+          display: "grid",
+          gridTemplateColumns: "1fr auto 1fr",
           alignItems: "center",
-          background: "rgba(19,19,19,0.4)",
-          backdropFilter: "blur(20px) saturate(150%)",
-          WebkitBackdropFilter: "blur(20px) saturate(150%)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: "9999px",
-          padding: "10px 28px",
-          marginTop: "20px",
-          width: "90%",
-          maxWidth: "80rem",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.8)",
-          transition: "padding 0.3s ease, margin 0.3s ease, backdrop-filter 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1)",
+          padding: "clamp(20px, 3vw, 36px) clamp(28px, 5vw, 64px)",
         }}
       >
-        {/* Logo */}
-        <Link
-          href="/"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            textDecoration: "none",
-            flexShrink: 0,
-          }}
-          aria-label="VikaFilms — Home"
-        >
-          <div
-            style={{
-              position: "relative",
-              width: "52px",
-              height: "52px",
-              flexShrink: 0,
-            }}
-          >
+        {/* Left links */}
+        <div style={{ display: "flex", gap: "clamp(20px, 3vw, 44px)", alignItems: "center" }}>
+          {LEFT_LINKS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              style={{
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "11px",
+                fontWeight: 600,
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.65)",
+                textDecoration: "none",
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+
+        {/* Center: logo */}
+        <Link href="/" aria-label="VikaFilms — Home" style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ position: "relative", width: "52px", height: "52px" }}>
             <Image
               src="/vikafilms-logo.png"
               alt="VikaFilms"
               fill
               sizes="52px"
               priority
-              style={{
-                objectFit: "contain",
-                /* Makes the solid-black logo background invisible against
-                   the dark navbar — only the gold ring + script remain. */
-                mixBlendMode: "screen",
-              }}
+              style={{ objectFit: "contain", mixBlendMode: "screen" }}
             />
           </div>
         </Link>
 
-        {/* Desktop Links */}
-        <div
-          className="hidden md:flex items-center gap-8"
-          style={{
-            fontFamily: "var(--font-geist), monospace",
-            fontSize: "12px",
-            fontWeight: 600,
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-          }}
-        >
-          {NAV_LINKS.map(({ label, href }) => {
-            const isActive = pathname === href;
-            return (
-              <Link
-                key={href}
-                href={href}
-                style={{
-                  color: isActive ? "#ffffff" : "#8e9192",
-                  textDecoration: "none",
-                  transition: "color 0.2s",
-                  borderBottom: isActive ? "1px solid #ffffff" : "1px solid transparent",
-                  paddingBottom: "2px",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = isActive ? "#ffffff" : "#8e9192")
-                }
-              >
-                {label}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* CTA + Mobile hamburger */}
-        <div className="flex items-center gap-4">
-          <Link
-            href="/contact"
-            style={{
-              backgroundColor: "#ffffff",
-              color: "#131313",
-              padding: "8px 24px",
-              borderRadius: "9999px",
-              fontFamily: "var(--font-geist), monospace",
-              fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              textDecoration: "none",
-              display: "inline-block",
-              transition: "transform 0.2s, box-shadow 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.05)";
-              e.currentTarget.style.boxShadow = "0 0 20px rgba(255,255,255,0.25)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            Inquire
-          </Link>
-
-          {/* Hamburger — mobile only */}
+        {/* Right: hamburger */}
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <button
-            className="flex md:hidden flex-col gap-1.5 p-1"
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-label="Toggle menu"
-            style={{ background: "none", border: "none", cursor: "pointer" }}
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", display: "flex", flexDirection: "column", gap: "6px" }}
           >
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                style={{
-                  display: "block",
-                  width: "20px",
-                  height: "1px",
-                  backgroundColor: "#ffffff",
-                  transition: "transform 0.2s, opacity 0.2s",
-                  transform:
-                    menuOpen && i === 0
-                      ? "rotate(45deg) translate(4px, 4px)"
-                      : menuOpen && i === 1
-                      ? "scaleX(0)"
-                      : menuOpen && i === 2
-                      ? "rotate(-45deg) translate(4px, -4px)"
-                      : "none",
-                  opacity: menuOpen && i === 1 ? 0 : 1,
-                }}
-              />
-            ))}
+            <span style={{ display: "block", width: "24px", height: "1.5px", background: "#fff", transition: "opacity 0.2s" }} />
+            <span style={{ display: "block", width: "18px", height: "1.5px", background: "#fff", transition: "opacity 0.2s" }} />
           </button>
         </div>
       </nav>
 
-      {/* Mobile dropdown */}
-      {menuOpen && (
+      {/* ── Full-screen overlay menu ────────────────────────────────────── */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 200,
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          opacity: menuOpen ? 1 : 0,
+          pointerEvents: menuOpen ? "auto" : "none",
+          transition: "opacity 0.4s cubic-bezier(0.16,1,0.3,1)",
+        }}
+      >
+        {/* Left panel */}
         <div
           style={{
-            position: "fixed",
-            top: "90px",
-            left: "5%",
-            right: "5%",
-            zIndex: 99,
-            background: "rgba(14,14,14,0.97)",
-            backdropFilter: "blur(30px)",
-            WebkitBackdropFilter: "blur(30px)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: "16px",
-            padding: "24px 32px",
+            background: "#000",
             display: "flex",
             flexDirection: "column",
-            gap: "20px",
+            padding: "clamp(28px, 4vw, 52px) clamp(32px, 5vw, 64px)",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
-          {NAV_LINKS.map(({ label, href }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setMenuOpen(false)}
-              style={{
-                color: pathname === href ? "#ffffff" : "#8e9192",
-                fontFamily: "var(--font-geist), monospace",
-                fontSize: "13px",
-                fontWeight: 600,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                textDecoration: "none",
-              }}
-            >
-              {label}
-            </Link>
-          ))}
+          {/* Logo top-center */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "clamp(40px, 7vh, 72px)" }}>
+            <div style={{ position: "relative", width: "56px", height: "56px" }}>
+              <Image
+                src="/vikafilms-logo.png"
+                alt="VikaFilms"
+                fill
+                sizes="56px"
+                style={{ objectFit: "contain", mixBlendMode: "screen" }}
+              />
+            </div>
+          </div>
+
+          {/* Nav links */}
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(4px, 1.5vh, 12px)" }}>
+            {MENU_LINKS.map(({ label, href }, i) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  fontFamily: "var(--font-geist), system-ui, sans-serif",
+                  fontSize: "clamp(40px, 6.5vw, 88px)",
+                  fontWeight: 700,
+                  color: "#fff",
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1.05,
+                  display: "block",
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? "translateX(0)" : "translateX(-32px)",
+                  transition: `opacity 0.55s cubic-bezier(0.16,1,0.3,1) ${0.06 + i * 0.07}s, transform 0.55s cubic-bezier(0.16,1,0.3,1) ${0.06 + i * 0.07}s, color 0.2s`,
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#fff")}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+
+          {/* CTA bottom */}
           <Link
             href="/contact"
             onClick={() => setMenuOpen(false)}
             style={{
-              marginTop: "8px",
-              backgroundColor: "#ffffff",
-              color: "#131313",
-              padding: "12px 24px",
+              alignSelf: "flex-start",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              border: "1.5px solid rgba(255,255,255,0.5)",
               borderRadius: "9999px",
+              padding: "12px 30px",
               fontFamily: "var(--font-geist), monospace",
               fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.2em",
+              fontWeight: 600,
+              letterSpacing: "0.25em",
               textTransform: "uppercase",
+              color: "#fff",
               textDecoration: "none",
-              textAlign: "center",
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(12px)",
+              transition: "opacity 0.5s ease 0.38s, transform 0.5s ease 0.38s, background 0.2s, border-color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.08)";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.8)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.5)";
             }}
           >
-            Inquire
+            Let&apos;s Create ↗
           </Link>
         </div>
-      )}
+
+        {/* Right panel: cinematic image */}
+        <div style={{ position: "relative", overflow: "hidden" }}>
+          <Image
+            src="https://res.cloudinary.com/deheutmgd/image/upload/q_auto,f_auto/DSC01346-Enhanced-NR_lf6bof"
+            alt="VikaFilms — BMW Z4 commercial"
+            fill
+            sizes="50vw"
+            style={{
+              objectFit: "cover",
+              transform: visible ? "scale(1)" : "scale(1.06)",
+              transition: "transform 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s",
+            }}
+          />
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.15)" }} />
+        </div>
+
+        {/* Close button */}
+        <button
+          onClick={() => setMenuOpen(false)}
+          aria-label="Close menu"
+          style={{
+            position: "absolute",
+            top: "clamp(20px, 3vw, 36px)",
+            right: "clamp(28px, 5vw, 64px)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "#fff",
+            fontSize: "22px",
+            lineHeight: 1,
+            fontWeight: 300,
+            opacity: visible ? 1 : 0,
+            transition: "opacity 0.4s ease 0.2s",
+            zIndex: 10,
+          }}
+        >
+          ✕
+        </button>
+      </div>
+
+      {/* ── Scoped styles ── */}
+      <style>{`
+        .nav-hidden { transform: translateY(-100%) !important; }
+      `}</style>
     </>
   );
 }
