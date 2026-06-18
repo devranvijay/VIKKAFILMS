@@ -123,13 +123,13 @@ export default function HomePage() {
           {/* "Vika Films" in Playfair italic */}
           <h1
             style={{
-              fontFamily: "var(--font-playfair), serif",
-              fontSize: "clamp(72px, 13vw, 200px)",
-              fontStyle: "italic",
-              fontWeight: 700,
+              fontFamily: "var(--font-monsieur), cursive",
+              fontSize: "clamp(80px, 14vw, 220px)",
+              fontWeight: 200,
+              fontStyle: "normal",
               color: "#ffffff",
-              lineHeight: 0.88,
-              letterSpacing: "-0.03em",
+              lineHeight: 0.9,
+              letterSpacing: "0.01em",
               margin: 0,
               textAlign: "center",
               textShadow: "0 2px 40px rgba(0,0,0,0.45)",
