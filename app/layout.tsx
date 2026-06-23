@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Playfair_Display, Hanken_Grotesk, Geist, Monsieur_La_Doulaise, DM_Sans, Bebas_Neue } from "next/font/google";
 import Navbar from "./components/Navbar";
 import FloatingContact from "./components/FloatingContact";
+import Preloader from "./components/Preloader";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -45,6 +46,13 @@ const bebasNeue = Bebas_Neue({
   variable: "--font-bebas",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0e0e0e",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.vikafilms.com"),
@@ -251,6 +259,7 @@ export default function RootLayout({
           padding: 0,
         }}
       >
+        <Preloader />
         <Navbar />
         <FloatingContact />
         {children}

@@ -96,6 +96,7 @@ export default function HomePage() {
 
         {/* Film grain */}
         <div
+          className="film-grain"
           style={{
             position: "absolute",
             inset: 0,
@@ -401,6 +402,7 @@ export default function HomePage() {
         <section
           ref={filmmakerRef}
           id="the-filmmaker"
+          className="filmmaker-desktop"
           style={{ position: "relative", height: "550vh", zIndex: 20 }}
         >
           {/* ── Sticky cinematic viewport ───────────────────────── */}
@@ -494,6 +496,7 @@ export default function HomePage() {
 
             {/* Film grain texture */}
             <div
+              className="film-grain"
               style={{
                 position: "absolute",
                 inset: 0,
@@ -724,6 +727,138 @@ export default function HomePage() {
                   animation: "filmScrollCue 1.6s ease-in-out infinite",
                 }}
               />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Mobile Filmmaker Section ──────────────────────────────── */}
+        {/* Shown only on mobile via CSS .filmmaker-mobile class          */}
+        <section
+          className="filmmaker-mobile"
+          style={{ position: "relative", backgroundColor: "#000", overflow: "hidden", zIndex: 20 }}
+        >
+          {/* Aurora gradient */}
+          <div style={{ position: "absolute", inset: 0, zIndex: 1 }}>
+            <SoftAurora color1="#c8b89a" color2="#6b4c8a" brightness={0.85} />
+          </div>
+          {/* Radial vignette */}
+          <div
+            style={{
+              position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
+              background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%)",
+            }}
+          />
+          {/* Photo */}
+          <div
+            style={{ position: "relative", height: "62vw", maxHeight: "300px", overflow: "hidden", zIndex: 3 }}
+          >
+            <Image
+              src="/vivek-kamble.png"
+              alt="Vivek Kamble — Founder & Cinematographer, VIKA FILMS"
+              fill
+              sizes="100vw"
+              style={{ objectFit: "contain", objectPosition: "center bottom" }}
+            />
+            <div
+              style={{
+                position: "absolute", inset: 0, pointerEvents: "none",
+                background: "linear-gradient(to top, #000 0%, rgba(0,0,0,0.4) 38%, transparent 65%)",
+              }}
+            />
+          </div>
+          {/* Text */}
+          <div
+            style={{
+              position: "relative", zIndex: 4,
+              padding: "clamp(18px,5vw,32px) clamp(24px,7vw,40px) clamp(52px,9vw,72px)",
+            }}
+          >
+            <span
+              className="home-reveal"
+              style={{
+                fontFamily: "var(--font-sans), monospace", fontSize: "10px",
+                letterSpacing: "0.45em", textTransform: "uppercase",
+                color: "rgba(255,255,255,0.45)", display: "block", marginBottom: "14px",
+                opacity: 0, transform: "translateY(16px)",
+                transition: "opacity 0.55s ease, transform 0.55s ease",
+              }}
+            >
+              The Filmmaker
+            </span>
+            <h2
+              className="home-reveal"
+              style={{
+                fontFamily: "var(--font-display), serif",
+                fontSize: "clamp(42px,11vw,62px)", fontWeight: 700,
+                lineHeight: 0.95, letterSpacing: "-0.03em", color: "#ffffff",
+                margin: "0 0 12px",
+                opacity: 0, transform: "translateY(20px)",
+                transition: "opacity 0.55s ease 0.08s, transform 0.55s ease 0.08s",
+              }}
+            >
+              Vivek Kamble
+            </h2>
+            <div style={{ height: "1px", background: "rgba(255,255,255,0.18)", margin: "12px 0 14px", maxWidth: "100px" }} />
+            <span
+              className="home-reveal"
+              style={{
+                fontFamily: "var(--font-sans), monospace", fontSize: "10px",
+                letterSpacing: "0.22em", textTransform: "uppercase",
+                color: "rgba(255,255,255,0.45)", display: "block", marginBottom: "20px",
+                opacity: 0, transform: "translateY(16px)",
+                transition: "opacity 0.55s ease 0.14s, transform 0.55s ease 0.14s",
+              }}
+            >
+              Founder &amp; Cinematographer, VIKA FILMS
+            </span>
+            <p
+              className="home-reveal"
+              style={{
+                fontFamily: "var(--font-sans), sans-serif", fontSize: "15px",
+                lineHeight: 1.75, color: "rgba(255,255,255,0.65)", marginBottom: "12px",
+                opacity: 0, transform: "translateY(16px)",
+                transition: "opacity 0.55s ease 0.2s, transform 0.55s ease 0.2s",
+              }}
+            >
+              I create cinematic content for luxury hospitality brands, premium products,
+              healthcare companies, and businesses looking to elevate their visual identity.
+            </p>
+            <p
+              className="home-reveal"
+              style={{
+                fontFamily: "var(--font-sans), sans-serif", fontSize: "15px",
+                lineHeight: 1.75, color: "rgba(255,255,255,0.65)", marginBottom: "28px",
+                opacity: 0, transform: "translateY(16px)",
+                transition: "opacity 0.55s ease 0.26s, transform 0.55s ease 0.26s",
+              }}
+            >
+              My work focuses on combining storytelling, aesthetics, and commercial
+              strategy to create films that leave a lasting impression.
+            </p>
+            <div
+              className="home-reveal"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: "10px",
+                padding: "10px 18px", borderRadius: "9999px",
+                border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.06)",
+                opacity: 0, transform: "translateY(16px)",
+                transition: "opacity 0.55s ease 0.32s, transform 0.55s ease 0.32s",
+              }}
+            >
+              <div
+                style={{
+                  width: "8px", height: "8px", borderRadius: "50%",
+                  backgroundColor: "#4ade80", boxShadow: "0 0 10px rgba(74,222,128,0.5)", flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: "var(--font-sans), monospace", fontSize: "10px",
+                  letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)",
+                }}
+              >
+                Available across India &amp; International
+              </span>
             </div>
           </div>
         </section>
@@ -974,6 +1109,18 @@ export default function HomePage() {
         color: #0a0a0a;
         transform: scale(0.97);
         transition-duration: 0.08s;
+      }
+      /* ── Mobile: simplify hero CTA ── */
+      @media (max-width: 768px) {
+        .hero-cta {
+          font-size: 12px;
+          padding: 12px 28px;
+          letter-spacing: 0.14em;
+        }
+        /* Work cards: full width on small phones */
+        .home-work-grid {
+          grid-template-columns: 1fr !important;
+        }
       }
     `}</style>
     </>

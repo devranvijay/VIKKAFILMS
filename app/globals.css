@@ -259,6 +259,54 @@ body {
   .contact-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
 }
 
+/* ── Global mobile touch polish ───────────────────────────────── */
+* { -webkit-tap-highlight-color: transparent; }
+a, button { touch-action: manipulation; }
+html { -webkit-text-size-adjust: 100%; }
+
+/* CSS-toggle: filmmaker desktop vs mobile versions */
+.filmmaker-mobile { display: none; }
+
+@media (max-width: 768px) {
+  /* ── Film grain: expensive SVG filter, kill it on mobile ── */
+  .film-grain { display: none !important; }
+
+  /* ── Filmmaker section visibility swap ── */
+  .filmmaker-desktop { display: none !important; }
+  .filmmaker-mobile  { display: block; }
+
+  /* ── Backdrop-filter is the #1 GPU killer on mobile ── */
+  .glass-panel,
+  .glass-card,
+  .high-blur {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(14, 14, 14, 0.92) !important;
+  }
+
+  /* ── Hero CTA: drop blur on mobile ── */
+  .hero-cta {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+  }
+
+  /* ── Disable 3D perspective transforms ── */
+  .perspective-container { perspective: none !important; }
+  .parallax-frame {
+    transform: none !important;
+    transform-style: flat !important;
+    transition: none !important;
+  }
+
+  /* ── Shorter reveal transitions ── */
+  .studio-object,
+  .studio-reveal,
+  .cinema-reveal {
+    transition-duration: 0.45s !important;
+  }
+}
+
 @media (max-width: 480px) {
   /* Bento — single column on phones */
   .bento-grid {
