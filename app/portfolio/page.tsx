@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import DomeGallery from "../components/DomeGallery";
 import {
   PROJECTS,
   CATEGORIES,
@@ -2489,6 +2490,90 @@ export default function PortfolioPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ── Dome Gallery ──────────────────────────────────────────────── */}
+        <section
+          className="relative z-20"
+          style={{
+            backgroundColor: "#0a0a0a",
+            borderTop: "1px solid rgba(255,255,255,0.05)",
+            padding: "clamp(64px,8vw,110px) 0 0",
+          }}
+        >
+          <div
+            style={{
+              padding: "0 clamp(28px,6vw,80px)",
+              marginBottom: "clamp(40px,5vw,64px)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              flexWrap: "wrap",
+              gap: "16px",
+            }}
+          >
+            <div>
+              <span
+                style={{
+                  fontFamily: "var(--font-geist), monospace",
+                  fontSize: "9px",
+                  letterSpacing: "0.38em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.22)",
+                  display: "block",
+                  marginBottom: "14px",
+                }}
+              >
+                Explore
+              </span>
+              <h2
+                style={{
+                  fontFamily: "var(--font-playfair), serif",
+                  fontSize: "clamp(34px,5vw,68px)",
+                  fontWeight: 700,
+                  lineHeight: 0.93,
+                  letterSpacing: "-0.03em",
+                  color: "#fff",
+                  margin: 0,
+                }}
+              >
+                The Sphere.
+              </h2>
+            </div>
+            <p
+              style={{
+                fontFamily: "var(--font-geist), monospace",
+                fontSize: "clamp(11px,1.1vw,13px)",
+                lineHeight: 1.72,
+                color: "rgba(196,199,200,0.35)",
+                maxWidth: "280px",
+                margin: 0,
+                textAlign: "right",
+                letterSpacing: "0.02em",
+              }}
+            >
+              Drag to explore. Click any image to open it.
+            </p>
+          </div>
+
+          <div style={{ width: "100%", height: "clamp(500px, 65vh, 800px)", position: "relative" }}>
+            <DomeGallery
+              images={[
+                { src: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC01488_qx6a1n`, alt: "BMW Commercial" },
+                { src: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC09380_aonznj`, alt: "DJI Gimbal" },
+                { src: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC01346-Enhanced-NR_lf6bof`, alt: "Portrait" },
+                { src: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC01456_ygk3gp`, alt: "Commercial" },
+                { src: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC09376_lygk5q`, alt: "Campaign" },
+              ]}
+              overlayBlurColor="#0a0a0a"
+              grayscale={false}
+              fit={0.52}
+              openedImageWidth="380px"
+              openedImageHeight="500px"
+              imageBorderRadius="12px"
+              openedImageBorderRadius="18px"
+            />
           </div>
         </section>
 

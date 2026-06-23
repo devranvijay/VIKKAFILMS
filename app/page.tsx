@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import SoftAurora from "./components/SoftAurora";
+import ImageSlider3D from "./components/ImageSlider3D";
 
 export default function HomePage() {
   const filmmakerRef = useRef<HTMLElement>(null);
@@ -47,6 +48,7 @@ export default function HomePage() {
   }, []);
 
   return (
+    <>
     <div
       className={`text-[#e2e2e2]`}
       style={{ fontFamily: "var(--font-sans), sans-serif" }}
@@ -77,7 +79,7 @@ export default function HomePage() {
           }}
         >
           <source
-            src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-11-large.mp4"
+            src="https://assets.mixkit.co/videos/preview/mixkit-aerial-drone-flight-through-jungle-with-a-waterfall-49333-large.mp4"
             type="video/mp4"
           />
         </video>
@@ -124,8 +126,8 @@ export default function HomePage() {
           <h1
             style={{
               fontFamily: "var(--font-monsieur), cursive",
-              fontSize: "clamp(80px, 14vw, 220px)",
-              fontWeight: 200,
+              fontSize: "clamp(52px, 8vw, 130px)",
+              fontWeight: 400,
               fontStyle: "normal",
               color: "#ffffff",
               lineHeight: 0.9,
@@ -139,39 +141,32 @@ export default function HomePage() {
           </h1>
 
           {/* CTA pill */}
-          <Link
-            href="/contact"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              border: "1.5px solid rgba(255,255,255,0.65)",
-              borderRadius: "9999px",
-              padding: "13px 32px",
-              fontFamily: "var(--font-geist), monospace",
-              fontSize: "11px",
-              fontWeight: 600,
-              letterSpacing: "0.25em",
-              textTransform: "uppercase",
-              color: "#fff",
-              textDecoration: "none",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              background: "rgba(255,255,255,0.06)",
-              transition: "background 0.25s, border-color 0.25s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.15)";
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.9)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.06)";
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.65)";
-            }}
-          >
+          <Link href="/contact" className="hero-cta">
             Let&apos;s Create ↗
           </Link>
         </div>
+      </section>
+
+      {/* ── 3D Image Slider ── */}
+      <section style={{ backgroundColor: "#060606", padding: "clamp(48px,6vw,80px) 0" }}>
+        <ImageSlider3D
+          images={[
+            `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC01488_qx6a1n`,
+            `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC09380_aonznj`,
+            `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC01346-Enhanced-NR_lf6bof`,
+            `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC01456_ygk3gp`,
+            `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC09376_lygk5q`,
+            `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC01488_qx6a1n`,
+            `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC09380_aonznj`,
+            `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto/DSC01346-Enhanced-NR_lf6bof`,
+          ]}
+          duration={36}
+          cardWidth="17em"
+          cardAspectRatio="7/10"
+          perspective="38em"
+          rotationDirection="left"
+          withMask
+        />
       </section>
 
         {/* ── Selected Work ────────────────────────────────────── */}
@@ -185,7 +180,6 @@ export default function HomePage() {
           <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
             {/* Header row */}
             <div
-              className="home-reveal"
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -193,13 +187,12 @@ export default function HomePage() {
                 flexWrap: "wrap",
                 gap: "20px",
                 marginBottom: "clamp(40px,6vw,72px)",
-                opacity: 0,
-                transform: "translateY(32px)",
-                transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)",
               }}
             >
               <div>
+                {/* Eyebrow label — fades in first */}
                 <span
+                  className="home-reveal"
                   style={{
                     fontFamily: "var(--font-sans), monospace",
                     fontSize: "11px",
@@ -207,28 +200,75 @@ export default function HomePage() {
                     textTransform: "uppercase",
                     color: "rgba(196,199,200,0.45)",
                     display: "block",
-                    marginBottom: "16px",
+                    marginBottom: "20px",
+                    opacity: 0,
+                    transform: "translateY(16px)",
+                    transition: "opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)",
                   }}
                 >
                   Selected Work
                 </span>
-                <h2
-                  style={{
-                    fontFamily: "var(--font-display), serif",
-                    fontSize: "clamp(36px,4vw,56px)",
-                    fontWeight: 700,
-                    lineHeight: 1.1,
-                    letterSpacing: "-0.02em",
-                    color: "#ffffff",
-                    margin: 0,
-                  }}
-                >
-                  Campaigns That
-                  <br />
-                  Moved Markets.
+
+                {/* ── Mixed-font animated headline ── */}
+                <h2 style={{ margin: 0, lineHeight: 1.05, letterSpacing: "-0.02em" }}>
+                  {/* Line 1: "Campaigns That" — Playfair bold */}
+                  <span
+                    className="home-reveal"
+                    style={{
+                      display: "block",
+                      fontFamily: "var(--font-playfair), serif",
+                      fontSize: "clamp(36px,4.5vw,64px)",
+                      fontWeight: 700,
+                      color: "#ffffff",
+                      opacity: 0,
+                      transform: "translateY(32px)",
+                      transition: "opacity 0.85s cubic-bezier(0.16,1,0.3,1) 0.1s, transform 0.85s cubic-bezier(0.16,1,0.3,1) 0.1s",
+                    }}
+                  >
+                    Campaigns That
+                  </span>
+
+                  {/* Line 2: "Moved" Playfair + "Markets." Monsieur script */}
+                  <span
+                    className="home-reveal"
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: "0.18em",
+                      flexWrap: "wrap",
+                      opacity: 0,
+                      transform: "translateY(40px)",
+                      transition: "opacity 0.95s cubic-bezier(0.16,1,0.3,1) 0.28s, transform 0.95s cubic-bezier(0.16,1,0.3,1) 0.28s",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-playfair), serif",
+                        fontSize: "clamp(36px,4.5vw,64px)",
+                        fontWeight: 700,
+                        color: "#ffffff",
+                      }}
+                    >
+                      Moved
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-monsieur), cursive",
+                        fontSize: "clamp(44px,5.5vw,80px)",
+                        fontWeight: 400,
+                        color: "rgba(255,255,255,0.55)",
+                        letterSpacing: "0.01em",
+                        lineHeight: 0.85,
+                      }}
+                    >
+                      Markets.
+                    </span>
+                  </span>
                 </h2>
               </div>
+
               <Link
+                className="home-reveal"
                 href="/portfolio"
                 style={{
                   fontFamily: "var(--font-sans), monospace",
@@ -241,10 +281,12 @@ export default function HomePage() {
                   alignItems: "center",
                   gap: "10px",
                   flexShrink: 0,
-                  transition: "color 0.2s",
+                  transition: "opacity 0.7s cubic-bezier(0.16,1,0.3,1) 0.5s, transform 0.7s cubic-bezier(0.16,1,0.3,1) 0.5s, color 0.2s",
                   paddingBottom: "4px",
                   borderBottom: "1px solid rgba(255,255,255,0.12)",
                   whiteSpace: "nowrap",
+                  opacity: 0,
+                  transform: "translateY(20px)",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "#8e9192")}
@@ -253,7 +295,7 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* 3-card grid */}
+            {/* 3-card grid — staggered in after headline */}
             <div
               style={{
                 display: "grid",
@@ -266,13 +308,13 @@ export default function HomePage() {
                   src: "https://res.cloudinary.com/deheutmgd/image/upload/q_auto,f_auto/DSC01488_qx6a1n",
                   category: "Commercial",
                   title: "BMW Series",
-                  delay: "0ms",
+                  delay: "0.55s",
                 },
                 {
                   src: "https://res.cloudinary.com/deheutmgd/image/upload/q_auto,f_auto/DSC09380_aonznj",
                   category: "Commercial",
                   title: "DJI Gimbal",
-                  delay: "120ms",
+                  delay: "0.72s",
                 },
               ].map((item) => (
                 <Link
@@ -281,12 +323,12 @@ export default function HomePage() {
                   className="home-reveal"
                   style={{
                     display: "block",
-                    borderRadius: "12px",
+                    borderRadius: "16px",
                     overflow: "hidden",
                     border: "1px solid rgba(255,255,255,0.07)",
                     opacity: 0,
-                    transform: "translateY(40px)",
-                    transition: `opacity 0.9s cubic-bezier(0.16,1,0.3,1) ${item.delay}, transform 0.9s cubic-bezier(0.16,1,0.3,1) ${item.delay}`,
+                    transform: "translateY(48px)",
+                    transition: `opacity 1s cubic-bezier(0.16,1,0.3,1) ${item.delay}, transform 1s cubic-bezier(0.16,1,0.3,1) ${item.delay}`,
                     textDecoration: "none",
                     position: "relative",
                     aspectRatio: "4/5",
@@ -294,7 +336,7 @@ export default function HomePage() {
                   onMouseEnter={(e) => {
                     const img = e.currentTarget.querySelector("img") as HTMLImageElement | null;
                     if (img) img.style.transform = "scale(1.06)";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
                   }}
                   onMouseLeave={(e) => {
                     const img = e.currentTarget.querySelector("img") as HTMLImageElement | null;
@@ -317,7 +359,7 @@ export default function HomePage() {
                     style={{
                       position: "absolute",
                       inset: 0,
-                      background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)",
+                      background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 55%)",
                       padding: "28px",
                       display: "flex",
                       flexDirection: "column",
@@ -326,7 +368,7 @@ export default function HomePage() {
                   >
                     <span
                       style={{
-                        fontFamily: "var(--font-sans), monospace",
+                        fontFamily: "var(--font-dm-sans), sans-serif",
                         fontSize: "10px",
                         letterSpacing: "0.3em",
                         textTransform: "uppercase",
@@ -339,7 +381,7 @@ export default function HomePage() {
                     </span>
                     <span
                       style={{
-                        fontFamily: "var(--font-display), serif",
+                        fontFamily: "var(--font-playfair), serif",
                         fontSize: "22px",
                         fontWeight: 500,
                         color: "#ffffff",
@@ -898,6 +940,43 @@ export default function HomePage() {
           </p>
         </footer>
     </div>
+
+    <style>{`
+      .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-dm-sans), sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #fff;
+        text-decoration: none;
+        border: 1.5px solid rgba(255,255,255,0.55);
+        border-radius: 9999px;
+        padding: 13px 34px;
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        transition: background 0.28s ease, border-color 0.28s ease, color 0.28s ease, transform 0.18s cubic-bezier(0.34,1.4,0.64,1);
+        will-change: transform;
+      }
+      .hero-cta:hover {
+        background: #ffffff;
+        border-color: #ffffff;
+        color: #0a0a0a;
+        transform: scale(1.04);
+      }
+      .hero-cta:active {
+        background: #e8e8e8;
+        border-color: #e8e8e8;
+        color: #0a0a0a;
+        transform: scale(0.97);
+        transition-duration: 0.08s;
+      }
+    `}</style>
+    </>
   );
 }
 

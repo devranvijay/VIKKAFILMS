@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Playfair_Display, Hanken_Grotesk, Geist, Monsieur_La_Doulaise } from "next/font/google";
+import { Playfair_Display, Hanken_Grotesk, Geist, Monsieur_La_Doulaise, DM_Sans, Bebas_Neue } from "next/font/google";
 import Navbar from "./components/Navbar";
 import FloatingContact from "./components/FloatingContact";
 import "./globals.css";
@@ -30,6 +30,19 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-monsieur",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-bebas",
   display: "swap",
 });
 
@@ -121,7 +134,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfairDisplay.variable} ${hankenGrotesk.variable} ${geist.variable} ${monsieurLaDoulaise.variable} antialiased`}
+      className={`${playfairDisplay.variable} ${hankenGrotesk.variable} ${geist.variable} ${monsieurLaDoulaise.variable} ${dmSans.variable} ${bebasNeue.variable} antialiased`}
     >
       <head>
         {/* JSON-LD: Local Business + Organization */}

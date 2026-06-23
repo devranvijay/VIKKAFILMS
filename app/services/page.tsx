@@ -1,1043 +1,541 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import ScrollStack, { ScrollStackItem } from "../components/ScrollStack";
 
-// ─── Cloudinary URL helper (inline, no import needed) ─────────────────────────
 const CLD = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto`;
 const img = (id: string) => `${CLD}/${id}`;
 
-// ─── Service data ─────────────────────────────────────────────────────────────
 const SERVICES = [
   {
     num: "01",
     label: "Photography",
-    title: "Still Work",
-    tagline: "Every frame, a statement.",
-    description:
-      "Commercial campaigns, automotive stills, product photography, editorial portraits, and brand identity — captured on full-frame sensors with cinema glass.",
-    features: [
-      "Automotive & Commercial",
-      "Brand & Product Stills",
-      "Corporate & Editorial",
-    ],
-    cta: "Book a Shoot",
+    title: "Commercial & Product Stills",
+    desc: "Full-frame photography for automotive campaigns, product launches, editorial portraits, and brand identity.",
+    tags: ["Automotive", "Product", "Editorial", "E-Commerce"],
     src: img("DSC01488_qx6a1n"),
-    accent: "rgba(200,184,154,0.18)",
-    accentLine: "#c8b89a",
+    cta: "Book a Shoot",
   },
   {
     num: "02",
     label: "Cinematography",
-    title: "Film Work",
-    tagline: "Motion with intention.",
-    description:
-      "Narrative brand films, product cinematics, wedding films, and documentary storytelling — colour graded and delivered in 4K with cinema lenses.",
-    features: [
-      "Brand & Product Films",
-      "Wedding Cinematics",
-      "Colour Graded Delivery",
-    ],
-    cta: "Commission a Film",
+    title: "Brand & Narrative Films",
+    desc: "Cinematic brand stories and product films — shot on cinema glass, graded in DaVinci Resolve, delivered in 4K.",
+    tags: ["Brand Films", "Product Cinematics", "Weddings", "Documentary"],
     src: img("DSC09380_aonznj"),
-    accent: "rgba(160,180,200,0.18)",
-    accentLine: "#a0b4c8",
+    cta: "Commission a Film",
   },
   {
     num: "03",
-    label: "Video",
-    title: "Reels & Social",
-    tagline: "Built for every screen.",
-    description:
-      "Social reels, product demos, testimonials, event highlights, and platform-optimised content — from Instagram to broadcast, we cut for attention.",
-    features: [
-      "Social Media Reels",
-      "Product Demo & Testimonial",
-      "Event & Live Coverage",
-    ],
-    cta: "Start a Project",
+    label: "Social Content",
+    title: "Reels & Platform Video",
+    desc: "Short-form content optimised for Instagram, YouTube, and broadcast — reels, demos, testimonials.",
+    tags: ["Instagram Reels", "YouTube", "Product Demo", "Events"],
     src: img("DSC01456_ygk3gp"),
-    accent: "rgba(160,180,140,0.14)",
-    accentLine: "#a8b898",
+    cta: "Start a Project",
+  },
+  {
+    num: "04",
+    label: "Aerial & BTS",
+    title: "Drone & Behind-the-Scenes",
+    desc: "Licensed drone cinematography for aerial establishing shots, event coverage, and authentic BTS content.",
+    tags: ["Licensed Drone Ops", "Aerial", "Event Coverage", "BTS"],
+    src: img("DSC01346-Enhanced-NR_lf6bof"),
+    cta: "Enquire Now",
   },
 ];
 
-// ─── Process steps ─────────────────────────────────────────────────────────────
-const PROCESS = [
-  {
-    num: "01",
-    title: "Discovery & Brief",
-    body: "We start by understanding your brand, audience, and objectives. Every project begins with a detailed creative brief — no assumptions, no guesswork.",
-  },
-  {
-    num: "02",
-    title: "Production Day",
-    body: "Full-frame cameras, cinema glass, professional lighting, and a focused crew. We execute with precision — on location or in studio, always on time.",
-  },
-  {
-    num: "03",
-    title: "Edit & Delivery",
-    body: "DaVinci Resolve colour grading, sound design, and motion graphics. Files delivered optimised for every platform, every format, every deadline.",
-  },
-];
-
-// ─── ServiceCard component ─────────────────────────────────────────────────────
-function ServiceCard({
-  service,
-  index,
-}: {
-  service: (typeof SERVICES)[0];
-  index: number;
-}) {
-  const [hovered, setHovered] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-
+function ServiceCard({ s }: { s: (typeof SERVICES)[0] }) {
   return (
-    <div
-      className="cinema-reveal"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position: "relative",
-        aspectRatio: "3/4",
-        borderRadius: "20px",
-        overflow: "hidden",
-        cursor: "pointer",
-        transform: hovered ? "scale(1.018)" : "scale(1)",
-        transition: "transform 0.65s cubic-bezier(0.23,1,0.32,1)",
-        transitionDelay: `${index * 80}ms`,
-      }}
-    >
-      {/* Accent line */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "1px",
-          height: "100%",
-          background: `linear-gradient(to bottom, transparent 0%, ${service.accentLine}44 40%, transparent 100%)`,
-          zIndex: 3,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Background image */}
-      {!loaded && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "#0f0f11",
-            borderRadius: "20px",
-          }}
+    <div className="svc-card-inner">
+      <div className="svc-card-img">
+        <Image
+          src={s.src}
+          alt={s.title}
+          fill
+          sizes="(max-width:768px) 100vw, 50vw"
+          style={{ objectFit: "cover" }}
         />
-      )}
-      <Image
-        src={service.src}
-        alt={service.title}
-        fill
-        sizes="(max-width:768px) 90vw, 33vw"
-        style={{
-          objectFit: "cover",
-          opacity: loaded ? 1 : 0,
-          transform: hovered ? "scale(1.07)" : "scale(1)",
-          transition: "transform 0.9s cubic-bezier(0.23,1,0.32,1), opacity 0.6s ease",
-        }}
-        onLoad={() => setLoaded(true)}
-      />
-
-      {/* Dark gradient overlay */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: hovered
-            ? "linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.55) 52%, rgba(0,0,0,0.28) 100%)"
-            : "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 42%, rgba(0,0,0,0.18) 100%)",
-          transition: "background 0.5s ease",
-        }}
-      />
-
-      {/* Ambient radial glow */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: service.accent,
-          opacity: hovered ? 1 : 0,
-          transition: "opacity 0.6s ease",
-          mixBlendMode: "screen",
-        }}
-      />
-
-      {/* Top: number + label */}
-      <div
-        style={{
-          position: "absolute",
-          top: "clamp(20px, 2.5vw, 32px)",
-          left: "clamp(20px, 2.5vw, 32px)",
-          zIndex: 4,
-          display: "flex",
-          alignItems: "center",
-          gap: "12px",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-geist), monospace",
-            fontSize: "8px",
-            letterSpacing: "0.4em",
-            textTransform: "uppercase",
-            color: service.accentLine,
-            opacity: 0.8,
-          }}
-        >
-          {service.num}
-        </span>
-        <span
-          style={{
-            width: "20px",
-            height: "1px",
-            background: `${service.accentLine}66`,
-            display: "block",
-          }}
-        />
-        <span
-          style={{
-            fontFamily: "var(--font-geist), monospace",
-            fontSize: "8px",
-            letterSpacing: "0.35em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.3)",
-          }}
-        >
-          {service.label}
-        </span>
+        <div className="svc-card-img-overlay" />
       </div>
-
-      {/* Bottom: content */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "clamp(22px, 2.8vw, 36px)",
-          left: "clamp(20px, 2.5vw, 32px)",
-          right: "clamp(20px, 2.5vw, 32px)",
-          zIndex: 4,
-        }}
-      >
-        {/* Tagline — always visible */}
-        <div
-          style={{
-            fontFamily: "var(--font-geist), monospace",
-            fontSize: "9px",
-            letterSpacing: "0.3em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.28)",
-            marginBottom: "10px",
-            opacity: hovered ? 0 : 1,
-            transform: hovered ? "translateY(-4px)" : "translateY(0)",
-            transition: "all 0.3s ease",
-          }}
-        >
-          {service.tagline}
+      <div className="svc-card-content">
+        <div className="svc-card-top">
+          <span className="svc-card-num">{s.num}</span>
+          <span className="svc-card-label">{s.label}</span>
         </div>
-
-        {/* Title */}
-        <h3
-          style={{
-            fontFamily: "var(--font-playfair), serif",
-            fontSize: "clamp(30px, 3.5vw, 52px)",
-            fontWeight: 700,
-            lineHeight: 0.95,
-            letterSpacing: "-0.02em",
-            color: "#fff",
-            marginBottom: hovered ? "18px" : "0",
-            transition: "margin 0.45s cubic-bezier(0.23,1,0.32,1)",
-          }}
-        >
-          {service.title}
-        </h3>
-
-        {/* Description — hover reveal */}
-        <div
-          style={{
-            overflow: "hidden",
-            maxHeight: hovered ? "200px" : "0",
-            opacity: hovered ? 1 : 0,
-            transition:
-              "max-height 0.5s cubic-bezier(0.23,1,0.32,1), opacity 0.4s ease 0.1s",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--font-hanken), sans-serif",
-              fontSize: "clamp(12px, 1.1vw, 14px)",
-              lineHeight: 1.72,
-              color: "rgba(196,199,200,0.58)",
-              marginBottom: "16px",
-            }}
-          >
-            {service.description}
-          </p>
-
-          <ul style={{ marginBottom: "20px", listStyle: "none", padding: 0 }}>
-            {service.features.map((f) => (
-              <li
-                key={f}
-                style={{
-                  fontFamily: "var(--font-geist), monospace",
-                  fontSize: "8.5px",
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.32)",
-                  marginBottom: "6px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
-              >
-                <span
-                  style={{
-                    width: "12px",
-                    height: "1px",
-                    background: `${service.accentLine}88`,
-                    display: "block",
-                    flexShrink: 0,
-                  }}
-                />
-                {f}
-              </li>
-            ))}
-          </ul>
-
-          <Link
-            href="/contact"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "10px",
-              fontFamily: "var(--font-geist), monospace",
-              fontSize: "9px",
-              letterSpacing: "0.28em",
-              textTransform: "uppercase",
-              color: "#fff",
-              textDecoration: "none",
-              borderBottom: `1px solid ${service.accentLine}66`,
-              paddingBottom: "3px",
-              transition: "border-color 0.2s",
-            }}
-          >
-            {service.cta}
-            <span style={{ fontSize: "12px" }}>→</span>
-          </Link>
+        <h3 className="svc-card-title">{s.title}</h3>
+        <p className="svc-card-desc">{s.desc}</p>
+        <div className="svc-card-tags">
+          {s.tags.map(t => <span key={t} className="svc-card-tag">{t}</span>)}
         </div>
+        <Link href="/contact" className="svc-card-cta">{s.cta} →</Link>
       </div>
     </div>
   );
 }
 
-// ─── Page ──────────────────────────────────────────────────────────────────────
 export default function ServicesPage() {
-  const [heroVisible, setHeroVisible] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const t = setTimeout(() => setHeroVisible(true), 120);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Scroll reveal
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            (e.target as HTMLElement).classList.add("is-visible");
-            obs.unobserve(e.target);
-          }
-        }),
-      { threshold: 0.08 }
-    );
-    document.querySelectorAll(".cinema-reveal").forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setMounted(true), 60); return () => clearTimeout(t); }, []);
 
   return (
-    <div
-      style={{
-        backgroundColor: "#060606",
-        color: "#e2e2e2",
-        overflowX: "hidden",
-      }}
-    >
-      {/* ══ HERO ════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          padding: "0 8vw clamp(60px, 9vh, 110px)",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Film grain */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: 0.04,
-            backgroundImage:
-              "url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>\")",
-            backgroundRepeat: "repeat",
-            backgroundSize: "200px",
-            pointerEvents: "none",
-            mixBlendMode: "overlay",
-          }}
-        />
+    <main style={{ background: "#080808", color: "#e2e2e2", minHeight: "100vh" }}>
 
-        {/* VF watermark */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            right: "-1vw",
-            transform: `translateY(calc(-50% + ${scrollY * 0.04}px))`,
-            fontFamily: "var(--font-playfair), serif",
-            fontSize: "clamp(180px, 32vw, 480px)",
-            fontWeight: 700,
-            color: "rgba(255,255,255,0.016)",
-            letterSpacing: "-0.05em",
-            lineHeight: 1,
-            userSelect: "none",
-            pointerEvents: "none",
-          }}
-        >
-          VF
+      {/* ── HERO ─────────────────────────────────────────────── */}
+      <section className="s-hero">
+        <div className="s-hero-top">
+          <span className="s-eyebrow">Vikka Films · Services</span>
+          <span className="s-eyebrow">Est. 2022</span>
         </div>
-
-        {/* Top-right year tag */}
-        <div
-          style={{
-            position: "absolute",
-            top: "clamp(100px, 14vw, 140px)",
-            right: "8vw",
-            textAlign: "right",
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? "translateY(0)" : "translateY(12px)",
-            transition: "all 1s cubic-bezier(0.16,1,0.3,1) 0.7s",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-geist), monospace",
-              fontSize: "9px",
-              letterSpacing: "0.3em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.18)",
-            }}
-          >
-            2026 · Studio Services
-          </span>
-        </div>
-
-        {/* Overline */}
-        <span
-          style={{
-            fontFamily: "var(--font-geist), monospace",
-            fontSize: "10px",
-            letterSpacing: "0.55em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.28)",
-            display: "block",
-            marginBottom: "28px",
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? "translateY(0)" : "translateY(18px)",
-            transition: "all 1.1s cubic-bezier(0.16,1,0.3,1) 0.1s",
-          }}
-        >
-          What We Do
-        </span>
-
-        {/* Headline */}
         <h1
+          className="s-hero-h1"
           style={{
-            fontFamily: "var(--font-playfair), serif",
-            fontSize: "clamp(48px, 8vw, 120px)",
-            fontWeight: 700,
-            lineHeight: 0.92,
-            letterSpacing: "-0.03em",
-            color: "#fff",
-            marginBottom: "clamp(28px, 4vw, 52px)",
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? "translateY(0)" : "translateY(50px)",
-            transition: "all 1.3s cubic-bezier(0.16,1,0.3,1) 0.2s",
+            opacity: mounted ? 1 : 0,
+            transform: mounted ? "none" : "translateY(48px)",
+            transition: "opacity 1.1s cubic-bezier(0.16,1,0.3,1) 0.1s, transform 1.1s cubic-bezier(0.16,1,0.3,1) 0.1s",
           }}
         >
-          Full-Service
+          What We
           <br />
-          Visual{" "}
-          <em style={{ fontStyle: "italic", color: "rgba(226,226,226,0.32)" }}>
-            Production.
-          </em>
+          <em>Do.</em>
         </h1>
-
-        {/* Bottom row */}
         <div
+          className="s-hero-foot"
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            flexWrap: "wrap",
-            gap: "24px",
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? "translateY(0)" : "translateY(24px)",
-            transition: "all 1s cubic-bezier(0.16,1,0.3,1) 0.55s",
+            opacity: mounted ? 1 : 0,
+            transform: mounted ? "none" : "translateY(20px)",
+            transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s, transform 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s",
           }}
         >
-          <p
-            style={{
-              fontFamily: "var(--font-hanken), sans-serif",
-              fontSize: "clamp(13px, 1.4vw, 17px)",
-              lineHeight: 1.7,
-              color: "rgba(196,199,200,0.42)",
-              maxWidth: "380px",
-              margin: 0,
-            }}
-          >
-            From a single product shot to a complete cinematic brand film — everything your brand needs, under one roof.
-          </p>
-
-          {/* Scroll cue */}
-          <div style={{ display: "flex", alignItems: "center", gap: "14px", flexShrink: 0 }}>
-            <span
-              style={{
-                fontFamily: "var(--font-geist), monospace",
-                fontSize: "9px",
-                letterSpacing: "0.38em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.18)",
-              }}
-            >
-              Scroll to explore
-            </span>
-            <div
-              style={{
-                width: "48px",
-                height: "1px",
-                background: "linear-gradient(to right, rgba(255,255,255,0.35), transparent)",
-                animation: "svcScrollCue 2s ease-in-out infinite",
-              }}
-            />
-          </div>
+          <p className="s-hero-sub">One studio. Every visual discipline.</p>
+          <Link href="/contact" className="s-cta-pill">Start a project →</Link>
         </div>
       </section>
 
-      {/* ══ SERVICES CARDS ════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          padding: "clamp(80px, 10vw, 130px) 8vw",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
-          backgroundColor: "#080808",
-        }}
-      >
-        {/* Header */}
-        <div
-          className="cinema-reveal"
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            flexWrap: "wrap",
-            gap: "24px",
-            marginBottom: "clamp(48px, 6vw, 80px)",
-            paddingBottom: "clamp(28px, 3.5vw, 44px)",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
-          }}
+      {/* ── SERVICES SCROLL STACK ────────────────────────────── */}
+      <section className="s-stack-section">
+        <ScrollStack
+          useWindowScroll={true}
+          itemDistance={200}
+          itemScale={0.04}
+          itemStackDistance={30}
+          stackPosition="15%"
+          scaleEndPosition="5%"
+          baseScale={0.88}
+          onStackComplete={undefined}
         >
-          <div>
-            <span
-              style={{
-                fontFamily: "var(--font-geist), monospace",
-                fontSize: "9px",
-                letterSpacing: "0.5em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.2)",
-                display: "block",
-                marginBottom: "14px",
-              }}
-            >
-              Three Disciplines
-            </span>
-            <h2
-              style={{
-                fontFamily: "var(--font-playfair), serif",
-                fontSize: "clamp(34px, 5vw, 68px)",
-                fontWeight: 700,
-                lineHeight: 0.95,
-                letterSpacing: "-0.03em",
-                color: "#fff",
-                margin: 0,
-              }}
-            >
-              The{" "}
-              <em style={{ fontStyle: "italic", color: "rgba(255,255,255,0.28)" }}>
-                Services.
-              </em>
-            </h2>
-          </div>
-          <p
-            style={{
-              fontFamily: "var(--font-hanken), sans-serif",
-              fontSize: "clamp(13px, 1.3vw, 16px)",
-              lineHeight: 1.72,
-              color: "rgba(196,199,200,0.38)",
-              maxWidth: "320px",
-              margin: 0,
-              textAlign: "right",
-            }}
-          >
-            Hover any service to explore what&apos;s included.
-          </p>
-        </div>
-
-        {/* 3-column card grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "clamp(10px, 1.5vw, 18px)",
-          }}
-          className="services-grid"
-        >
-          {SERVICES.map((s, i) => (
-            <ServiceCard key={s.num} service={s} index={i} />
+          {SERVICES.map(s => (
+            <ScrollStackItem key={s.num} itemClassName="svc-stack-item">
+              <ServiceCard s={s} />
+            </ScrollStackItem>
           ))}
-        </div>
+        </ScrollStack>
       </section>
 
-      {/* ══ PROCESS ══════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          padding: "clamp(80px, 10vw, 130px) 8vw",
-          backgroundColor: "#0a0a0a",
-          borderTop: "1px solid rgba(255,255,255,0.04)",
-        }}
-      >
-        {/* Header */}
-        <div
-          className="cinema-reveal"
-          style={{ marginBottom: "clamp(56px, 7vw, 96px)" }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-geist), monospace",
-              fontSize: "9px",
-              letterSpacing: "0.5em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.2)",
-              display: "block",
-              marginBottom: "14px",
-            }}
-          >
-            How We Work
-          </span>
-          <h2
-            style={{
-              fontFamily: "var(--font-playfair), serif",
-              fontSize: "clamp(34px, 5vw, 68px)",
-              fontWeight: 700,
-              lineHeight: 0.95,
-              letterSpacing: "-0.03em",
-              color: "#fff",
-              margin: 0,
-            }}
-          >
-            The{" "}
-            <em style={{ fontStyle: "italic", color: "rgba(255,255,255,0.28)" }}>
-              Process.
-            </em>
-          </h2>
+      {/* ── PROCESS ──────────────────────────────────────────── */}
+      <section className="s-process">
+        <div className="s-process-head">
+          <span className="s-eyebrow">How it works</span>
+          <h2 className="s-process-title">The<br /><em>Process.</em></h2>
         </div>
-
-        {/* Steps */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-          {PROCESS.map((step, i) => (
-            <div
-              key={step.num}
-              className="cinema-reveal"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "clamp(32px, 5vw, 80px)",
-                alignItems: "center",
-                padding: "clamp(40px, 5vw, 64px) 0",
-                borderBottom:
-                  i < PROCESS.length - 1
-                    ? "1px solid rgba(255,255,255,0.05)"
-                    : "none",
-                transitionDelay: `${i * 100}ms`,
-              }}
-            >
-              {/* Left: number + title */}
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "clamp(24px, 3vw, 48px)" }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-playfair), serif",
-                    fontSize: "clamp(72px, 10vw, 140px)",
-                    fontWeight: 700,
-                    lineHeight: 0.85,
-                    color: "rgba(255,255,255,0.04)",
-                    flexShrink: 0,
-                    userSelect: "none",
-                  }}
-                >
-                  {step.num}
-                </span>
-                <div style={{ paddingTop: "clamp(10px, 1.5vw, 18px)" }}>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-geist), monospace",
-                      fontSize: "8px",
-                      letterSpacing: "0.4em",
-                      textTransform: "uppercase",
-                      color: "rgba(255,255,255,0.18)",
-                      display: "block",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    Step {step.num}
-                  </span>
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-playfair), serif",
-                      fontSize: "clamp(24px, 2.8vw, 38px)",
-                      fontWeight: 700,
-                      lineHeight: 1.1,
-                      letterSpacing: "-0.02em",
-                      color: "#fff",
-                      margin: 0,
-                    }}
-                  >
-                    {step.title}
-                  </h3>
-                </div>
-              </div>
-
-              {/* Right: description */}
-              <p
-                style={{
-                  fontFamily: "var(--font-hanken), sans-serif",
-                  fontSize: "clamp(14px, 1.4vw, 17px)",
-                  lineHeight: 1.75,
-                  color: "rgba(196,199,200,0.48)",
-                  margin: 0,
-                }}
-              >
-                {step.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══ IMAGE SHOWCASE ════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr",
-          gap: "2px",
-          borderTop: "1px solid rgba(255,255,255,0.04)",
-        }}
-        className="showcase-grid"
-      >
-        {/* Large: BMW */}
-        <div style={{ position: "relative", aspectRatio: "16/9", overflow: "hidden" }}>
-          <Image
-            src={img("DSC01346-Enhanced-NR_lf6bof")}
-            alt="BMW Z4 commercial shoot"
-            fill
-            sizes="(max-width:768px) 100vw, 66vw"
-            style={{ objectFit: "cover" }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)",
-            }}
-          />
-          <div style={{ position: "absolute", bottom: "clamp(20px, 3vw, 36px)", left: "clamp(20px, 3vw, 36px)" }}>
-            <span
-              style={{
-                fontFamily: "var(--font-geist), monospace",
-                fontSize: "8px",
-                letterSpacing: "0.4em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.35)",
-                display: "block",
-                marginBottom: "8px",
-              }}
-            >
-              Commercial · Automotive · 2026
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-playfair), serif",
-                fontSize: "clamp(20px, 2.5vw, 34px)",
-                fontWeight: 700,
-                color: "#fff",
-                lineHeight: 1.1,
-              }}
-            >
-              BMW Z4
-            </span>
-          </div>
-        </div>
-
-        {/* Small: DJI */}
-        <div style={{ position: "relative", overflow: "hidden" }}>
-          <Image
-            src={img("DSC09376_lygk5q")}
-            alt="DJI Gimbal product shoot"
-            fill
-            sizes="(max-width:768px) 100vw, 33vw"
-            style={{ objectFit: "cover" }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, transparent 55%)",
-            }}
-          />
-          <div style={{ position: "absolute", bottom: "clamp(20px, 3vw, 36px)", left: "clamp(20px, 3vw, 36px)" }}>
-            <span
-              style={{
-                fontFamily: "var(--font-geist), monospace",
-                fontSize: "8px",
-                letterSpacing: "0.4em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.35)",
-                display: "block",
-                marginBottom: "8px",
-              }}
-            >
-              Commercial · Product · 2026
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-playfair), serif",
-                fontSize: "clamp(20px, 2.5vw, 34px)",
-                fontWeight: 700,
-                color: "#fff",
-                lineHeight: 1.1,
-              }}
-            >
-              DJI Gimbal
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ══ CAPABILITIES STRIP ════════════════════════════════════════════════ */}
-      <section
-        style={{
-          backgroundColor: "#070707",
-          borderTop: "1px solid rgba(255,255,255,0.04)",
-          padding: "clamp(48px, 6vw, 80px) 8vw",
-        }}
-      >
-        <div
-          className="cinema-reveal"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(160px,1fr))",
-            gap: "clamp(32px, 4vw, 56px)",
-            textAlign: "center",
-          }}
-        >
+        <div className="s-steps">
           {[
-            { value: "8K", label: "Full-Frame Sensors" },
-            { value: "4K", label: "Cinema Glass" },
-            { value: "DaVinci", label: "Colour Grading" },
-            { value: "Arri", label: "Lighting Arrays" },
-          ].map((c, i) => (
-            <div key={c.label} style={{ transitionDelay: `${i * 70}ms` }}>
-              <div
-                style={{
-                  fontFamily: "var(--font-playfair), serif",
-                  fontSize: "clamp(32px, 4vw, 52px)",
-                  fontWeight: 700,
-                  lineHeight: 1,
-                  background: "linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.3) 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  marginBottom: "10px",
-                }}
-              >
-                {c.value}
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-geist), monospace",
-                  fontSize: "8.5px",
-                  letterSpacing: "0.3em",
-                  textTransform: "uppercase",
-                  color: "rgba(196,199,200,0.28)",
-                }}
-              >
-                {c.label}
+            { n: "01", t: "Brief & Discovery", b: "We map your objectives, deliverables, and vision — no guesswork, just clarity before a single frame is shot." },
+            { n: "02", t: "Production Day",    b: "Cinema glass, professional lighting, a focused crew. Every detail is locked before we call action." },
+            { n: "03", t: "Edit & Delivery",   b: "DaVinci grading, motion graphics, colour-correct masters — optimised and delivered for every platform." },
+          ].map((step) => (
+            <div key={step.n} className="s-step">
+              <div className="s-step-bg-num">{step.n}</div>
+              <div className="s-step-content">
+                <span className="s-step-index">{step.n}</span>
+                <p className="s-step-title">{step.t}</p>
+                <p className="s-step-body">{step.b}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ══ CTA ════════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          padding: "clamp(80px, 10vw, 140px) 8vw",
-          textAlign: "center",
-          backgroundColor: "#0a0a0a",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
-        }}
-      >
-        <div className="cinema-reveal">
-          <p
-            style={{
-              fontFamily: "var(--font-geist), monospace",
-              fontSize: "9px",
-              letterSpacing: "0.45em",
-              textTransform: "uppercase",
-              color: "rgba(196,199,200,0.28)",
-              marginBottom: "20px",
-            }}
-          >
-            Ready to start?
-          </p>
-          <h2
-            style={{
-              fontFamily: "var(--font-playfair), serif",
-              fontSize: "clamp(34px, 5vw, 70px)",
-              fontWeight: 700,
-              color: "#fff",
-              lineHeight: 1.05,
-              letterSpacing: "-0.03em",
-              marginBottom: "clamp(32px, 4vw, 52px)",
-            }}
-          >
-            Let&apos;s create your
-            <br />
-            <em style={{ fontStyle: "italic", color: "rgba(255,255,255,0.32)" }}>
-              next visual story.
-            </em>
-          </h2>
-          <div
-            style={{
-              display: "flex",
-              gap: "14px",
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <Link
-              href="/contact"
-              style={{
-                backgroundColor: "#ffffff",
-                color: "#0a0a0a",
-                padding: "14px 44px",
-                borderRadius: "9999px",
-                fontFamily: "var(--font-geist), monospace",
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                textDecoration: "none",
-                display: "inline-block",
-                transition: "transform 0.3s, box-shadow 0.3s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1.05)";
-                (e.currentTarget as HTMLAnchorElement).style.boxShadow =
-                  "0 0 32px rgba(255,255,255,0.2)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)";
-                (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
-              }}
-            >
-              Book A Shoot
-            </Link>
-            <Link
-              href="/portfolio"
-              style={{
-                backgroundColor: "transparent",
-                color: "rgba(255,255,255,0.55)",
-                padding: "14px 44px",
-                borderRadius: "9999px",
-                border: "1px solid rgba(255,255,255,0.14)",
-                fontFamily: "var(--font-geist), monospace",
-                fontSize: "11px",
-                fontWeight: 500,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                textDecoration: "none",
-                display: "inline-block",
-                transition: "border-color 0.25s, color 0.25s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.borderColor =
-                  "rgba(255,255,255,0.4)";
-                (e.currentTarget as HTMLAnchorElement).style.color = "#fff";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.borderColor =
-                  "rgba(255,255,255,0.14)";
-                (e.currentTarget as HTMLAnchorElement).style.color =
-                  "rgba(255,255,255,0.55)";
-              }}
-            >
-              View Portfolio
-            </Link>
-          </div>
+      {/* ── CTA ──────────────────────────────────────────────── */}
+      <section className="s-cta-section">
+        <h2 className="s-cta-h2">
+          Let&apos;s build your<br />
+          <em>visual story.</em>
+        </h2>
+        <div className="s-cta-row">
+          <Link href="/contact" className="s-btn-white">Book a Shoot</Link>
+          <Link href="/portfolio" className="s-btn-outline">View Portfolio</Link>
         </div>
       </section>
 
-      {/* ── Page-scoped CSS ── */}
       <style>{`
-        @keyframes svcScrollCue {
-          0%, 100% { width: 48px; opacity: 0.6; }
-          50%       { width: 72px; opacity: 1; }
+        /* ─ Base ─ */
+        .s-eyebrow {
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.28);
         }
-        .cinema-reveal {
-          opacity: 0;
-          transform: translateY(28px);
-          transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
-                      transform 0.9s cubic-bezier(0.16,1,0.3,1);
+
+        /* ─ Hero ─ */
+        .s-hero {
+          padding: clamp(120px,14vw,180px) clamp(24px,6vw,80px) clamp(64px,8vw,100px);
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          display: flex;
+          flex-direction: column;
+          gap: clamp(40px,6vw,72px);
         }
-        .cinema-reveal.is-visible {
-          opacity: 1;
-          transform: translateY(0);
+        .s-hero-top {
+          display: flex;
+          justify-content: space-between;
         }
+        .s-hero-h1 {
+          font-family: var(--font-playfair), serif;
+          font-size: clamp(64px,11vw,160px);
+          font-weight: 700;
+          line-height: 0.9;
+          letter-spacing: -0.04em;
+          color: #fff;
+          margin: 0;
+        }
+        .s-hero-h1 em {
+          font-family: var(--font-monsieur), cursive;
+          font-style: normal;
+          font-weight: 400;
+          color: rgba(255,255,255,0.35);
+          font-size: 1.05em;
+        }
+        .s-hero-foot {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 20px;
+          padding-top: clamp(24px,3vw,40px);
+          border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .s-hero-sub {
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: clamp(14px,1.4vw,17px);
+          color: rgba(255,255,255,0.38);
+          margin: 0;
+        }
+        .s-cta-pill {
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.55);
+          text-decoration: none;
+          border: 1px solid rgba(255,255,255,0.14);
+          border-radius: 9999px;
+          padding: 10px 24px;
+          transition: color 0.2s, border-color 0.2s;
+        }
+        .s-cta-pill:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+        /* ─ Scroll Stack section ─ */
+        .s-stack-section {
+          padding: 0 clamp(24px,6vw,80px);
+        }
+
+        /* Override default card height/shape for our service cards */
+        .svc-stack-item {
+          height: auto !important;
+          min-height: 520px;
+          border-radius: 24px !important;
+          padding: 0 !important;
+          overflow: hidden;
+          background: #111;
+          border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .svc-card-inner {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          height: 100%;
+          min-height: 520px;
+        }
+
+        .svc-card-img {
+          position: relative;
+          overflow: hidden;
+        }
+        .svc-card-img-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to right, transparent 60%, #111 100%);
+          z-index: 1;
+        }
+
+        .svc-card-content {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 20px;
+          padding: clamp(36px,4vw,60px);
+        }
+
+        .svc-card-top {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+        .svc-card-num {
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.3em;
+          color: rgba(255,255,255,0.2);
+        }
+        .svc-card-label {
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: 9px;
+          letter-spacing: 0.24em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.3);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 9999px;
+          padding: 4px 14px;
+        }
+
+        .svc-card-title {
+          font-family: var(--font-bebas), sans-serif;
+          font-size: clamp(40px,5vw,80px);
+          font-weight: 400;
+          letter-spacing: 0.04em;
+          color: #fff;
+          margin: 0;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+
+        .svc-card-desc {
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: clamp(13px,1.3vw,16px);
+          line-height: 1.75;
+          color: rgba(196,199,200,0.52);
+          margin: 0;
+          max-width: 38ch;
+        }
+
+        .svc-card-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .svc-card-tag {
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.28);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 4px;
+          padding: 4px 10px;
+        }
+
+        .svc-card-cta {
+          align-self: flex-start;
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.5);
+          text-decoration: none;
+          border-bottom: 1px solid rgba(255,255,255,0.16);
+          padding-bottom: 4px;
+          transition: color 0.2s, border-color 0.2s;
+        }
+        .svc-card-cta:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
+
+        /* Window-scroll mode: let window drive, not the inner div */
+        .s-stack-section .scroll-stack-scroller {
+          overflow: visible;
+          height: auto;
+        }
+        .s-stack-section .scroll-stack-inner {
+          padding: 6vh 0 50rem;
+        }
+
+        /* ─ Process ─ */
+        .s-process {
+          padding: clamp(80px,10vw,130px) clamp(24px,6vw,80px);
+          border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .s-process-head {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-bottom: clamp(48px,6vw,80px);
+        }
+        .s-process-title {
+          font-family: var(--font-playfair), serif;
+          font-size: clamp(44px,7vw,100px);
+          font-weight: 700;
+          line-height: 0.9;
+          letter-spacing: -0.04em;
+          color: #fff;
+          margin: 0;
+        }
+        .s-process-title em {
+          font-family: var(--font-monsieur), cursive;
+          font-style: normal;
+          font-weight: 400;
+          color: rgba(255,255,255,0.28);
+          font-size: 1.05em;
+        }
+
+        .s-steps {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1px;
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 20px;
+          overflow: hidden;
+        }
+
+        .s-step {
+          position: relative;
+          padding: clamp(28px,3.5vw,52px) clamp(24px,3vw,44px);
+          background: #0d0d0d;
+          overflow: hidden;
+          transition: background 0.3s;
+        }
+        .s-step:hover { background: #131313; }
+
+        .s-step-bg-num {
+          font-family: var(--font-bebas), sans-serif;
+          font-size: clamp(100px,14vw,180px);
+          font-weight: 400;
+          line-height: 1;
+          color: rgba(255,255,255,0.03);
+          position: absolute;
+          bottom: -12px;
+          right: 16px;
+          pointer-events: none;
+          user-select: none;
+          letter-spacing: 0.02em;
+        }
+
+        .s-step-content {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          height: 100%;
+        }
+
+        .s-step-index {
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.3em;
+          color: rgba(255,255,255,0.2);
+        }
+        .s-step-title {
+          font-family: var(--font-bebas), sans-serif;
+          font-size: clamp(24px,2.8vw,40px);
+          font-weight: 400;
+          letter-spacing: 0.04em;
+          color: rgba(255,255,255,0.9);
+          margin: 0;
+          text-transform: uppercase;
+          line-height: 1;
+        }
+        .s-step-body {
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: clamp(12px,1.1vw,14px);
+          color: rgba(196,199,200,0.42);
+          margin: 0;
+          line-height: 1.75;
+          max-width: 28ch;
+        }
+
+        /* ─ Final CTA ─ */
+        .s-cta-section {
+          padding: clamp(80px,10vw,140px) clamp(24px,6vw,80px);
+          border-top: 1px solid rgba(255,255,255,0.07);
+          display: flex;
+          flex-direction: column;
+          gap: clamp(32px,4vw,52px);
+        }
+        .s-cta-h2 {
+          font-family: var(--font-playfair), serif;
+          font-size: clamp(44px,7.5vw,110px);
+          font-weight: 700;
+          line-height: 0.93;
+          letter-spacing: -0.04em;
+          color: #fff;
+          margin: 0;
+        }
+        .s-cta-h2 em {
+          font-family: var(--font-monsieur), cursive;
+          font-style: normal;
+          font-weight: 400;
+          color: rgba(255,255,255,0.28);
+          font-size: 1.05em;
+        }
+        .s-cta-row {
+          display: flex;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
+        .s-btn-white {
+          background: #fff;
+          color: #080808;
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          text-decoration: none;
+          padding: 14px 40px;
+          border-radius: 9999px;
+          transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .s-btn-white:hover { transform: scale(1.03); box-shadow: 0 0 28px rgba(255,255,255,0.16); }
+        .s-btn-outline {
+          background: transparent;
+          color: rgba(255,255,255,0.5);
+          font-family: var(--font-dm-sans), sans-serif;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          text-decoration: none;
+          padding: 14px 40px;
+          border-radius: 9999px;
+          border: 1px solid rgba(255,255,255,0.14);
+          transition: color 0.2s, border-color 0.2s;
+        }
+        .s-btn-outline:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+        /* ─ Responsive ─ */
         @media (max-width: 768px) {
-          .services-grid { grid-template-columns: 1fr !important; }
-          .showcase-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 900px) {
-          .services-grid { grid-template-columns: 1fr 1fr !important; }
+          .svc-card-inner {
+            grid-template-columns: 1fr;
+          }
+          .svc-card-img {
+            aspect-ratio: 16/9;
+            min-height: 0;
+          }
+          .svc-card-img-overlay {
+            background: linear-gradient(to bottom, transparent 60%, #111 100%);
+          }
+          .svc-stack-item {
+            min-height: auto !important;
+          }
+          .s-steps {
+            grid-template-columns: 1fr;
+          }
+          .s-step-bg-num {
+            font-size: 120px;
+          }
         }
       `}</style>
-    </div>
+    </main>
   );
 }
