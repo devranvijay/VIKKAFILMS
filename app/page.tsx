@@ -10,6 +10,12 @@ export default function HomePage() {
   const filmmakerRef = useRef<HTMLElement>(null);
   const [filmProgress, setFilmProgress] = useState(0);
 
+  // Always start at the top — prevents browser scroll-restoration from mid-page
+  useEffect(() => {
+    history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     const onFilmScroll = () => {
       const el = filmmakerRef.current;
