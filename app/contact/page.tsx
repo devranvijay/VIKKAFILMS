@@ -255,37 +255,42 @@ export default function ContactPage() {
               >
                 Follow
               </span>
-              {[
-                {
-                  label: "Instagram",
-                  href: "https://www.instagram.com/vikafilms.in?igsh=MWkyc2hoMTBiM3VhMA%3D%3D&utm_source=qr",
-                },
-                {
-                  label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/vivek-kamble-65a39b238?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
-                },
-              ].map(({ label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontFamily: "var(--font-sans), monospace",
-                    fontSize: "12px",
-                    letterSpacing: "0.2em",
-                    fontWeight: 600,
-                    color: "#8e9192",
-                    textDecoration: "none",
-                    textTransform: "uppercase",
-                    transition: "color 0.2s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "#8e9192")}
-                >
-                  {label} ↗
-                </a>
-              ))}
+
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/vikafilms.in?igsh=MWkyc2hoMTBiM3VhMA%3D%3D&utm_source=qr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link social-insta"
+              >
+                <span className="social-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <circle cx="12" cy="12" r="4.5"/>
+                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                  </svg>
+                </span>
+                <span className="social-label">Instagram</span>
+                <span className="social-arrow">↗</span>
+              </a>
+
+              {/* LinkedIn */}
+              <a
+                href="https://www.linkedin.com/in/vivek-kamble-65a39b238?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link social-linkedin"
+              >
+                <span className="social-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                    <rect x="2" y="9" width="4" height="12"/>
+                    <circle cx="4" cy="4" r="2"/>
+                  </svg>
+                </span>
+                <span className="social-label">LinkedIn</span>
+                <span className="social-arrow">↗</span>
+              </a>
             </div>
 
             {/* Divider */}
@@ -629,6 +634,65 @@ export default function ContactPage() {
       </main>
 
       <style>{`
+        /* ── Social icon cards ── */
+        .social-link {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 12px 14px;
+          border-radius: 10px;
+          border: 1px solid rgba(255,255,255,0.08);
+          text-decoration: none;
+          color: #8e9192;
+          transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
+          font-family: var(--font-sans), monospace;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+        }
+        .social-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          background: rgba(255,255,255,0.06);
+          flex-shrink: 0;
+          transition: background 0.25s ease, color 0.25s ease;
+        }
+        .social-label { flex: 1; }
+        .social-arrow {
+          font-size: 14px;
+          opacity: 0.4;
+          transition: opacity 0.25s ease;
+        }
+
+        /* Instagram hover */
+        .social-insta:hover {
+          border-color: rgba(225,48,108,0.35);
+          background: rgba(225,48,108,0.04);
+          color: #e8698a;
+        }
+        .social-insta:hover .social-icon {
+          background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+          color: #fff;
+        }
+        .social-insta:hover .social-arrow { opacity: 1; }
+
+        /* LinkedIn hover */
+        .social-linkedin:hover {
+          border-color: rgba(10,102,194,0.4);
+          background: rgba(10,102,194,0.05);
+          color: #4a9fd4;
+        }
+        .social-linkedin:hover .social-icon {
+          background: #0a66c2;
+          color: #fff;
+        }
+        .social-linkedin:hover .social-arrow { opacity: 1; }
+
         @media (max-width: 768px) {
           .contact-grid {
             grid-template-columns: 1fr !important;
@@ -637,6 +701,7 @@ export default function ContactPage() {
           .form-grid {
             grid-template-columns: 1fr !important;
           }
+          .social-link { padding: 14px; }
         }
       `}</style>
     </div>
