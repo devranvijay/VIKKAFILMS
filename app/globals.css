@@ -265,7 +265,7 @@ a, button { touch-action: manipulation; }
 html { -webkit-text-size-adjust: 100%; }
 
 /* CSS-toggle: filmmaker desktop vs mobile versions */
-.filmmaker-mobile { display: none; }
+.filmmaker-mobile { display: none !important; }
 
 @media (max-width: 768px) {
   /* ── Film grain: expensive SVG filter, kill it on mobile ── */
@@ -273,7 +273,7 @@ html { -webkit-text-size-adjust: 100%; }
 
   /* ── Filmmaker section visibility swap ── */
   .filmmaker-desktop { display: none !important; }
-  .filmmaker-mobile  { display: block; }
+  .filmmaker-mobile  { display: block !important; }
 
   /* ── Backdrop-filter is the #1 GPU killer on mobile ── */
   .glass-panel,
