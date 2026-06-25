@@ -56,8 +56,17 @@ export const viewport: Viewport = {
   themeColor: "#0e0e0e",
 };
 
+const META_DEFAULTS = {
+  seoTitle: "VikaFilms | Commercial Photography, Brand Films & Product Shoots",
+  seoDescription: "Crafting visual stories that move people. VikaFilms is Mumbai's premium commercial photography and cinematography studio.",
+  seoKeywords: "vikafilms,commercial photographer,cinematographer,mumbai,india",
+  seoCanonical: "https://www.vikafilms.com",
+  brandName: "VikaFilms",
+  founderName: "Vivek Kamble",
+};
+
 export async function generateMetadata(): Promise<Metadata> {
-  const s = await getSiteSettings();
+  const s = await getSiteSettings().catch(() => null) ?? META_DEFAULTS;
   const canonical = s.seoCanonical || "https://www.vikafilms.com";
   const keywords = s.seoKeywords ? s.seoKeywords.split(",").map((k) => k.trim()) : [];
   return {
