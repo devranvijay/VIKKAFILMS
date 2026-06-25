@@ -16,7 +16,7 @@ const MENU_LINKS = [
   { label: "Contact",  href: "/contact"   },
 ];
 
-export default function Navbar() {
+export default function Navbar({ logoUrl = "/vikafilms-logo.png" }: { logoUrl?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [visible,  setVisible]  = useState(false);
 
@@ -62,7 +62,7 @@ export default function Navbar() {
         <Link href="/" aria-label="VikaFilms — Home" className="vf-logo-wrap">
           <div style={{ position: "relative", width: "52px", height: "52px" }}>
             <Image
-              src="/vikafilms-logo.png"
+              src={logoUrl}
               alt="VikaFilms"
               fill
               sizes="52px"
@@ -94,7 +94,7 @@ export default function Navbar() {
           <div style={{ display: "flex", justifyContent: "center", marginBottom: "clamp(36px, 7vh, 68px)" }}>
             <div style={{ position: "relative", width: "56px", height: "56px" }}>
               <Image
-                src="/vikafilms-logo.png"
+                src={logoUrl}
                 alt="VikaFilms"
                 fill
                 sizes="56px"

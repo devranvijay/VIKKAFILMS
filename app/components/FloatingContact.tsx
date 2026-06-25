@@ -2,13 +2,24 @@
 
 import { useState } from "react";
 
-const EMAIL = "vikafilms15@gmail.com";
-const WHATSAPP = "919309906722";
-const WA_PREFILL = encodeURIComponent(
+const DEFAULT_EMAIL = "vikafilms15@gmail.com";
+const DEFAULT_WA_LINK = "https://wa.me/919309906722?text=" + encodeURIComponent(
   "Hi VikaFilms! 👋 I'd like to inquire about a shoot. Could you share more details about your packages and availability?"
 );
 
-export default function FloatingContact() {
+type Props = {
+  whatsappLink?: string;
+  whatsappMessage?: string;
+  email?: string;
+};
+
+export default function FloatingContact({ whatsappLink, whatsappMessage, email }: Props) {
+  const resolvedEmail = email || DEFAULT_EMAIL;
+  const resolvedWaLink = whatsappLink
+    ? whatsappMessage
+      ? `${whatsappLink}${whatsappLink.includes("?") ? "&" : "?"}text=${encodeURIComponent(whatsappMessage)}`
+      : whatsappLink
+    : DEFAULT_WA_LINK;
   const [emailHovered, setEmailHovered] = useState(false);
   const [waHovered, setWaHovered] = useState(false);
 
@@ -27,7 +38,7 @@ export default function FloatingContact() {
     >
       {/* WhatsApp */}
       <a
-        href={`https://wa.me/${WHATSAPP}?text=${WA_PREFILL}`}
+        href={resolvedWaLink}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
@@ -85,7 +96,7 @@ export default function FloatingContact() {
 
       {/* Email */}
       <a
-        href={`mailto:${EMAIL}`}
+        href={`mailto:${resolvedEmail}`}
         aria-label="Send us an email"
         onMouseEnter={() => setEmailHovered(true)}
         onMouseLeave={() => setEmailHovered(false)}

@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Slider3DProps {
   images?: string[];
@@ -27,43 +26,64 @@ export default function ImageSlider3D({
   withMask = true,
 }: Slider3DProps) {
   const n = images.length;
-  const prefersReducedMotion = useReducedMotion();
-  const animationDuration = prefersReducedMotion ? duration * 4 : duration;
+  const loadedCount = useRef(0);
+  const [ready, setReady] = useState(false);
 
-  const rotationValues = rotationDirection === "left" ? [0, 360] : [360, 0];
+  const onImgSettle = () => {
+    loadedCount.current += 1;
+    if (loadedCount.current >= n) {
+      setReady(true);
+      window.dispatchEvent(new CustomEvent("slider-ready"));
+    }
+  };
+
+  // Fallback: reveal after 4 s even if a Cloudinary image times out
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setReady(true);
+      window.dispatchEvent(new CustomEvent("slider-ready"));
+    }, 4000);
+    return () => clearTimeout(t);
+  }, []);
 
   const maskStyles = withMask
     ? {
-        WebkitMask:
-          "linear-gradient(90deg, transparent, #000 20% 80%, transparent)",
+        WebkitMask: "linear-gradient(90deg, transparent, #000 20% 80%, transparent)",
         mask: "linear-gradient(90deg, transparent, #000 20% 80%, transparent)",
       }
     : {};
 
   if (n === 0) return null;
 
-  // Duplicate images for seamless CSS marquee loop on mobile
   const marqueeImages = [...images, ...images];
-  const marqueeDuration = (prefersReducedMotion ? animationDuration * 3 : animationDuration * 1.8) + "s";
+  const marqueeDuration = duration * 1.8 + "s";
+  const rotDir = rotationDirection === "right" ? "reverse" : "normal";
 
   return (
     <>
-      {/* ── Desktop: 3D rotating carousel ── */}
+      {/* ── Desktop: pure-CSS 3D rotating carousel (GPU-composited) ── */}
       <div
         className={`slider-3d-wrap ${containerClassName}`}
-        style={{ perspective: perspective, ...maskStyles }}
+        style={{
+          perspective,
+          ...maskStyles,
+          opacity: ready ? 1 : 0,
+          transition: "opacity 0.7s ease",
+        }}
       >
-        <motion.div
-          className="grid place-self-center pointer-events-auto"
-          style={{ transformStyle: "preserve-3d" }}
-          animate={{ rotateY: rotationValues }}
-          transition={{ duration: animationDuration, ease: "linear", repeat: Infinity }}
+        <div
+          className="slider-3d-inner"
+          style={{ animationDuration: `${duration}s`, animationDirection: rotDir }}
         >
           {images.map((src, i) => (
             <img
               key={i}
               src={src}
-              alt={`Slide ${i}`}
+              alt={`Slide ${i + 1}`}
+              loading="eager"
+              decoding="async"
+              onLoad={onImgSettle}
+              onError={onImgSettle}
               className={`col-start-1 row-start-1 object-cover rounded-[1.5em] ${imageClassName}`}
               style={{
                 width: cardWidth,
@@ -74,23 +94,32 @@ export default function ImageSlider3D({
               }}
             />
           ))}
-        </motion.div>
+        </div>
       </div>
 
-      {/* ── Mobile: 2D CSS marquee (no JS, no 3D, smooth on all devices) ── */}
-      <div className="slider-mob-wrap" style={maskStyles}>
+      {/* ── Mobile: CSS marquee (no 3D, smooth on all devices) ── */}
+      <div
+        className="slider-mob-wrap"
+        style={{
+          ...maskStyles,
+          opacity: ready ? 1 : 0,
+          transition: "opacity 0.7s ease",
+        }}
+      >
         <div
           className="slider-mob-track"
           style={{
             animationDuration: marqueeDuration,
-            animationDirection: rotationDirection === "right" ? "reverse" : "normal",
+            animationDirection: rotDir,
           }}
         >
           {marqueeImages.map((src, i) => (
             <img
               key={i}
               src={src}
-              alt={`Slide ${i % n}`}
+              alt={`Slide ${(i % n) + 1}`}
+              loading="eager"
+              decoding="async"
               className="slider-mob-img"
             />
           ))}
@@ -98,7 +127,7 @@ export default function ImageSlider3D({
       </div>
 
       <style>{`
-        /* Desktop carousel wrapper */
+        /* Desktop wrapper */
         .slider-3d-wrap {
           display: grid;
           width: 100%;
@@ -106,7 +135,22 @@ export default function ImageSlider3D({
           overflow: hidden;
           place-items: center;
         }
-        /* Mobile marquee hidden on desktop */
+
+        /* Rotating ring — pure CSS, runs on compositor thread */
+        .slider-3d-inner {
+          display: grid;
+          place-self: center;
+          transform-style: preserve-3d;
+          will-change: transform;
+          animation: slider3dRotate linear infinite;
+          pointer-events: none;
+        }
+        @keyframes slider3dRotate {
+          from { transform: rotateY(0deg); }
+          to   { transform: rotateY(360deg); }
+        }
+
+        /* Hide mobile marquee on desktop */
         .slider-mob-wrap { display: none; }
 
         @media (max-width: 768px) {
@@ -120,6 +164,7 @@ export default function ImageSlider3D({
             display: flex;
             gap: 10px;
             width: max-content;
+            will-change: transform;
             animation: mobMarquee linear infinite;
             padding: 8px 0;
           }

@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id String @id @default("main")
+
+  // Hero Section
+  heroTagline     String @default("Vika Films")
+  heroCta         String @default("Let's Create ↗")
+  heroCtaLink     String @default("/contact")
+  heroSubheading  String @default("Campaigns That Moved Markets.")
+
+  // Filmmaker / About Section
+  founderName      String @default("Vivek Kamble")
+  founderTitle     String @default("Founder & Cinematographer, VIKA FILMS")
+  founderBio1      String @default("I create cinematic content for luxury hospitality brands, premium products, healthcare companies, and businesses looking to elevate their visual identity.")
+  founderBio2      String @default("My work focuses on combining storytelling, aesthetics, and commercial strategy to create films that leave a lasting impression.")
+  founderAvatarUrl String @default("/vivek-kamble.png")
+  availabilityText String @default("Available across India & International")
+
+  // CTA Section
+  ctaHeading  String @default("Let's Build Something Iconic")
+  ctaBtn1Text String @default("Book A Shoot")
+  ctaBtn1Link String @default("/contact")
+  ctaBtn2Text String @default("View Portfolio")
+  ctaBtn2Link String @default("/portfolio")
+
+  // Services Page
+  servicesEyebrow  String @default("Vikka Films · Services")
+  servicesHeading  String @default("What We Do.")
+  servicesSubtitle String @default("One studio. Every visual discipline.")
+
+  // Contact Information
+  contactEmail     String @default("vikafilms15@gmail.com")
+  contactWhatsapp  String @default("+91 93099 06722")
+  contactWhatsappLink String @default("https://wa.me/919309906722")
+  contactLocation  String @default("Mumbai, India")
+  contactWhatsappMessage String @default("Hi VikaFilms! 👋 I'd like to inquire about a shoot. Could you share more details about your packages and availability?")
+
+  // Social Links
+  instagramUrl String @default("https://www.instagram.com/vikafilms.in")
+  linkedinUrl  String @default("https://www.linkedin.com/in/vivek-kamble-65a39b238")
+
+  // Footer
+  footerCopyright String @default("© 2024 VikaFilms. All Rights Reserved.")
+  brandName       String @default("VikaFilms")
+  logoUrl         String @default("/vikafilms-logo.png")
+
+  // SEO
+  seoTitle       String @default("VikaFilms | Commercial Photography, Brand Films & Product Shoots")
+  seoDescription String @default("Crafting visual stories that move people. VikaFilms is Mumbai's premium commercial photography and cinematography studio — specializing in brand films, automotive campaigns, product photography, drone cinematography, corporate portraits, and creative visual storytelling for brands across India.")
+  seoKeywords    String @default("vikafilms,VikaFilms Mumbai,photographer in mumbai,commercial photographer,cinematographer,product photographer,wedding photographer,mumbai,india")
+  seoCanonical   String @default("https://www.vikafilms.com")
+
+  // Website Settings
+  estYear        String @default("Est. 2022")
+  websiteUrl     String @default("https://www.vikafilms.com")
+
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  title        String
+  category     String
+  subcategory  String   @default("")
+  client       String   @default("")
+  year         String   @default("")
+  description  String   @default("")
+  cloudinaryId String
+  cloudinaryUrl String  @default("")
+  tags         String   @default("[]")
+  featured     Boolean  @default(false)
+  sortOrder    Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  number      String
+  title       String
+  subtitle    String   @default("")
+  description String
+  tags        String   @default("[]")
+  ctaText     String   @default("")
+  sortOrder   Int      @default(0)
+  active      Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model ProcessStep {
+  id          Int      @id @default(autoincrement())
+  number      String
+  title       String
+  description String
+  sortOrder   Int      @default(0)
+  updatedAt   DateTime @updatedAt
+}

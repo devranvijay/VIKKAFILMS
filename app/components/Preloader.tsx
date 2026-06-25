@@ -73,13 +73,26 @@ export default function Preloader() {
     // Phase 3 — fonts ready → 82
     document.fonts.ready.then(() => setTarget(82));
 
-    // Phase 4 — all resources loaded → ramp to 100
-    // Minimum display time of 900ms so fast caches don't just flash
-    const onLoad = () => {
-      setTarget(95);
+    // Phase 4 — window loaded → 95; hold at 95 until slider images are ready
+    let windowLoaded = false;
+    let sliderReady = false;
+
+    const tryFinish = () => {
+      if (!windowLoaded || !sliderReady) return;
       const elapsed = Date.now() - startTime.current;
-      const delay = Math.max(0, 900 - elapsed);
-      setTimeout(() => setTarget(100), delay + 400);
+      const delay = Math.max(0, 1000 - elapsed);
+      setTimeout(() => setTarget(100), delay);
+    };
+
+    const onLoad = () => {
+      windowLoaded = true;
+      setTarget(95);
+      tryFinish();
+    };
+
+    const onSliderReady = () => {
+      sliderReady = true;
+      tryFinish();
     };
 
     if (document.readyState === "complete") {
@@ -88,14 +101,17 @@ export default function Preloader() {
       window.addEventListener("load", onLoad, { once: true });
     }
 
-    // Hard safety net — never stall beyond 6s
-    const safety = setTimeout(() => setTarget(100), 6000);
+    window.addEventListener("slider-ready", onSliderReady, { once: true });
+
+    // Hard safety net — never stall beyond 7s
+    const safety = setTimeout(() => setTarget(100), 7000);
 
     return () => {
       clearInterval(crawlTimer);
       clearTimeout(safety);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       document.body.style.overflow = "";
+      window.removeEventListener("slider-ready", onSliderReady);
     };
   }, [triggerExit]);
 

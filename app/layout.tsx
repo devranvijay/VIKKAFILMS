@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Playfair_Display, Hanken_Grotesk, Geist, Monsieur_La_Doulaise, DM_Sans, Bebas_Neue } from "next/font/google";
+import { headers } from "next/headers";
 import Navbar from "./components/Navbar";
 import FloatingContact from "./components/FloatingContact";
 import Preloader from "./components/Preloader";
+import { getSiteSettings } from "./lib/content";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -54,91 +56,52 @@ export const viewport: Viewport = {
   themeColor: "#0e0e0e",
 };
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://www.vikafilms.com"),
-  title: {
-    default: "VikaFilms | Commercial Photography, Brand Films & Product Shoots",
-    template: "%s | VikaFilms",
-  },
-  description:
-    "Crafting visual stories that move people. VikaFilms is Mumbai's premium commercial photography and cinematography studio — specializing in brand films, automotive campaigns, product photography, drone cinematography, corporate portraits, and creative visual storytelling for brands across India.",
-  keywords: [
-    "vikafilms",
-    "vika films",
-    "VikaFilms Mumbai",
-    "photographer in mumbai",
-    "commercial photographer mumbai",
-    "cinematographer mumbai",
-    "photography studio mumbai",
-    "brand photographer mumbai",
-    "product photographer mumbai",
-    "commercial photography india",
-    "film production company mumbai",
-    "video production mumbai",
-    "automotive photographer india",
-    "wedding photographer mumbai",
-    "corporate photographer mumbai",
-    "advertising photographer mumbai",
-    "fashion photographer mumbai",
-    "editorial photographer mumbai",
-    "luxury photography mumbai",
-    "premium photo studio mumbai",
-    "shoot in mumbai",
-    "photo shoot mumbai",
-    "professional photographer mumbai",
-    "vivek kamble photographer",
-    "healthcare photography mumbai",
-    "brand film mumbai",
-  ],
-  authors: [{ name: "Vivek Kamble", url: "https://www.vikafilms.com" }],
-  creator: "Vivek Kamble – VikaFilms",
-  publisher: "VikaFilms",
-  alternates: { canonical: "https://www.vikafilms.com" },
-  openGraph: {
-    type: "website",
-    url: "https://www.vikafilms.com",
-    siteName: "VikaFilms",
-    title: "VikaFilms | Commercial Photography, Brand Films & Product Shoots",
-    description:
-      "Crafting visual stories that move people. Mumbai's premium commercial photography and cinematography studio — brand films, product campaigns, automotive shoots & editorial stories.",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "VikaFilms – Commercial Photography & Brand Films, Mumbai",
-      },
-    ],
-    locale: "en_IN",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "VikaFilms | Commercial Photography, Brand Films & Product Shoots",
-    description:
-      "Crafting visual stories that move people. Mumbai's premium commercial photography and cinematography studio — brand films, product campaigns & visual stories.",
-    images: ["/opengraph-image"],
-    creator: "@vikafilms",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+export async function generateMetadata(): Promise<Metadata> {
+  const s = await getSiteSettings();
+  const canonical = s.seoCanonical || "https://www.vikafilms.com";
+  const keywords = s.seoKeywords ? s.seoKeywords.split(",").map((k) => k.trim()) : [];
+  return {
+    metadataBase: new URL(canonical),
+    title: {
+      default: s.seoTitle,
+      template: `%s | ${s.brandName}`,
     },
-  },
-  verification: {
-    google: "", // paste your Google Search Console verification code here when ready
-  },
-};
+    description: s.seoDescription,
+    keywords,
+    authors: [{ name: s.founderName, url: canonical }],
+    creator: `${s.founderName} – ${s.brandName}`,
+    publisher: s.brandName,
+    alternates: { canonical },
+    openGraph: {
+      type: "website",
+      url: canonical,
+      siteName: s.brandName,
+      title: s.seoTitle,
+      description: s.seoDescription,
+      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: `${s.brandName} – Commercial Photography & Brand Films` }],
+      locale: "en_IN",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: s.seoTitle,
+      description: s.seoDescription,
+      images: ["/opengraph-image"],
+    },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const reqHeaders = await headers();
+  const pathname = reqHeaders.get("x-pathname") ?? "";
+  const isAdmin = pathname.startsWith("/admin");
+
+  const settings = isAdmin ? null : await getSiteSettings().catch(() => null);
+
   return (
     <html
       lang="en"
@@ -259,9 +222,17 @@ export default function RootLayout({
           padding: 0,
         }}
       >
-        <Preloader />
-        <Navbar />
-        <FloatingContact />
+        {!isAdmin && (
+          <>
+            <Preloader />
+            <Navbar logoUrl={settings?.logoUrl} />
+            <FloatingContact
+              whatsappLink={settings?.contactWhatsappLink}
+              whatsappMessage={settings?.contactWhatsappMessage}
+              email={settings?.contactEmail}
+            />
+          </>
+        )}
         {children}
       </body>
     </html>
